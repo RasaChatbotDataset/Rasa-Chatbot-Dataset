@@ -9,7 +9,7 @@ config = dotenv_values('config.env')
 
 GITHUB_API_URL = "https://api.github.com"
 ACCESS_TOKEN = config['GITHUB_TOKEN']
-USER_AGENT = 'python-requests' 
+USER_AGENT = 'agent' 
 
 
 REPO_KEYWORDS = ['rasa', 'chatbot'] 
