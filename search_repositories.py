@@ -28,7 +28,7 @@ def execute_query(keywords, page, dt):
     delimiter = "+"
     query = delimiter.join(keywords)
     print("Searching repositories")
-    search_url = f"{GITHUB_API_URL}/search/repositories?q={query}+pushed:<{dt.isoformat()}&sort=updated&page={page}&per_page=100"
+    search_url = f"{GITHUB_API_URL}/search/repositories?q={query}+in:name,description,topics,readme+pushed:<{dt.isoformat()}&sort=updated&page={page}&per_page=100"
     print(search_url)
     repo_response = requests.get(search_url, headers=headers)
     return repo_response
@@ -36,7 +36,7 @@ def execute_query(keywords, page, dt):
 
 def search_repositories():
     repo_file = open(RESULT_FILE, 'w')
-    repo_file.write('full-name'+CSV_SEPARATOR+'html-url'+CSV_SEPARATOR+'stars'+CSV_SEPARATOR+'forks'+CSV_SEPARATOR+'created-at'+CSV_SEPARATOR+'updated-at'+CSV_SEPARATOR+'owner-name'+CSV_SEPARATOR+'owner-id'+CSV_SEPARATOR+'owner-type\n')
+    repo_file.write('full-name'+CSV_SEPARATOR+'html-url'+CSV_SEPARATOR+'stars'+CSV_SEPARATOR+'forks'+CSV_SEPARATOR+'created-at'+CSV_SEPARATOR+'updated-at'+CSV_SEPARATOR+'pushed-at'+CSV_SEPARATOR+'owner-name'+CSV_SEPARATOR+'owner-id'+CSV_SEPARATOR+'owner-type\n')
     page = 1
     list_completed = False
     dt = datetime.today()
@@ -61,7 +61,7 @@ def search_repositories():
 
         for repo in repositories['items']:
             repo_file.write(repo['full_name']+CSV_SEPARATOR+repo['html_url']+CSV_SEPARATOR+str(repo['stargazers_count'])+CSV_SEPARATOR+str(repo['forks_count'])+CSV_SEPARATOR
-                        + repo['created_at'] + CSV_SEPARATOR + repo['updated_at'] + CSV_SEPARATOR
+                        + repo['created_at'] + CSV_SEPARATOR + repo['updated_at'] + CSV_SEPARATOR + repo['pushed_at'] + CSV_SEPARATOR
                         + repo['owner']['login']+CSV_SEPARATOR+str(repo['owner']['id'])+CSV_SEPARATOR+repo['owner']['type']+'\n')
             
             if min_pushed_date > datetime.fromisoformat(repo['pushed_at'].rstrip('Z')):
