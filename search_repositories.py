@@ -8,7 +8,7 @@ config = dotenv_values('config.env')
 
 
 GITHUB_API_URL = "https://api.github.com"
-ACCESS_TOKEN = config['GITHUB_TOKEN']
+ACCESS_TOKEN = config['GITHUB_TOKENS'][0]
 USER_AGENT = 'agent' 
 
 
@@ -36,7 +36,9 @@ def execute_query(keywords, page, dt):
 
 def search_repositories():
     repo_file = open(RESULT_FILE, 'w')
-    repo_file.write('full-name'+CSV_SEPARATOR+'html-url'+CSV_SEPARATOR+'stars'+CSV_SEPARATOR+'forks'+CSV_SEPARATOR+'created-at'+CSV_SEPARATOR+'updated-at'+CSV_SEPARATOR+'pushed-at'+CSV_SEPARATOR+'owner-name'+CSV_SEPARATOR+'owner-id'+CSV_SEPARATOR+'owner-type\n')
+    repo_file.write('full-name'+CSV_SEPARATOR+'html-url'+CSV_SEPARATOR+'stars'+CSV_SEPARATOR+'forks'+CSV_SEPARATOR
+                    +'created-at'+CSV_SEPARATOR+'updated-at'+CSV_SEPARATOR+'pushed-at'+CSV_SEPARATOR
+                    +'owner-name'+CSV_SEPARATOR+'owner-id'+CSV_SEPARATOR+'owner-type\n')
     page = 1
     list_completed = False
     dt = datetime.today()
