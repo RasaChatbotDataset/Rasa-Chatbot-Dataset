@@ -8,7 +8,7 @@ config = dotenv_values('config.env')
 
 
 GITHUB_API_URL = "https://api.github.com"
-ACCESS_TOKEN = config['GITHUB_TOKENS'][0]
+ACCESS_TOKEN = config['GITHUB_TOKENS'].split(',')[0]
 USER_AGENT = 'agent' 
 
 
