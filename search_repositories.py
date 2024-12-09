@@ -64,6 +64,7 @@ def search_repositories():
         for repo in repositories['items']:
             repo_file.write(repo['full_name']+CSV_SEPARATOR+repo['html_url']+CSV_SEPARATOR+str(repo['stargazers_count'])+CSV_SEPARATOR+str(repo['forks_count'])+CSV_SEPARATOR
                         + repo['created_at'] + CSV_SEPARATOR + repo['updated_at'] + CSV_SEPARATOR + repo['pushed_at'] + CSV_SEPARATOR
+                        + repo['default_branch'] + CSV_SEPARATOR +
                         + repo['owner']['login']+CSV_SEPARATOR+str(repo['owner']['id'])+CSV_SEPARATOR+repo['owner']['type']+'\n')
             
             if min_pushed_date > datetime.fromisoformat(repo['pushed_at'].rstrip('Z')):
