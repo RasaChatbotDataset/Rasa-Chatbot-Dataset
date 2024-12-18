@@ -35,7 +35,7 @@ def search_keywords_in_repo(keywords, repo_full_name, token):
     query = delimiter.join(keywords)
     #search_url = f"{GITHUB_API_URL}/search/code?q={query}+in:file+extension:yml+OR+extension:yaml+repo:{repo_full_name}"
     search_url = f"{GITHUB_API_URL}/search/code?q={query}+in:file+extension:yml+repo:{repo_full_name}"
-    print(search_url)
+    #print(search_url)
     response = requests.get(search_url, headers=headers)
     return response
 
@@ -44,23 +44,26 @@ def search_keywords_in_repo(keywords, repo_full_name, token):
 def check_repositories(repositories, t_index):
     print(ACCESS_TOKENS[t_index])
 
-    headers = ['full-name','html-url', 'stars','forks','created-at','updated-at','pushed-at','owner-name','owner-id','owner-type','domain-files']
+    headers = ['full-name','html-url', 'stars','forks','created-at','updated-at','pushed-at','default-branch','owner-name','owner-id','owner-type','domain-files']
 
-    cb_file = open(str(t_index)+'_'+CHATBOTS_FILE, 'w', newline='')
+    cb_file = open(str(t_index)+'__'+CHATBOTS_FILE, 'w', newline='')
     chatbots = csv.DictWriter(cb_file, fieldnames=headers, delimiter=CSV_SEPARATOR)
     chatbots.writeheader()
 
-    ncb_file = open(str(t_index)+'_'+NOT_CHATBOTS_FILE, 'w', newline='')
+    ncb_file = open(str(t_index)+'__'+NOT_CHATBOTS_FILE, 'w', newline='')
     not_chatbots = csv.DictWriter(ncb_file, fieldnames=headers[:-1], delimiter=CSV_SEPARATOR)
     not_chatbots.writeheader()
 
-    ni_repo_file = open(str(t_index)+'_'+NOT_INDEXED_REPO_FILE, 'w', newline='')
+    ni_repo_file = open(str(t_index)+'__'+NOT_INDEXED_REPO_FILE, 'w', newline='')
     ni_repo = csv.DictWriter(ni_repo_file, fieldnames=headers[:-1], delimiter=CSV_SEPARATOR)
     ni_repo.writeheader()
     
     for repo in repositories:
 
         check_response = search_keywords_in_repo(KEYWORDS, repo['full-name'], ACCESS_TOKENS[t_index])
+        if check_response.status_code == 404:
+            print(f"Error 404 for repository {repo['full-name']}")
+            break
         print(check_response)
         retries = 0
         while retries < 5 and (check_response.status_code == 403 or check_response.status_code == 429):
@@ -116,6 +119,8 @@ def sleep(response):
         sleep_seconds = int(response.headers['X-RateLimit-Reset']) - time.time() + 2
     except:
         sleep_seconds = 60
+    if sleep_seconds <= 0:
+        sleep_seconds = 60
     
     print(f'Primary rate limit exceeded. Waiting for {sleep_seconds}s...')
     time.sleep(sleep_seconds)
@@ -149,7 +154,7 @@ def is_indexed(t_index, repo_name):
 
     if response.status_code == 200:
 
-        if "This repository's code is being indexed right now. Try again in a few minutes" in response.text:
+        if "This repository's code is being indexed right now. Try again in a few minutes" in response.text or "This repository's code has not been indexed yet. Try again later." in response.text:
             return False
         else:
             return True
@@ -160,16 +165,15 @@ repo_file = open(REPOSITORIES_FILE, 'r')
 reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
 repos = list(reader)
 
-# 1117
-t1 = threading.Thread(target=check_repositories, args=(repos[1118:1280], 0))
-t2 = threading.Thread(target=check_repositories, args=(repos[1280:1442], 1))
-t3 = threading.Thread(target=check_repositories, args=(repos[1442:1604], 2))
+# 7677
+t1 = threading.Thread(target=check_repositories, args=(repos[7697:7920], 0)) #7696
+t2 = threading.Thread(target=check_repositories, args=(repos[7940:8051], 1)) #7939
+t3 = threading.Thread(target=check_repositories, args=(repos[8051:8163], 2))
 t1.start()
 t2.start()
 t3.start()
 t1.join()
 t2.join()
 t3.join()
-
 
 repo_file.close()
