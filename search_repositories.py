@@ -2,19 +2,22 @@ import requests
 
 from dotenv import dotenv_values
 from datetime import datetime
+import json
+import os
 
 
 config = dotenv_values('config.env')
 
 
 GITHUB_API_URL = "https://api.github.com"
-ACCESS_TOKEN = config['GITHUB_TOKENS'].split(',')[0]
+ACCESS_TOKEN = config['GITHUB_TOKENS'].split(',')[1]
 USER_AGENT = 'agent' 
 
 
 REPO_KEYWORDS = ['rasa', 'chatbot'] 
-RESULT_FILE = 'repositories.csv'
+RESULT_FILE = 'repositories-2025.csv'
 CSV_SEPARATOR= ';'
+REPOSITORIES_DIRECTORY = 'repositories_2025_json'
   
 
 headers = {
@@ -37,12 +40,16 @@ def execute_query(keywords, page, dt):
 def search_repositories():
     repo_file = open(RESULT_FILE, 'w')
     repo_file.write('full-name'+CSV_SEPARATOR+'html-url'+CSV_SEPARATOR+'stars'+CSV_SEPARATOR+'forks'+CSV_SEPARATOR
-                    +'created-at'+CSV_SEPARATOR+'updated-at'+CSV_SEPARATOR+'pushed-at'+CSV_SEPARATOR
-                    +'owner-name'+CSV_SEPARATOR+'owner-id'+CSV_SEPARATOR+'owner-type\n')
+                    +'created-at'+CSV_SEPARATOR+'updated-at'+CSV_SEPARATOR+'pushed-at'+CSV_SEPARATOR +
+                    'default-branch' + CSV_SEPARATOR +'owner-name'+CSV_SEPARATOR+'owner-id'+CSV_SEPARATOR+'owner-type'
+                    + CSV_SEPARATOR + 'is-fork' + CSV_SEPARATOR + 'fork-parent\n')
     page = 1
     list_completed = False
     dt = datetime.today()
     min_pushed_date = dt
+
+    if not os.path.isdir(REPOSITORIES_DIRECTORY):
+        os.mkdir(REPOSITORIES_DIRECTORY)
 
     while not list_completed:
 
@@ -62,10 +69,19 @@ def search_repositories():
             break
 
         for repo in repositories['items']:
+            fork_parent = ''
+            if repo['fork']:
+                fork_parent = repo['parent']['full_name']
+            
             repo_file.write(repo['full_name']+CSV_SEPARATOR+repo['html_url']+CSV_SEPARATOR+str(repo['stargazers_count'])+CSV_SEPARATOR+str(repo['forks_count'])+CSV_SEPARATOR
                         + repo['created_at'] + CSV_SEPARATOR + repo['updated_at'] + CSV_SEPARATOR + repo['pushed_at'] + CSV_SEPARATOR
-                        + repo['default_branch'] + CSV_SEPARATOR +
-                        + repo['owner']['login']+CSV_SEPARATOR+str(repo['owner']['id'])+CSV_SEPARATOR+repo['owner']['type']+'\n')
+                        + repo['default_branch'] + CSV_SEPARATOR
+                        + repo['owner']['login']+CSV_SEPARATOR+str(repo['owner']['id'])+CSV_SEPARATOR+repo['owner']['type']+ CSV_SEPARATOR
+                        + str(repo['fork'])+ CSV_SEPARATOR + fork_parent+'\n')
+            
+            single_repo_file = open(REPOSITORIES_DIRECTORY+'/'+repo['full_name'].replace('/', '_')+'.json', 'w', newline='')
+            json.dump(repo, single_repo_file)
+            single_repo_file.close()
             
             if min_pushed_date > datetime.fromisoformat(repo['pushed_at'].rstrip('Z')):
                 min_pushed_date = datetime.fromisoformat(repo['pushed_at'].rstrip('Z'))
