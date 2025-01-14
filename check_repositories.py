@@ -16,7 +16,7 @@ SESSION_COOKIES = config['USER_SESSION_COOKIES'].split(',')
 
 KEYWORDS  = ['intents']
 
-REPOSITORIES_FILE = 'repositories.csv'
+REPOSITORIES_FILE = 'repositories-2025-commit.csv'
 CHATBOTS_FILE = 'chatbots.csv'
 NOT_CHATBOTS_FILE = 'not_chatbots.csv'
 NOT_INDEXED_REPO_FILE = 'not_indexed.csv'
@@ -44,17 +44,17 @@ def search_keywords_in_repo(keywords, repo_full_name, token):
 def check_repositories(repositories, t_index):
     print(ACCESS_TOKENS[t_index])
 
-    headers = ['full-name','html-url', 'stars','forks','created-at','updated-at','pushed-at','default-branch','owner-name','owner-id','owner-type','domain-files']
+    headers = ['full-name','html-url', 'stars','forks','created-at','updated-at','pushed-at','default-branch','owner-name','owner-id','owner-type', 'is-fork', 'fork-parent', 'last-commit','domain-files']
 
-    cb_file = open(str(t_index)+'__'+CHATBOTS_FILE, 'w', newline='')
+    cb_file = open(str(t_index)+'_'+CHATBOTS_FILE, 'w', newline='')
     chatbots = csv.DictWriter(cb_file, fieldnames=headers, delimiter=CSV_SEPARATOR)
     chatbots.writeheader()
 
-    ncb_file = open(str(t_index)+'__'+NOT_CHATBOTS_FILE, 'w', newline='')
+    ncb_file = open(str(t_index)+'_'+NOT_CHATBOTS_FILE, 'w', newline='')
     not_chatbots = csv.DictWriter(ncb_file, fieldnames=headers[:-1], delimiter=CSV_SEPARATOR)
     not_chatbots.writeheader()
 
-    ni_repo_file = open(str(t_index)+'__'+NOT_INDEXED_REPO_FILE, 'w', newline='')
+    ni_repo_file = open(str(t_index)+'_'+NOT_INDEXED_REPO_FILE, 'w', newline='')
     ni_repo = csv.DictWriter(ni_repo_file, fieldnames=headers[:-1], delimiter=CSV_SEPARATOR)
     ni_repo.writeheader()
     
@@ -165,10 +165,9 @@ repo_file = open(REPOSITORIES_FILE, 'r')
 reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
 repos = list(reader)
 
-# 7677
-t1 = threading.Thread(target=check_repositories, args=(repos[7697:7920], 0)) #7696
-t2 = threading.Thread(target=check_repositories, args=(repos[7940:8051], 1)) #7939
-t3 = threading.Thread(target=check_repositories, args=(repos[8051:8163], 2))
+t1 = threading.Thread(target=check_repositories, args=(repos[0:100], 0)) 
+t2 = threading.Thread(target=check_repositories, args=(repos[100:200], 1)) 
+t3 = threading.Thread(target=check_repositories, args=(repos[200:300], 2))
 t1.start()
 t2.start()
 t3.start()
