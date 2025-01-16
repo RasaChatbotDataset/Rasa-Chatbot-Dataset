@@ -4,6 +4,7 @@ import zipfile
 import re
 from utils import download_zip, clean_zip
 import os
+import subprocess
 
 
 NOT_INDEXED_FILE_NAME = "not_indexed-2025.csv"
@@ -16,7 +17,7 @@ ZIP_DIRECTORY = 'chatbot_zip-2025'
     
 
 # Check if repository is chatbot
-def find_keyword_in_repo(keyword, repo_zip_path):
+def find_keyword_in_repo(keyword, repo_zip_path, commit):
     domain_files = []
     repo =  zipfile.ZipFile(repo_zip_path, 'r')
     r = re.compile(".*.yml")
@@ -26,10 +27,23 @@ def find_keyword_in_repo(keyword, repo_zip_path):
             try:
                 yml_content = yml_file.read().decode()
                 if keyword in yml_content:
-                    domain_files.append(file_path)
+                    domain_files.append(file_path.split(commit+'/')[-1])
             except UnicodeDecodeError as e:
                 print(f"Decode error")
     return domain_files
+
+
+# Sync zip folder on google drive with rclone
+def sync():
+   try:
+      command = ['rclone', 'sync', ZIP_DIRECTORY, 'gdrive:'+ZIP_DIRECTORY]
+      result = subprocess.run(command, capture_output=True, text=True)
+      if result.returncode == 0:
+         print('Sync completed')
+      else:
+         print(f'Sync failed {result.sterr}')
+   except Exception as e:
+      print(f'Error {str(e)}')
 
 
 def main():
@@ -48,15 +62,18 @@ def main():
     
     if not os.path.isdir(ZIP_DIRECTORY):
         os.makedirs(ZIP_DIRECTORY)
-
+    i=0
     for repo in repositories: 
+        i += 1
+        if i%50==0:
+          sync()
         try:
             # Download zip
             zip_path = download_zip(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'])
             print('Download completed')
             if zip_path != -1:
                 # Chatbot check
-                domain_files = find_keyword_in_repo('intents', zip_path)
+                domain_files = find_keyword_in_repo('intents', zip_path, repo['last-commit'])
                 # Not chatbot
                 if not domain_files:
                     print(f"{repo['full-name']}: not chatbot")
@@ -82,6 +99,6 @@ def main():
 
     cb_file.close()
     ncb_file.close()
-
+    sync()
 
 main()
