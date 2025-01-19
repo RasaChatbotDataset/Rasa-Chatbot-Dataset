@@ -1,10 +1,9 @@
-import requests
 import csv
 import zipfile
 import re
 from utils import download_zip, clean_zip
 import os
-import subprocess
+from utils import sync
 
 
 NOT_INDEXED_FILE_NAME = "not_indexed-2025.csv"
@@ -33,18 +32,6 @@ def find_keyword_in_repo(keyword, repo_zip_path, commit):
     return domain_files
 
 
-# Sync zip folder on google drive with rclone
-def sync():
-   try:
-      command = ['rclone', 'sync', ZIP_DIRECTORY, 'gdrive:'+ZIP_DIRECTORY]
-      result = subprocess.run(command, capture_output=True, text=True)
-      if result.returncode == 0:
-         print('Sync completed')
-      else:
-         print(f'Sync failed {result.sterr}')
-   except Exception as e:
-      print(f'Error {str(e)}')
-
 
 def main():
 
@@ -66,7 +53,7 @@ def main():
     for repo in repositories: 
         i += 1
         if i%50==0:
-          sync()
+          sync(ZIP_DIRECTORY)
         try:
             # Download zip
             zip_path = download_zip(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'])
@@ -99,6 +86,6 @@ def main():
 
     cb_file.close()
     ncb_file.close()
-    sync()
+    sync(ZIP_DIRECTORY)
 
 main()
