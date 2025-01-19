@@ -2,6 +2,7 @@ import zipfile
 import os
 import re
 import requests
+import subprocess
 
 
 
@@ -61,8 +62,21 @@ def clean_zip(zip_path):
 
 
 # Download and clean zip
-def download_clean_zip(repo_name, branch):
-    zip_path = download_zip(repo_name, branch)
+def download_clean_zip(zip_directory, repo_name, commit):
+    zip_path = download_zip(zip_directory, repo_name, commit)
     if zip_path != -1 and zip_path != 0:
         clean_zip(zip_path)
+
+
+# Sync zip folder on google drive with rclone
+def sync(zip_directory):
+   try:
+      command = ['rclone', 'sync', zip_directory, 'gdrive:'+zip_directory]
+      result = subprocess.run(command, capture_output=True, text=True)
+      if result.returncode == 0:
+         print('Sync completed')
+      else:
+         print(f'Sync failed {result.sterr}')
+   except Exception as e:
+      print(f'Error {str(e)}')
 
