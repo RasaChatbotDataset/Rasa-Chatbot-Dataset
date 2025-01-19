@@ -49,7 +49,7 @@ python check_repositories.py
 ```
 
 ### 5. Download chatbots zip
-Execute script *download_chatbots.py* to download the zip archive of all chatbots identified from the previus steps; they will be saved in folder *chatbot_zip-2025*.
+Execute script *download_chatbots.py* to download the zip archive of all chatbots identified from the previus steps. They will be saved in folder *chatbot_zip-2025*, which is periodically synchronized with an online backup folder on Google Drive with rclone. If you want to keep this feature you will need to install rclone, configure a remote named gdrive and create a folder 'chatbot_zip-2025' on your Google Drive. Otherwise you can comment all lines with *sync()* in script *download_chatbots.py* and *check_not_indexed_repositories.py*.
 
 ```
 python download_chatbots.py
