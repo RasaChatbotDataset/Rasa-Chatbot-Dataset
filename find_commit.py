@@ -7,12 +7,12 @@ config = dotenv_values('config.env')
 
 
 GITHUB_API_URL = "https://api.github.com"
-ACCESS_TOKEN = config['GITHUB_TOKENS'].split(',')[1]
+ACCESS_TOKEN = config['GITHUB_TOKENS'].split(',')[0]
 USER_AGENT = 'agent' 
-REPOSITORIES_FILE = 'repositories-2025.csv'
+REPOSITORIES_FILE = 'repositories-2025-commit.csv'
 CSV_SEPARATOR= ';'
-COMMIT_REPO_FILE = 'repositories-2025-commit.csv'
-EMPTY_REPOSITORIES = 'empty_repositories-2025.csv'
+COMMIT_REPO_FILE = 'repositories-2025-commit-date.csv'
+EMPTY_REPOSITORIES = 'empty_repositories-2025-date.csv'
   
 
 headers = {
@@ -40,7 +40,7 @@ def add_last_commit():
     repos = list(reader)
 
     repo_complete_file = open(COMMIT_REPO_FILE, 'a', newline='')
-    cheaders = reader.fieldnames + ['last-commit']
+    cheaders = reader.fieldnames + ['last-commit', 'last-commit-date']
     writer = csv.DictWriter(repo_complete_file, fieldnames=cheaders, delimiter=CSV_SEPARATOR)
     writer.writeheader()
 
@@ -60,7 +60,9 @@ def add_last_commit():
         if response.status_code == 200:
             branch = response.json()
             commit = branch['commit']['sha']
+            date = branch['commit']['commit']['author']['date']
             repo['last-commit'] = commit
+            repo['last-commit-date'] = date
             writer.writerow(repo)
         elif response.status_code == 404:
             print(f"Error: {response} for repo {repo['full-name']}")
@@ -76,4 +78,3 @@ def add_last_commit():
 
 
 add_last_commit()
-
