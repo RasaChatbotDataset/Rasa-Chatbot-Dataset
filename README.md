@@ -32,7 +32,7 @@ python search_repositories.py
 ```
 
 ### 3. Save last commit
-In order to keep a reference to a same repository version execute script *find_commit.py* which saves the last commit sha for each repository. Classification and analysis will refer to this version.
+In order to keep a reference to a same repository version execute script *find_commit.py* which saves the sha and date of the last commit on the default branch for each repository. Classification and analysis will refer to this version.
 
 ```
 python find_commit.py
@@ -48,7 +48,7 @@ Execute script *check_repositories.py* to check wether a repository is a chatbot
 python check_repositories.py
 ```
 
-### 5. Download chatbots zip
+### 5. Chatbots zip download
 Execute script *download_chatbots.py* to download the zip archive of all chatbots identified from the previus steps. They will be saved in folder *chatbot_zip-2025*, which is periodically synchronized with an online backup folder on Google Drive with rclone. If you want to keep this feature you will need to install rclone, configure a remote named gdrive and create a folder 'chatbot_zip-2025' on your Google Drive. Otherwise you can comment all lines with *sync()* in script *download_chatbots.py* and *check_not_indexed_repositories.py*.
 
 ```
@@ -62,9 +62,16 @@ Execute script *check_not_indexed_repositories.py* to classify not indexed repos
 python check_not_indexed_repositories.py
 ```
 
-### 7. Analyze chatbots
-The execution of the previous steps produces a dataset of chatbot repositories (file *chatbots-2025.csv*) which zip archives are saved in folder *chatbot_zip-2025*. Execute script *analyze_chatbot.py* to analyze chatbots by extracting information about their domain, their language and their use of external services. The detect language API used to detect chatbot language has a limit of 1000 requests per day so this step may have to be divided into more days.
+### 7. Domain files filtering
+Execute script *check_domain_files.py* to remove all domain files which were previously identified but that are actually not parsable, empty or not really a rasa domain file. Repositories with no domain files left will be removed from the list of chatbots in *chatbots_2025.csv* and will be saved in file *chatbots-2025-no-more-domains.csv*; their zip files will be deleted. Statistics about domain file filtering can be found in file *clean_domain_statistics.txt*.
 
 ```
-python analyze_chatbots.py
+check_domain_files.py
+```
+
+### 8. NLU, actions and readmes files check
+Execute script *find_files.py* to enrich the dataset file *chatbots_2025.csv* with information about nlu files / folder, actions files / folders and readmes.
+
+```
+find_files.py
 ```
