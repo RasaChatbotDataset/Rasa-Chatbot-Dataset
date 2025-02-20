@@ -108,15 +108,15 @@ def find_action_files(repository, chatbot_info):
         if 'node_modules' not in file and 'site-packages' not in file:
             with repository.open(file) as action_file:
                 try:
-                    content = action_file.read().decode()  # vedere cosa succede con un file vuoto
+                    content = action_file.read().decode() 
                     empty = False
                     if len(content) == 0:
                         empty = True
                     
                     all_comment = True
 
-                    for line in content:
-                        if not line.startswith('#'):
+                    for line in content.split('\n'):
+                        if not line.startswith('#') and not line == '' and not line.strip() == '':
                             all_comment = False
 
                     
@@ -164,7 +164,7 @@ def main():
     chatbots = list(reader)
 
     multi_file = open(CHATBOTS_ANALYSIS_FILE_NAME, 'w', newline='')
-    header = reader.fieldnames + ['n-domain-files', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files']
+    header = reader.fieldnames + ['n-domain-files', 'domain-folders', 'n-domain-folders', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files']
     writer = csv.DictWriter(multi_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
 
@@ -176,6 +176,14 @@ def main():
 
         chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files'])
         chatbot_info['n-domain-files'] = len(chatbot_info['domain-files'])
+        chatbot_info['domain-folders'] = []
+
+        for domain in chatbot_info['domain-files']:
+            if str(Path(domain).parent) not in chatbot_info['domain-folders']:
+                                    chatbot_info['domain-folders'].append(str(Path(domain).parent))
+        
+        chatbot_info['n-domain-folders'] = len(chatbot_info['domain-folders'])
+
         chatbot_info = find_nlu_files(repository, chatbot_info)
         chatbot_info = find_action_files(repository, chatbot_info)
         chatbot_info = find_readme_files(repository, chatbot_info)
