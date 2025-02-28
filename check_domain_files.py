@@ -6,7 +6,7 @@ import os
 from utils import sync
 
 CHATBOTS_FILE_NAME = 'chatbots-2025.csv'
-NO_MORE_DOMAIN_FILE_NAME = 'no-more-domain-chatbots-2025.csv'
+NO_MORE_DOMAIN_FILE_NAME = 'chatbots-2025-no-more-domains.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_zip-2025'
 CHECK_DOMAIN_STATISTICS_FILE = 'clean_domain_statistics.txt'
