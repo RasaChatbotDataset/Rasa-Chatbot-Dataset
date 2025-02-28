@@ -19,12 +19,12 @@ KEYWORDS  = ['intents']
 REPOSITORIES_FILE = 'repositories-2025-commit.csv'
 CHATBOTS_FILE = 'chatbots.csv'
 NOT_CHATBOTS_FILE = 'not_chatbots.csv'
-NOT_INDEXED_REPO_FILE = 'not_indexed.csv'
+NOT_INDEXED_REPO_FILE = 'git not_indexed.csv'
 CSV_SEPARATOR= ';'
 
 
 
-def search_keywords_in_repo(keywords, repo_full_name, token):
+def search_keywords_in_repo(keywords, repo_full_name, token, page):
     headers = {
     'Authorization': f'Bearer {token}',
     'Accept': 'application/vnd.github.v3+json',
@@ -34,9 +34,18 @@ def search_keywords_in_repo(keywords, repo_full_name, token):
     delimiter = " "
     query = delimiter.join(keywords)
     #search_url = f"{GITHUB_API_URL}/search/code?q={query}+in:file+extension:yml+OR+extension:yaml+repo:{repo_full_name}"
-    search_url = f"{GITHUB_API_URL}/search/code?q={query}+in:file+extension:yml+repo:{repo_full_name}"
+    search_url = f"{GITHUB_API_URL}/search/code?q={query}+in:file+extension:yml+repo:{repo_full_name}&page={page}&per_page=100"
     #print(search_url)
+
+    retries = 0
+
     response = requests.get(search_url, headers=headers)
+
+    while retries < 5 and (response.status_code == 403 or response.status_code == 429):
+        sleep(response)
+        response = requests.get(search_url, headers=headers)
+        retries = retries+1
+
     return response
 
 
@@ -44,7 +53,7 @@ def search_keywords_in_repo(keywords, repo_full_name, token):
 def check_repositories(repositories, t_index):
     print(ACCESS_TOKENS[t_index])
 
-    headers = ['full-name','html-url', 'stars','forks','created-at','updated-at','pushed-at','default-branch','owner-name','owner-id','owner-type', 'is-fork', 'fork-parent', 'last-commit','domain-files']
+    headers = ['full-name','html-url', 'stars','forks','created-at','updated-at','pushed-at','default-branch','owner-name','owner-id','owner-type', 'is-fork', 'fork-parent', 'last-commit', 'last-commit-date', 'domain-files', 'n-domain-files']
 
     cb_file = open(str(t_index)+'_'+CHATBOTS_FILE, 'w', newline='')
     chatbots = csv.DictWriter(cb_file, fieldnames=headers, delimiter=CSV_SEPARATOR)
@@ -60,22 +69,17 @@ def check_repositories(repositories, t_index):
     
     for repo in repositories:
 
-        check_response = search_keywords_in_repo(KEYWORDS, repo['full-name'], ACCESS_TOKENS[t_index])
+        page = 1
+        check_response = search_keywords_in_repo(KEYWORDS, repo['full-name'], ACCESS_TOKENS[t_index], page)
         if check_response.status_code == 404:
             print(f"Error 404 for repository {repo['full-name']}")
             break
         print(check_response)
-        retries = 0
-        while retries < 5 and (check_response.status_code == 403 or check_response.status_code == 429):
-            sleep(check_response)
-            check_response = search_keywords_in_repo(KEYWORDS, repo['full-name'], ACCESS_TOKENS[t_index])
-            retries = retries+1
         
-        if retries == 5:
+        if check_response.status_code == 403 or check_response.status_code == 429:
             print('Too many retries')
             sys.exit()
 
-        retries = 0
             
         if check_response.status_code != 200:
             print(f"Error in repository check: {check_response.status_code}")
@@ -94,9 +98,28 @@ def check_repositories(repositories, t_index):
         else:
             print(f"Repository {repo['full-name']}: Chatbot")
             domain_files = []
-            for f in check_result['items']:
-                domain_files.append(f['path'])
-            
+            found_all = False
+            repo['n-domain-files'] = check_result['total_count'] 
+
+            while not found_all:
+                for f in check_result['items']:
+                    domain_files.append(f['path'])
+                if check_result['total_count'] > len(domain_files):
+                    page += 1
+                    check_response = search_keywords_in_repo(KEYWORDS, repo['full-name'], ACCESS_TOKENS[t_index], page)
+                    if check_response.status_code == 403 or check_response.status_code == 429:
+                        print('Too many retries')
+                        sys.exit()
+
+                    if check_response.status_code != 200:
+                        print(f"Error in repository check: {check_response.status_code}")
+                        print(check_response.content)
+                        sys.exit()
+                    else:
+                        check_result = check_response.json()
+                else:
+                    found_all = True
+        
             repo['domain-files'] = domain_files
             chatbots.writerow(repo)
         
@@ -125,6 +148,7 @@ def sleep(response):
     print(f'Primary rate limit exceeded. Waiting for {sleep_seconds}s...')
     time.sleep(sleep_seconds)
     print('Rate limit reset. Continuing...')
+
 
 
 def is_indexed(t_index, repo_name):
@@ -165,9 +189,9 @@ repo_file = open(REPOSITORIES_FILE, 'r')
 reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
 repos = list(reader)
 
-t1 = threading.Thread(target=check_repositories, args=(repos[0:100], 0)) 
-t2 = threading.Thread(target=check_repositories, args=(repos[100:200], 1)) 
-t3 = threading.Thread(target=check_repositories, args=(repos[200:300], 2))
+t1 = threading.Thread(target=check_repositories, args=(repos[0:10], 0)) 
+t2 = threading.Thread(target=check_repositories, args=(repos[10:20], 1)) 
+t3 = threading.Thread(target=check_repositories, args=(repos[20:30], 2))
 t1.start()
 t2.start()
 t3.start()

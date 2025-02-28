@@ -56,11 +56,11 @@ def main():
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
-    cleaned_file = open('chatbots-2025-clean.csv', 'w', newline='')
+    cleaned_file = open(CHATBOTS_CLEAN_FILE_NAME, 'w', newline='')
     analysis_writer = csv.DictWriter(cleaned_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
     analysis_writer.writeheader()
 
-    discarded_file = open('chatbots-2025-no-more-domains.csv', 'w', newline='')
+    discarded_file = open(NO_MORE_DOMAIN_FILE_NAME, 'w', newline='')
     discarded_writer = csv.DictWriter(discarded_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
     discarded_writer.writeheader()
 
@@ -79,6 +79,9 @@ def main():
         if n>0:
             n_repository_cleaned += 1
             n_domain_removed += n
+        
+        chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files']) 
+        chatbot_info['n-domain-files'] = len(chatbot_info['domain-files'])
         
         # If there is no domain file left: not a chatbot, remove zip
         if len(chatbot_info['domain-files']) > 0:
