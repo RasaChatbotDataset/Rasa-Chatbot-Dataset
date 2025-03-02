@@ -66,12 +66,27 @@ python check_not_indexed_repositories.py
 Execute script *check_domain_files.py* to remove all domain files which were previously identified but that are actually not parsable, empty or not really a rasa domain file. Repositories with no domain files left will be removed from the list of chatbots in *chatbots_2025.csv* and will be saved in file *chatbots-2025-no-more-domains.csv*; their zip files will be deleted. Statistics about domain file filtering can be found in file *clean_domain_statistics.txt*.
 
 ```
-check_domain_files.py
+python check_domain_files.py
 ```
 
 ### 8. NLU, actions and readmes files check
-Execute script *find_files.py* to enrich the dataset file *chatbots_2025.csv* with information about nlu files / folder, actions files / folders and readmes.
+Execute script *find_files.py* to enrich the dataset file *chatbots-2025.csv* with information about nlu files / folder, actions files / folders and readmes. Information are saved in file *chatbots-2025-files.csv*.
 
 ```
-find_files.py
+python find_files.py
+```
+
+### 9. Chatbot repositories classification
+Based on the number of domain files and domain folders, chatbot repositories will be divided into
+- **SFSD**: one domain folder, one domain file
+- **SFMD**: one domain folder, more domain files
+- **MF**: more domain folders
+
+Multi-folder repositories will be split into *sub-chatbots*, one for each domain folder. NLU, action and readme files will be associated to a sub-chatbot basing on the length of the common path between the file and the domain folder of the sub-chatbot. Sub-chatbots derived from MF repositories will then be divided into:
+- **MFSD**: sub-chatbot with one domain file
+- **MFMD**: sub-chatbot with more domain files
+
+Execute script *classify_chatbot_repositories.py*.
+```
+python classify_chatbot_repositories.py
 ```

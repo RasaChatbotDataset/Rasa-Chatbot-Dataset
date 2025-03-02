@@ -1,5 +1,4 @@
 import requests
-from datetime import datetime
 from dotenv import dotenv_values
 import csv
 

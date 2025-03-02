@@ -164,7 +164,7 @@ def main():
     chatbots = list(reader)
 
     multi_file = open(CHATBOTS_ANALYSIS_FILE_NAME, 'w', newline='')
-    header = reader.fieldnames + ['n-domain-files', 'domain-folders', 'n-domain-folders', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files']
+    header = reader.fieldnames + ['domain-folders', 'n-domain-folders', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files']
     writer = csv.DictWriter(multi_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
 
@@ -175,7 +175,6 @@ def main():
         repository =  zipfile.ZipFile(zip_path, 'r')
 
         chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files'])
-        chatbot_info['n-domain-files'] = len(chatbot_info['domain-files'])
         chatbot_info['domain-folders'] = []
 
         for domain in chatbot_info['domain-files']:
