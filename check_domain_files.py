@@ -20,6 +20,7 @@ def check_domain_files(repository, chatbot_info):
     chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files']) 
 
     clean_domain_files = []
+    tests_md = []
 
     for domain_file in chatbot_info['domain-files']:
 
@@ -42,12 +43,18 @@ def check_domain_files(repository, chatbot_info):
             continue
         
         if 'test' in domain_file or 'models/dialogue' in domain_file:
-            continue
-
-        clean_domain_files.append(domain_file)
+            tests_md.append(domain_file)
+        else:
+            clean_domain_files.append(domain_file)
     
-    n_cleaned = len(chatbot_info['domain-files']) - len(clean_domain_files)
-    chatbot_info['domain-files'] = clean_domain_files
+    if len(clean_domain_files) == 0:
+        if len(tests_md) != 0:
+            n_cleaned = len(chatbot_info['domain-files'])- len(tests_md)
+            chatbot_info['domain-files'] = tests_md
+
+    else:            
+        n_cleaned = len(chatbot_info['domain-files']) - len(clean_domain_files)
+        chatbot_info['domain-files'] = clean_domain_files
 
     return  chatbot_info, n_cleaned
 
