@@ -10,6 +10,8 @@ SFMD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-sfmd.csv'
 
 fields = ['full-name','html-url','stars','forks','created-at','updated-at','pushed-at', 'default-branch', 'owner-name','owner-id','owner-type', 'is-fork', 'fork-parent', 'last-commit', 'last-commit-date', 'domain-folders', 'domain-files', 'nlu-files', 'actions-files', 'readme-files', 'n-domain-files', 'n-nlu-files', 'n-actions-files', 'n-readme-files', 'unclear-match']
 
+n_test = 0
+n_test_sf = 0
 
 # Split a multi-domain repository into more chatbots
 def split_sub_folders(chatbot, mfsd_writer, mfmd_writer):
@@ -65,11 +67,15 @@ def split_sub_folders(chatbot, mfsd_writer, mfmd_writer):
         sub_chatbot = {}
         sub_chatbot['unclear-match'] = []
 
+        if 'test' in domain_folder or 'testing' in domain_folder:
+            n_test += 1
+
         for field in fields[:-1]:
             sub_chatbot[field] =  chatbot[field]
         
         sub_chatbot['domain-files'] = []
-        
+        sub_chatbot['domain-folders'] = domain_folder
+
         # Select domain files for sub-chatbot
         for domain in chatbot['domain-files']:
             domain = './' + domain
@@ -179,7 +185,11 @@ def main():
     for chatbot in chatbots:
 
         # Single folder (SF)
-        if int(chatbot['n-domain-folders']) == 1:  
+        if int(chatbot['n-domain-folders']) == 1: 
+
+            chatbot['domain-folders']  = ast.literal_eval(chatbot['domain-folders'])
+            if 'test' in chatbot['domain-folders'][0] or 'testing' in chatbot['domain-folders'][0]:
+                n_test_sf += 1
 
             # Single folder multi domain (SFMD)
             if int(chatbot['n-domain-files']) > 1: 
@@ -200,6 +210,9 @@ def main():
     sfmd_file.close()
     sfsd_file.close()
     chatbot_file.close()
+
+    print(n_test)
+    print(n_test_sf)
 
 
 

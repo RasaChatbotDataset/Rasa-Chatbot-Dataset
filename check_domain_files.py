@@ -5,7 +5,7 @@ import ast
 import os
 from utils import sync
 
-CHATBOTS_FILE_NAME = 'chatbots-2025.csv'
+CHATBOTS_FILE_NAME = 'chatbots-2025-before-clean.csv'
 NO_MORE_DOMAIN_FILE_NAME = 'chatbots-2025-no-more-domains.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_zip-2025'
@@ -16,12 +16,15 @@ CHATBOTS_CLEAN_FILE_NAME = 'chatbots-2025-clean.csv'
 # Clean not domain files - not working domain files
 def check_domain_files(repository, chatbot_info):
 
-    chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files']) 
     n_cleaned = 0
-    
+    chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files']) 
 
-    for domain_file in chatbot_info['domain-files'][:]:
+    clean_domain_files = []
+
+    for domain_file in chatbot_info['domain-files']:
+
         full_domain_path = chatbot_info['full-name'].split('/')[-1]+'-'+chatbot_info['last-commit']+ '/' + domain_file
+
         with repository.open(full_domain_path) as nlu_file:
             try:
                 content = nlu_file.read().decode()
@@ -29,14 +32,22 @@ def check_domain_files(repository, chatbot_info):
 
                 # Not a domain file
                 if 'intents' not in domain:
-                    chatbot_info['domain-files'].remove(domain_file)
-                    n_cleaned += 1
+                    continue
 
             except:
                 # YML parsing failed: not working file
-                chatbot_info['domain-files'].remove(domain_file)
+                continue
+        
+        if 'nlu.yml' in domain_file or 'stories.yml' in domain_file or 'rules.yml' in domain_file:
+            continue
+        
+        if 'test' in domain_file or 'models/dialogue' in domain_file:
+            continue
 
-                n_cleaned += 1
+        clean_domain_files.append(domain_file)
+    
+    n_cleaned = len(chatbot_info['domain-files']) - len(clean_domain_files)
+    chatbot_info['domain-files'] = clean_domain_files
 
     return  chatbot_info, n_cleaned
 
@@ -44,9 +55,9 @@ def check_domain_files(repository, chatbot_info):
 
 def write_statistics(n_domain_removed, n_repository_cleaned, n_repository_removed):
     statistics_file = open(CHECK_DOMAIN_STATISTICS_FILE, 'w', newline='')
-    statistics_file.write(f"Domain files removed: {n_domain_removed}")
-    statistics_file.write(f"Repositories cleaned: {n_repository_cleaned}")
-    statistics_file.write(f"Repositories removed: {n_repository_removed}")
+    statistics_file.write(f"Domain files removed: {n_domain_removed}\n")
+    statistics_file.write(f"Repositories cleaned: {n_repository_cleaned}\n")
+    statistics_file.write(f"Repositories removed: {n_repository_removed}\n")
     statistics_file.close()
 
 
@@ -71,8 +82,11 @@ def main():
     for chatbot_info in chatbots:
 
         zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
-
-        repository =  zipfile.ZipFile(zip_path, 'r')
+        try:
+            repository =  zipfile.ZipFile(zip_path, 'r')
+        except:
+            print(chatbot_info['full-name'])
+            continue
 
         chatbot_info, n = check_domain_files(repository, chatbot_info)
 
@@ -80,7 +94,6 @@ def main():
             n_repository_cleaned += 1
             n_domain_removed += n
         
-        chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files']) 
         chatbot_info['n-domain-files'] = len(chatbot_info['domain-files'])
         
         # If there is no domain file left: not a chatbot, remove zip
