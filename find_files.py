@@ -30,11 +30,11 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
     for file in file_list:
 
         # Discard file with extension other than yml, json and md
-        if not (file.endswith('.yml') and file.endswith('.md') and file.endswith('.json')):
+        if not (file.endswith('.yml') or file.endswith('.md') or file.endswith('.json')):
             continue
 
-        # Discard python / javascript libraries
-        if 'node_modules' in file or 'site-packages' in file:
+        # Discard programming languages libraries
+        if 'node_modules' in file or 'site-packages' in file or 'vendor/' in file or 'assets/libs' in file:
             continue
 
 
@@ -85,7 +85,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
                 json_content = json.loads(content)
                 # NLU file
                 if 'rasa_nlu_data' in json_content:
-                    if 'test' in clean_file_name and not domain_is_test: #decidere se escludere test_data.json (ce ne sono tanti mf che hanno questo e un altro?)
+                    if 'test' in clean_file_name and not domain_is_test:
                         test_md.append(clean_file_name)
                     elif 'models' in clean_file_name and not domain_is_model:
                          test_md.append(clean_file_name)
@@ -98,7 +98,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
         elif file.endswith('.md'):
             # NLU file
             if '## intent:' in content:
-                if 'test' in clean_file_name and not domain_is_test: #vedere se sono in tanti ad avere test nel nome del file e non nel percorso
+                if 'test' in clean_file_name and not domain_is_test:
                     test_md.append(clean_file_name)
                 elif 'models' in clean_file_name and not domain_is_model:
                     test_md.append(clean_file_name)
@@ -106,8 +106,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
                     chatbot_info['nlu-files'].append(clean_file_name)
                     chatbot_info['n-nlu-md'] +=1
         
-    if len(chatbot_info['nlu-files']) == 0:
-        if len(test_md) != 0:
+    if len(chatbot_info['nlu-files']) == 0 and len(test_md) != 0:
             chatbot_info['nlu-files'] = test_md
     
     chatbot_info['n-nlu-files'] = len(chatbot_info['nlu-files'])
@@ -181,8 +180,7 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
             chatbot_info['actions-files'].append(clean_file_name)
         
     
-    if len(chatbot_info['actions-files']) == 0:
-        if len(test_md) != 0:
+    if len(chatbot_info['actions-files']) == 0 and len(test_md) != 0:
             chatbot_info['actions-files'] = test_md
     
     chatbot_info['n-actions-files'] = len(chatbot_info['actions-files'])
@@ -196,10 +194,13 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
     return chatbot_info
 
 
-def find_readme_files(repository, chatbot_info):
+def find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model):
+    test_md = []
 
     chatbot_info['readme-files'] = []
     chatbot_info['n-readme-files'] = 0
+    chatbot_info['readme-folders'] = []
+    chatbot_info['n-readme-folders'] = 0
 
     file_list = repository.namelist()
     readme_regex = re.compile(".*README\\.md$")
@@ -207,10 +208,30 @@ def find_readme_files(repository, chatbot_info):
 
     for readme in readme_file_list:
         clean_file_name = readme.split(chatbot_info['last-commit']+'/')[-1]
-        if not 'site-packages' in readme and not 'node_modules' in readme:
+
+        # Discard programming languages libraries
+        if 'node_modules' in readme or 'site-packages' in readme or 'vendor/' in readme or 'assets/libs' in readme:
+            continue
+
+        if 'test' in clean_file_name and not domain_is_test:
+            test_md.append(clean_file_name)
+        elif 'models' in clean_file_name and not domain_is_model:
+            test_md.append(clean_file_name)
+        else:
             chatbot_info['readme-files'].append(clean_file_name)
 
+
+    if len(chatbot_info['readme-files']) == 0 and len(test_md) != 0:
+            chatbot_info['readme-files'] = test_md   
+
     chatbot_info['n-readme-files'] = len(chatbot_info['readme-files'])
+
+    for readme_name in chatbot_info['readme-files']:
+        if str(Path(readme_name).parent) not in chatbot_info['readme-folders']:
+            chatbot_info['readme-folders'].append(str(Path(readme_name).parent))
+                                    
+    chatbot_info['n-readme-folders'] = len(chatbot_info['readme-folders'])
+
 
     return chatbot_info
 
@@ -239,7 +260,10 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
         # Discard files that are not configuration files
         if file.endswith('docker-compose.yml'):
             continue
-
+        
+        # Discard programming languages libraries
+        if 'node_modules' in file or 'site-packages' in file or 'vendor/' in file or 'assets/libs' in file:
+            continue
 
         language_file = repository.open(file)
 
@@ -281,9 +305,8 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
             else:
                 chatbot_info['language-files'].append(clean_file_name)
     
-    if len(chatbot_info['language-files']) == 0:
-        if len(test_md) != 0:
-            chatbot_info['language-files'] = test_md
+    if len(chatbot_info['language-files']) == 0 and len(test_md) != 0:
+        chatbot_info['language-files'] = test_md
     
     chatbot_info['n-language-files'] = len(chatbot_info['language-files'])
 
@@ -305,7 +328,7 @@ def main():
     chatbots = list(reader)
 
     multi_file = open(CHATBOTS_ANALYSIS_FILE_NAME, 'w', newline='')
-    header = reader.fieldnames + ['domain-folders', 'n-domain-folders', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files', 'language-files', 'n-language-files', 'language-folders', 'n-language-folders']
+    header = reader.fieldnames + ['domain-folders', 'n-domain-folders', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files', 'readme-folders', 'n-readme-folders', 'language-files', 'n-language-files', 'language-folders', 'n-language-folders']
     writer = csv.DictWriter(multi_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
 
@@ -335,7 +358,7 @@ def main():
 
         chatbot_info = find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model)
         chatbot_info = find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
-        chatbot_info = find_readme_files(repository, chatbot_info)
+        chatbot_info = find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model)
         chatbot_info = find_language_files(repository, chatbot_info, domain_is_test, domain_is_model)
         writer.writerow(chatbot_info)
     
