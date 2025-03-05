@@ -5,15 +5,15 @@ import ast
 import os
 from utils import sync
 
-CHATBOTS_FILE_NAME = 'chatbots-2025-before-clean.csv'
+CHATBOTS_FILE_NAME = 'chatbots-2025.csv'
 NO_MORE_DOMAIN_FILE_NAME = 'chatbots-2025-no-more-domains.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_zip-2025'
 CHECK_DOMAIN_STATISTICS_FILE = 'clean_domain_statistics.txt'
-CHATBOTS_CLEAN_FILE_NAME = 'chatbots-2025-clean.csv'
+CHATBOTS_BEFORE_CLEAN_NAME= 'chatbots-2025-before-clean.csv'
 
 
-# Clean not domain files - not working domain files
+# Clean wrong domain files
 def check_domain_files(repository, chatbot_info):
 
     n_cleaned = 0
@@ -26,9 +26,17 @@ def check_domain_files(repository, chatbot_info):
 
         full_domain_path = chatbot_info['full-name'].split('/')[-1]+'-'+chatbot_info['last-commit']+ '/' + domain_file
 
-        with repository.open(full_domain_path) as nlu_file:
+        # Discard other rasa configuration files - other files
+        if 'nlu.yml' in domain_file or 'stories.yml' in domain_file or 'rules.yml' in domain_file or 'docker-compose.yml' in domain_file:
+            continue
+
+        # Discard programming language libraries
+        if 'node_modules' in domain_file or 'site-packages' in domain_file or 'vendor/' in domain_file or 'assets/libs' in domain_file:
+            continue
+
+        with repository.open(full_domain_path) as d_file:
             try:
-                content = nlu_file.read().decode()
+                content = d_file.read().decode()
                 domain = yaml.safe_load(content)
 
                 # Not a domain file
@@ -37,22 +45,20 @@ def check_domain_files(repository, chatbot_info):
 
             except:
                 # YML parsing failed: not working file
+                print('YML EXCEPTION')
                 continue
         
-        if 'nlu.yml' in domain_file or 'stories.yml' in domain_file or 'rules.yml' in domain_file:
-            continue
-        
+        # Test files - copy files
         if 'test' in domain_file or 'models/dialogue' in domain_file:
             tests_md.append(domain_file)
         else:
             clean_domain_files.append(domain_file)
     
-    if len(clean_domain_files) == 0:
-        if len(tests_md) != 0:
+    if len(clean_domain_files) == 0 and len(tests_md) != 0:
             n_cleaned = len(chatbot_info['domain-files'])- len(tests_md)
             chatbot_info['domain-files'] = tests_md
 
-    else:            
+    else:       
         n_cleaned = len(chatbot_info['domain-files']) - len(clean_domain_files)
         chatbot_info['domain-files'] = clean_domain_files
 
@@ -70,11 +76,13 @@ def write_statistics(n_domain_removed, n_repository_cleaned, n_repository_remove
 
 def main():
 
-    chatbot_file = open(CHATBOTS_FILE_NAME, 'r')
+    os.rename(CHATBOTS_FILE_NAME, CHATBOTS_BEFORE_CLEAN_NAME)
+
+    chatbot_file = open(CHATBOTS_BEFORE_CLEAN_NAME, 'r')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
-    cleaned_file = open(CHATBOTS_CLEAN_FILE_NAME, 'w', newline='')
+    cleaned_file = open(CHATBOTS_FILE_NAME, 'w', newline='')
     analysis_writer = csv.DictWriter(cleaned_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
     analysis_writer.writeheader()
 
@@ -118,9 +126,6 @@ def main():
     discarded_file.close()
 
     write_statistics(n_domain_removed, n_repository_cleaned, n_repository_removed)
-
-    os.remove(CHATBOTS_FILE_NAME)
-    os.rename(CHATBOTS_CLEAN_FILE_NAME, CHATBOTS_FILE_NAME)
 
 
 main()
