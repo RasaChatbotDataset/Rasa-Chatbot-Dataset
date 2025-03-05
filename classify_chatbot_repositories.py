@@ -1,5 +1,6 @@
 import csv
 import ast
+import copy
 
 CSV_SEPARATOR= ';'
 CHATBOTS_FILE_NAME = 'chatbots-2025-files.csv'
@@ -8,10 +9,9 @@ SFSD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-sfsd.csv'
 MFMD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-mfmd.csv'
 SFMD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-sfmd.csv'
 
-fields = ['full-name','html-url','stars','forks','created-at','updated-at','pushed-at', 'default-branch', 'owner-name','owner-id','owner-type', 'is-fork', 'fork-parent', 'last-commit', 'last-commit-date', 'domain-folders', 'domain-files', 'nlu-files', 'actions-files', 'readme-files', 'n-domain-files', 'n-nlu-files', 'n-actions-files', 'n-readme-files', 'unclear-match']
-
-n_test = 0
-n_test_sf = 0
+fields = ['id', 'full-name', 'html-url', 'stars', 'forks', 'created-at', 'updated-at', 'pushed-at', 'default-branch', 'owner-name', 'owner-id','owner-type',
+          'last-commit', 'last-commit-date', 'domain-folder', 'domain-files', 'n-domain-files', 'nlu-files' , 'n-nlu-files', 'actions-files', 
+          'n-actions-files', 'readme-files', 'n-readme-files', 'language-files', 'n-language-files','unclear-match']
 
 # Split a multi-domain repository into more chatbots
 def split_sub_folders(chatbot, mfsd_writer, mfmd_writer):
@@ -20,6 +20,7 @@ def split_sub_folders(chatbot, mfsd_writer, mfmd_writer):
     chatbot['domain-files']  = ast.literal_eval(chatbot['domain-files'])
     chatbot['nlu-files'] = ast.literal_eval(chatbot['nlu-files'])
     chatbot['actions-files'] = ast.literal_eval(chatbot['actions-files'])
+    chatbot['language-files'] = ast.literal_eval(chatbot['language-files'])
     chatbot['readme-files'] = ast.literal_eval(chatbot['readme-files'])
 
     # Compute NLU files match score with domain folders
@@ -58,25 +59,31 @@ def split_sub_folders(chatbot, mfsd_writer, mfmd_writer):
             scores.append(score)
         readme_scores.append(scores)
     
+    # Compute language files match score with domain folders
+    language_scores = []
+
+    for language in chatbot['language-files']:
+        scores = []
+
+        for domain in chatbot['domain-folders']:
+            score = compute_score_match(domain, language)
+            scores.append(score)
+        language_scores.append(scores)
+    
     # Create a sub-chatbot for each domain folder
     i = 0
     for domain_folder in chatbot['domain-folders']:
 
-        if domain_folder != '.':
-            domain_folder = './' +domain_folder
-        sub_chatbot = {}
+        sub_chatbot =  copy.deepcopy(chatbot)
         sub_chatbot['unclear-match'] = []
 
-        if 'test' in domain_folder or 'testing' in domain_folder:
-            n_test += 1
+        sub_chatbot['domain-folder'] = domain_folder
 
-        for field in fields[:-1]:
-            sub_chatbot[field] =  chatbot[field]
-        
-        sub_chatbot['domain-files'] = []
-        sub_chatbot['domain-folders'] = domain_folder
+        if domain_folder != '.':
+            domain_folder = './' +domain_folder
 
         # Select domain files for sub-chatbot
+        sub_chatbot['domain-files'] = []
         for domain in chatbot['domain-files']:
             domain = './' + domain
 
@@ -111,6 +118,19 @@ def split_sub_folders(chatbot, mfsd_writer, mfmd_writer):
         
         sub_chatbot['n-actions-files'] = len(sub_chatbot['actions-files'])
 
+        # Select language files for sub-chatbots
+        sub_chatbot['language-files'] = []
+        
+        for l in range(len(language_scores)):
+            scores = language_scores[l]
+            if scores.index(max(scores)) == i:
+                if scores.count((max(scores))) == 1:
+                    sub_chatbot['language-files'].append(chatbot['language-files'][l])
+                else:
+                    sub_chatbot['unclear-match'].append(chatbot['language-files'][l])
+        
+        sub_chatbot['n-language-files'] = len(sub_chatbot['language-files'])
+
         # Select readme files for sub-chatbots
         sub_chatbot['readme-files'] = []
         
@@ -125,6 +145,9 @@ def split_sub_folders(chatbot, mfsd_writer, mfmd_writer):
                     sub_chatbot['unclear-match'].append(chatbot['readme-files'][h])
         
         sub_chatbot['n-readme-files'] = len(sub_chatbot['readme-files'])
+
+        # Sub-chatbot id
+        sub_chatbot['id'] = sub_chatbot['full-name'] + '__' + sub_chatbot['domain-folder']
         
         if sub_chatbot['n-domain-files'] == 1:
             mfsd_writer.writerow(sub_chatbot)
@@ -165,15 +188,15 @@ def main():
     chatbots = list(reader)
 
     sfsd_file = open(SFSD_CHATBOTS_FILE_NAME, 'w', newline='', encoding="utf-8")
-    sfsd_writer = csv.DictWriter(sfsd_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
+    sfsd_writer = csv.DictWriter(sfsd_file, delimiter=CSV_SEPARATOR, fieldnames=fields[:-1], extrasaction='ignore')
     sfsd_writer.writeheader()
 
     sfmd_file = open(SFMD_CHATBOTS_FILE_NAME, 'w', newline='', encoding="utf-8")
-    sfmd_writer = csv.DictWriter(sfmd_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
+    sfmd_writer = csv.DictWriter(sfmd_file, delimiter=CSV_SEPARATOR, fieldnames=fields[:-1], extrasaction='ignore')
     sfmd_writer.writeheader()
 
     mfmd_file = open(MFMD_CHATBOTS_FILE_NAME, 'w', newline='', encoding="utf-8")
-    mfmd_writer = csv.DictWriter(mfmd_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames, extrasaction='ignore')
+    mfmd_writer = csv.DictWriter(mfmd_file, delimiter=CSV_SEPARATOR, fieldnames=fields, extrasaction='ignore')
     mfmd_writer.writeheader()
 
     mfsd_file = open(MFSD_CHATBOTS_FILE_NAME, 'w', newline='', encoding="utf-8")
@@ -187,20 +210,23 @@ def main():
         # Single folder (SF)
         if int(chatbot['n-domain-folders']) == 1: 
 
-            chatbot['domain-folders']  = ast.literal_eval(chatbot['domain-folders'])
-            if 'test' in chatbot['domain-folders'][0] or 'testing' in chatbot['domain-folders'][0]:
-                n_test_sf += 1
+            del chatbot['n-domain-folders']
+            chatbot['domain-folder'] = chatbot['domain-folders'][2:-2]
+            del chatbot['domain-folders']
+
+            # Chatbot id
+            chatbot['id'] = chatbot['full-name']
 
             # Single folder multi domain (SFMD)
             if int(chatbot['n-domain-files']) > 1: 
                 sfmd_writer.writerow(chatbot)
 
             # Single folder single domain (SFSD)
-            else:                               
+            else:
                 sfsd_writer.writerow(chatbot)
 
         # Multi folder (MF)
-        else:                                      
+        else:                                
             split_sub_folders(chatbot, mfsd_writer, mfmd_writer)
 
 
@@ -210,11 +236,5 @@ def main():
     sfmd_file.close()
     sfsd_file.close()
     chatbot_file.close()
-
-    print(n_test)
-    print(n_test_sf)
-
-
-
 
 main()
