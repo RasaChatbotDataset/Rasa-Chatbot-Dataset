@@ -2,10 +2,13 @@ import zipfile
 import yaml
 import ast
 import csv
+import os
 
 
 CSV_SEPARATOR= ';'
-ZIP_FOLDER = 'chatbot_zip-2025'
+ZIP_FOLDER = 'chatbot_repositories_zip'
+RESULTS_FOLDER = 'resultss/09_results'
+INPUT_FOLDER = 'results/08_results'
 
 FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
     'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 
@@ -137,22 +140,25 @@ def extract_domain_info(repository, file_path, chatbot_info):
     return chatbot_info
     
 
-CHATBOT_FILES = ['chatbots-2025-files-sfsd', 'chatbots-2025-files-sfmd', 'chatbots-2025-files-mfsd', 'chatbots-2025-files-mfmd']
-ERROR_FILE = 'chatbots-2025-yml-error.csv'
+CHATBOT_FILES = ['chatbot_repositories_sfsd', 'chatbot_repositories_sfmd', 'chatbot_repositories_mfsd', 'chatbot_repositories_mfmd']
+ERROR_FILE = 'chatbot_repositories_errors.csv'
 
 def main(): 
 
-    error_file = open(ERROR_FILE, 'w', newline='')
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.mkdir(RESULTS_FOLDER)
+
+    error_file = open(RESULTS_FOLDER + '/' +ERROR_FILE, 'w', newline='')
     error_writer = csv.DictWriter(error_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS[:10] + ['chatbot-type', 'exception'], extrasaction='ignore')
     error_writer.writeheader()
 
     for file in CHATBOT_FILES:
 
-        chatbot_file = open(file+'.csv', 'r')
+        chatbot_file = open(INPUT_FOLDER + '/' +file+'.csv', 'r')
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
 
-        analysis_file = open(file+'_info.csv', 'w', newline='')
+        analysis_file = open(RESULTS_FOLDER + '/' +file+'_info.csv', 'w', newline='')
         analysis_writer = csv.DictWriter(analysis_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS, extrasaction='ignore')
         analysis_writer.writeheader()
 

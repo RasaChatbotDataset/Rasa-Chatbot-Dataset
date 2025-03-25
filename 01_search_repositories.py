@@ -15,9 +15,10 @@ USER_AGENT = 'agent'
 
 
 REPO_KEYWORDS = ['rasa', 'chatbot'] 
-RESULT_FILE = 'repositories-2025.csv'
+RESULTS_FOLDER = 'results/01_results'
+RESULT_FILE = RESULTS_FOLDER + '/' +'repositories.csv'
 CSV_SEPARATOR= ';'
-REPOSITORIES_DIRECTORY = 'repositories_2025_json'
+REPO_JSON_DIRECTORY =  RESULTS_FOLDER + '/' + 'repositories_json'
   
 
 headers = {
@@ -38,6 +39,11 @@ def execute_query(keywords, page, dt):
 
 
 def search_repositories():
+
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.makedirs(RESULTS_FOLDER)
+
+
     repo_file = open(RESULT_FILE, 'w')
     repo_file.write('full-name'+CSV_SEPARATOR+'html-url'+CSV_SEPARATOR+'stars'+CSV_SEPARATOR+'forks'+CSV_SEPARATOR
                     +'created-at'+CSV_SEPARATOR+'updated-at'+CSV_SEPARATOR+'pushed-at'+CSV_SEPARATOR +
@@ -48,8 +54,9 @@ def search_repositories():
     dt = datetime.today()
     min_pushed_date = dt
 
-    if not os.path.isdir(REPOSITORIES_DIRECTORY):
-        os.mkdir(REPOSITORIES_DIRECTORY)
+
+    if not os.path.isdir(REPO_JSON_DIRECTORY):
+        os.mkdir(REPO_JSON_DIRECTORY)
 
     while not list_completed:
 
@@ -79,7 +86,7 @@ def search_repositories():
                         + repo['owner']['login']+CSV_SEPARATOR+str(repo['owner']['id'])+CSV_SEPARATOR+repo['owner']['type']+ CSV_SEPARATOR
                         + str(repo['fork'])+ CSV_SEPARATOR + fork_parent+'\n')
             
-            single_repo_file = open(REPOSITORIES_DIRECTORY+'/'+repo['full_name'].replace('/', '_')+'.json', 'w', newline='')
+            single_repo_file = open(REPO_JSON_DIRECTORY+'/'+repo['full_name'].replace('/', '_')+'.json', 'w', newline='')
             json.dump(repo, single_repo_file)
             single_repo_file.close()
             

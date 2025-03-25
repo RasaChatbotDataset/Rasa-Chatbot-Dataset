@@ -6,7 +6,7 @@ The code used to build the dataset is also available in this repository. To repl
 
 ## How to build a Rasa chatbot dataset
 
-### 1. Configuration
+### 0. Configuration
 Create a config.env file from the template config.env.sample and complete it as explained below:
 
 - **GITHUB_TOKENS**: three GitHub personal access tokens from three different GitHub accounts. 
@@ -24,59 +24,60 @@ Create a config.env file from the template config.env.sample and complete it as 
 
 > Using three GitHub tokens and three GitHub session cookies (six GitHub accounts) instead of one and one speeds up the chatbot-check process by allowing to multi-thread it. If you want to use only one GitHub token and one GitHub session (two GitHub accounts) you will have to modify script *check_repositories.py* with one thread instead of three and you will need to change how access tokens and session cookies are read from config file in all scripts (not an array anymore but a single variable).
 
-### 2. Repositories search
-Execute script *search_repositories.py* to search for repositories with 'Rasa' and 'Chatbot' keywords in the README, in the title, in the topics or in the description. Complete json responses will be saved in folder *repositories_2025_json*, while only the fields of interest for each repository will be saved in file *repositories.csv*.
+### 1. Repositories search
+Execute script *01_search_repositories.py* to search for repositories with 'Rasa' and 'Chatbot' keywords in the README, in the title, in the topics or in the description. Complete json responses will be saved in under 'results/01_results', in folder *repositories_json*, while only the fields of interest for each repository will be saved in file *repositories.csv*.
 
 ```
-python search_repositories.py
+python 01_search_repositories.py
 ```
 
-### 3. Save last commit
-In order to keep a reference to a same repository version execute script *find_commit.py* which saves the sha and date of the last commit on the default branch for each repository. Classification and analysis will refer to this version.
+### 2. Save last commit
+In order to keep a reference to a same repository version execute script *02_find_commit.py* which saves the sha and date of the last commit on the default branch for each repository; results are saved in folder 'results/02_results'. Classification and analysis will refer to this version.
 
 ```
-python find_commit.py
+python 02_find_commit.py
 ```
 
-### 4. Chatbot check for indexed repositories
-Execute script *check_repositories.py* to check wether a repository is a chatbot or not; this classification is based on the presence of a .yml file that contains the keyword 'intents', since all Rasa chatbots require a domain file with the definition of its intents. This check is performed via GitHub search API and works only for indexed repositories. This script will produce three csv files: 
-- **chatbots_2025.csv**: repositories which are chatbots; in this cases, domain files found by the API are saved in field *domain-files*.
-- **not_chatbots-2025.csv**: repositories which are not chatbots.
-- **not_indexed-2025.csv**: repositories which are not indexed (they cound be chatbots or not).
+### 3. Chatbot check for indexed repositories
+Execute script *03_check_repositories.py* to check wether a repository contains a chatbot or not; this classification is based on the presence of a .yml file that contains the keyword 'intents', since all Rasa chatbots require a domain file with the definition of its intents. This check is performed via GitHub search API and works only for indexed repositories. This script will save four csv files under 'results/03_results: 
+- **chatbot_repositories.csv**: repositories whit one or more chatbots; in this cases, domain files found by the API are saved in field *domain-files*.
+- **not_chatbot_repositories.csv**: repositories without chatbots.
+- **not_indexed_repositories.csv**: repositories which have not been indexed by GitHub (they could contain chatbots or not).
+- **not_found_repositories.csv**: repositories no longer available on GitHub.
 
 ```
-python check_repositories.py
+python 03_check_repositories.py
 ```
 
-### 5. Chatbots zip download
-Execute script *download_chatbots.py* to download the zip archive of all chatbots identified from the previus steps. They will be saved in folder *chatbot_zip-2025*, which is periodically synchronized with an online backup folder on Google Drive with rclone. If you want to keep this feature you will need to install rclone, configure a remote named gdrive and create a folder 'chatbot_zip-2025' on your Google Drive. Otherwise you can comment all lines with *sync()* in script *download_chatbots.py* and *check_not_indexed_repositories.py*.
+### 4. Chatbots zip download
+Execute script *04_download_chatbot_repositories.py* to download the zip archive of all chatbot repositories identified from the previus steps. They will be saved in folder *chatbot_repositories_zip*, which is periodically synchronized with an online backup folder on Google Drive with rclone. If you want to keep this feature you will need to install rclone, configure a remote named gdrive, create a folder 'chatbot_repositories_zip' on your Google Drive and de-comment all lines with *sync()* in script *04_download_chatbot_repositories.py* and *05_check_not_indexed_repositories.py*.
 
 ```
-python download_chatbots.py
+python 04_download_chatbot_repositories.py
 ```
 
-### 6. Check not indexed repositories
-Execute script *check_not_indexed_repositories.py* to classify not indexed repositories as chatbots or not-chatbots. This script downloads the zip archive of the repository and classifies it as chatbot based on the presence of a domain file; if the repository is not a chatbot, its zip archive is deleted. In this step, files *chatbots-2025.csv* and *not_chatbots-2025.csv* will be updated and chatbots zip will be saved in folder *chatbot_zip-2025*.
+### 5. Check not indexed repositories
+Execute script *05_check_not_indexed_repositories.py* to classify not indexed repositories as chatbot or not-chatbot repositories. This script downloads the zip archive of the repository and classifies it as chatbot repository based on the presence of a domain file; if the repository doesn not contain a chatbot, its zip archive is deleted. The updated version of files *chatbot_repositories.csv*, *not_chatbot_repositories.csv* and  *not_found_repositories.csv* will be saved in folder 'results/05_results' and chatbot repositories zip will be saved in folder *chatbot_repositories_zip*.
 
 ```
-python check_not_indexed_repositories.py
+python 05_check_not_indexed_repositories.py
 ```
 
-### 7. Domain files filtering
-Execute script *check_domain_files.py* to remove all domain files which were previously identified but that are actually not parsable, empty or not really a rasa domain file. Repositories with no domain files left will be removed from the list of chatbots in *chatbots_2025.csv* and will be saved in file *chatbots-2025-no-more-domains.csv*; their zip files will be deleted. Statistics about domain file filtering can be found in file *clean_domain_statistics.txt*.
+### 6. Domain files filtering
+Execute script *06_check_domain_files.py* to remove all domain files which were previously identified but that are actually not parsable, empty or not really a rasa domain file. Repositories with no domain files left will be discarded and their data will be moved to file *discarded_repositories*. Results will be saved in folder 'results/06_results'. The filtered list of chatbot repositories will be saved in file *chatbot_repositories.csv*. Statistics about domain file filtering can be found in file *clean_domain_statistics.txt*.
 
 ```
-python check_domain_files.py
+python 06_check_domain_files.py
 ```
 
-### 8. NLU, actions and readmes files check
-Execute script *find_files.py* to enrich the dataset file *chatbots-2025.csv* with information about nlu files / folder, actions files / folders and readmes. Information are saved in file *chatbots-2025-files.csv*.
+### 7. NLU, actions and readmes files check
+Execute script *07_find_files.py* to enrich the dataset file *chatbot_repositories.csv* with information about nlu files / folder, actions files / folders and readmes. Information are saved in file *chatbots_repositories_files.csv* under 'results/07_results'.
 
 ```
-python find_files.py
+python 07_find_files.py
 ```
 
-### 9. Chatbot repositories classification
+### 8. Chatbot repositories classification
 Based on the number of domain files and domain folders, chatbot repositories will be divided into
 - **SFSD**: one domain folder, one domain file
 - **SFMD**: one domain folder, more domain files
@@ -86,7 +87,13 @@ Multi-folder repositories will be split into *sub-chatbots*, one for each domain
 - **MFSD**: sub-chatbot with one domain file
 - **MFMD**: sub-chatbot with more domain files
 
-Execute script *classify_chatbot_repositories.py*.
+Execute script *08_classify_chatbot_repositories.py* to classify chatbot repositories; results will be saved in folder 'results/08_results'.
 ```
-python classify_chatbot_repositories.py
+python 08_classify_chatbot_repositories.py
+```
+
+### 9. Analyze domain files
+Execute script *09_analyze_domain.py* to extract domain definition data from all domain files. A file for each chatbot-repository class (SFSD, SFMD, MFSD, MFMD) will be generated under 'results/09_results'. 
+```
+python 09_analyze_domain.py
 ```

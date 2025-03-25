@@ -5,12 +5,14 @@ import ast
 import os
 from utils import sync
 
-CHATBOTS_FILE_NAME = 'chatbots-2025.csv'
-NO_MORE_DOMAIN_FILE_NAME = 'chatbots-2025-no-more-domains.csv'
+
+RESULTS_FOLDER = 'results/06_results'
+CHATBOTS_BEFORE_CLEAN_NAME=  'results/05_results/chatbot_repositories.csv'
+CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories.csv'
+NO_MORE_DOMAIN_FILE_NAME = RESULTS_FOLDER + '/' + 'discarded_repositories.csv'
 CSV_SEPARATOR= ';'
-ZIP_FOLDER = 'chatbot_zip-2025'
-CHECK_DOMAIN_STATISTICS_FILE = 'clean_domain_statistics.txt'
-CHATBOTS_BEFORE_CLEAN_NAME= 'chatbots-2025-before-clean.csv'
+ZIP_FOLDER = 'chatbot_repositories_zip'
+CHECK_DOMAIN_STATISTICS_FILE = RESULTS_FOLDER + '/' + 'clean_domain_statistics.txt'
 
 
 # Clean wrong domain files
@@ -76,7 +78,8 @@ def write_statistics(n_domain_removed, n_repository_cleaned, n_repository_remove
 
 def main():
 
-    os.rename(CHATBOTS_FILE_NAME, CHATBOTS_BEFORE_CLEAN_NAME)
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.mkdir(RESULTS_FOLDER)
 
     chatbot_file = open(CHATBOTS_BEFORE_CLEAN_NAME, 'r')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
@@ -120,7 +123,7 @@ def main():
             os.remove(zip_path) 
     
     # Sync folder with google drive folder
-    sync(ZIP_FOLDER)
+    #sync(ZIP_FOLDER)
     cleaned_file.close()
     chatbot_file.close()
     discarded_file.close()

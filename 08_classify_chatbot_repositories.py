@@ -1,13 +1,15 @@
 import csv
 import ast
 import copy
+import os
 
 CSV_SEPARATOR= ';'
-CHATBOTS_FILE_NAME = 'chatbots-2025-files.csv'
-MFSD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-mfsd.csv'
-SFSD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-sfsd.csv'
-MFMD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-mfmd.csv'
-SFMD_CHATBOTS_FILE_NAME = 'chatbots-2025-files-sfmd.csv'
+RESULTS_FOLDER = 'results/08_results'
+CHATBOTS_FILE_NAME = 'results/07_results/chatbot_repositories_files.csv'
+MFSD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_mfsd.csv'
+SFSD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_sfsd.csv'
+MFMD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_mfmd.csv'
+SFMD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_sfmd.csv'
 
 fields = ['id', 'full-name', 'html-url', 'stars', 'forks', 'created-at', 'updated-at', 'pushed-at', 'default-branch', 'owner-name', 'owner-id','owner-type',
           'last-commit', 'last-commit-date', 'domain-folder', 'domain-files', 'n-domain-files', 'nlu-files' , 'n-nlu-files', 'actions-files', 
@@ -180,6 +182,9 @@ def compute_score_match(domain_folder, file):
 
 
 def main():
+
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.mkdir(RESULTS_FOLDER)
 
     # Open files
     csv.field_size_limit(100000000)

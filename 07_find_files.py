@@ -5,11 +5,13 @@ import re
 import yaml
 import json
 from pathlib import Path
+import os
 
-CHATBOTS_FILE_NAME = 'chatbots-2025.csv'
+RESULTS_FOLDER = 'results/07_results'
+CHATBOTS_FILE_NAME = 'results/06_results/chatbot_repositories.csv'
 CSV_SEPARATOR= ';'
-ZIP_FOLDER = 'chatbot_zip-2025'
-CHATBOTS_ANALYSIS_FILE_NAME = 'chatbots-2025-files.csv'
+ZIP_FOLDER = 'chatbot_repositories_zip'
+CHATBOTS_ANALYSIS_FILE_NAME = RESULTS_FOLDER + '/' +'chatbot_repositories_files.csv'
 
 # Find nlu files
 def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model): 
@@ -322,6 +324,9 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
 
 
 def main():
+
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.mkdir(RESULTS_FOLDER)
 
     chatbot_file = open(CHATBOTS_FILE_NAME, 'r')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)

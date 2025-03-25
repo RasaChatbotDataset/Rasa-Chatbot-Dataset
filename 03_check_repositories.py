@@ -5,6 +5,7 @@ from dotenv import dotenv_values
 import csv
 import time
 import sys 
+import os
 config = dotenv_values('config.env')
 
 
@@ -16,10 +17,12 @@ SESSION_COOKIES = config['USER_SESSION_COOKIES'].split(',')
 
 KEYWORDS  = ['intents']
 
-REPOSITORIES_FILE = 'repositories-2025-commit.csv'
-CHATBOTS_FILE = 'chatbots.csv'
-NOT_CHATBOTS_FILE = 'not_chatbots.csv'
-NOT_INDEXED_REPO_FILE = 'git not_indexed.csv'
+REPOSITORIES_FILE = 'results/02_results/repositories_commit.csv'
+RESULTS_FOLDER = 'results/03_results'
+CHATBOTS_FILE = 'chatbot_repositories.csv'
+NOT_CHATBOTS_FILE = 'not_chatbot_repositories.csv'
+NOT_INDEXED_REPO_FILE = 'not_indexed_repositories.csv'
+NOT_FOUND_REPOSITORIES_FILE = 'not_found_repositories.csv'
 CSV_SEPARATOR= ';'
 
 
@@ -55,15 +58,15 @@ def check_repositories(repositories, t_index):
 
     headers = ['full-name','html-url', 'stars','forks','created-at','updated-at','pushed-at','default-branch','owner-name','owner-id','owner-type', 'is-fork', 'fork-parent', 'last-commit', 'last-commit-date', 'domain-files', 'n-domain-files']
 
-    cb_file = open(str(t_index)+'_'+CHATBOTS_FILE, 'w', newline='')
+    cb_file = open(RESULTS_FOLDER + '/' + str(t_index)+'_'+CHATBOTS_FILE, 'w', newline='')
     chatbots = csv.DictWriter(cb_file, fieldnames=headers, delimiter=CSV_SEPARATOR)
     chatbots.writeheader()
 
-    ncb_file = open(str(t_index)+'_'+NOT_CHATBOTS_FILE, 'w', newline='')
+    ncb_file = open(RESULTS_FOLDER + '/' + str(t_index)+'_'+NOT_CHATBOTS_FILE, 'w', newline='')
     not_chatbots = csv.DictWriter(ncb_file, fieldnames=headers[:-1], delimiter=CSV_SEPARATOR)
     not_chatbots.writeheader()
 
-    ni_repo_file = open(str(t_index)+'_'+NOT_INDEXED_REPO_FILE, 'w', newline='')
+    ni_repo_file = open(RESULTS_FOLDER + '/' + str(t_index)+'_'+NOT_INDEXED_REPO_FILE, 'w', newline='')
     ni_repo = csv.DictWriter(ni_repo_file, fieldnames=headers[:-1], delimiter=CSV_SEPARATOR)
     ni_repo.writeheader()
     
@@ -72,6 +75,16 @@ def check_repositories(repositories, t_index):
         page = 1
         check_response = search_keywords_in_repo(KEYWORDS, repo['full-name'], ACCESS_TOKENS[t_index], page)
         if check_response.status_code == 404:
+            if not os.path.isfile(NOT_FOUND_REPOSITORIES_FILE):
+                not_found_repo_file = open(NOT_FOUND_REPOSITORIES_FILE, 'w', newline='')
+                not_found_csv = csv.DictWriter(not_found_repo_file, fieldnames=reader.fieldnames, delimiter=CSV_SEPARATOR)
+                not_found_csv.writeheader()
+            else:
+                not_found_repo_file = open(NOT_FOUND_REPOSITORIES_FILE, 'a', newline='')
+                not_found_csv = csv.DictWriter(not_found_repo_file, fieldnames=reader.fieldnames, delimiter=CSV_SEPARATOR)
+
+            not_found_csv.writerow(repo)
+            not_found_repo_file.close()
             print(f"Error 404 for repository {repo['full-name']}")
             break
         print(check_response)
@@ -184,7 +197,9 @@ def is_indexed(t_index, repo_name):
             return True
         
 
-
+if not os.path.isdir(RESULTS_FOLDER):
+    os.mkdir(RESULTS_FOLDER)
+    
 repo_file = open(REPOSITORIES_FILE, 'r')
 reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
 repos = list(reader)

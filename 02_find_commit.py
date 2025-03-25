@@ -1,6 +1,7 @@
 import requests
 from dotenv import dotenv_values
 import csv
+import os
 
 config = dotenv_values('config.env')
 
@@ -8,10 +9,11 @@ config = dotenv_values('config.env')
 GITHUB_API_URL = "https://api.github.com"
 ACCESS_TOKEN = config['GITHUB_TOKENS'].split(',')[0]
 USER_AGENT = 'agent' 
-REPOSITORIES_FILE = 'repositories-2025-commit.csv'
+RESULTS_FOLDER = 'results/02_results'
+REPOSITORIES_FILE = 'results/01_results/repositories.csv'
 CSV_SEPARATOR= ';'
-COMMIT_REPO_FILE = 'repositories-2025-commit-date.csv'
-EMPTY_REPOSITORIES = 'empty_repositories-2025-date.csv'
+COMMIT_REPO_FILE =  RESULTS_FOLDER + '/' + 'repositories_commit.csv'
+EMPTY_REPOSITORIES = RESULTS_FOLDER + '/' + 'empty_repositories.csv'
   
 
 headers = {
@@ -33,6 +35,9 @@ def find_last_commit_sha(repo_name, branch):
 
 
 def add_last_commit():
+
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.mkdir(RESULTS_FOLDER)
 
     repo_file = open(REPOSITORIES_FILE, 'r')
     reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
