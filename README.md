@@ -97,3 +97,14 @@ Execute script *09_analyze_domain.py* to extract domain definition data from all
 ```
 python 09_analyze_domain.py
 ```
+
+
+### 10. Handle multi-domain files chatbots
+Execute script *10_handle_multi_domain.py* to remove domain file copies from MD repositories and to automatically merge domains which are divided into more files (domain files in MD chatbots which have no intersection). Results and statistics files will be generated in folder 'results/10_results'. MD chatbots automatically handled are marked as 'solved', while the rest of them require manual check because their multiple domain files have soma intersection but are not the same file.
+
+```
+python 10_handle_multi_domain.py
+```
+
+### 11. Manual check of remaining MD chatbots
+Multi-domain files chatbots marked as 'manual check' must be manually checked to extablish the actual domain of the chatbot. 
