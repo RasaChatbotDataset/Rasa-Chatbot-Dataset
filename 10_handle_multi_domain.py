@@ -31,14 +31,14 @@ def clean_same_domain(domain_files):
         with repository.open(full_domain_path) as d_file:
             try:
                 content = d_file.read().decode()
-                contents[d] = content.replace(' ', '').replace('\n', '')
+                contents[d['domain-file']] = content.replace(' ', '').replace('\n', '')
             except:
                 print('Decode error')
                 continue
 
     different_domain_files = []
 
-    for d, c in contents.items:
+    for d, c in contents.items():
         # First domain file
         if not different_domain_files:
             different_domain_files.append(d)
@@ -47,12 +47,12 @@ def clean_same_domain(domain_files):
                 # Domain file different from others already saved: save in list
                 if c != contents[diff_domain]:
                    different_domain_files.append(d) 
-                # Domain file already saved: +1 cleaned
-                else:
-                    n += 1
 
-
-    return different_domain_files, n
+    for d_file in domain_files[:]:
+        if not d_file['domain-file'] in different_domain_files:
+            domain_files.remove(d_file)
+            n += 1
+    return domain_files, n
 
 
 
@@ -142,7 +142,7 @@ def main():
                     # Check for same domain files
                     chatbot_domain_files, n = clean_same_domain(chatbot_domain_files)
                     domains_deleted_by_same += n
-
+                   
                     if len(chatbot_domain_files) != 1:
 
                         # Check instersection
@@ -157,13 +157,13 @@ def main():
                         else:
                             union_domain = unify_domains(chatbot_domain_files)
                             domains_deleted_by_merged = domains_deleted_by_merged + len(chatbot_domain_files) - 1
-                            union_domain['status'] = 'solved'
+                            union_domain['status'] = 'solved-union'
                             result_writer.writerow(union_domain)
                             chatbots_all_merge += 1
 
                     # Only one domain file left
                     else:
-                        chatbot_domain_files[0]['status'] = 'solved'
+                        chatbot_domain_files[0]['status'] = 'solved-copies'
                         result_writer.writerow(chatbot_domain_files[0])
                         chatbots_all_same += 1
                     

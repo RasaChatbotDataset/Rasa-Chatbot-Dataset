@@ -1,0 +1,5 @@
+Domain files removed as copies: 4
+Domain files removed after union: 108
+Chatbots completely unified: 29
+Chatbots with only domain file copies: 2
+Chatbots left for manual check: 179
