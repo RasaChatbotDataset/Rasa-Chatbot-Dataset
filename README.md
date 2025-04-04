@@ -105,3 +105,9 @@ Execute script *10_handle_multi_domain.py* to remove domain file copies from MD 
 ```
 python 10_handle_multi_domain.py
 ```
+
+### 11. Chatbot files unification
+Execute script *11_unify_chatbot_dataset* to create a unified CSV with all the chatbots and their type.
+```
+python 11_unify_chatbot_dataset
+```
