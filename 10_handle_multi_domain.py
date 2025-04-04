@@ -114,17 +114,17 @@ def check_repository(chatbot_domain_files, result_writer, statistics):
     if len(chatbot_domain_files) != 1:
 
         # Check instersection
-        # Intersection between domain files but they are not the same file: manual check required
+        # Intersection between domain files but they are not the same file: discard
         if check_intersection(chatbot_domain_files):
             for d in chatbot_domain_files:
-                d['status'] = 'manual_check'
+                d['status'] = 'discarded'
                 result_writer.writerow(d)
-            statistics['manual_check'] += 1
+            statistics['discarded'] += 1
         
         # No intersection between domain files: domain split into more files
         else:
             union_domain = unify_domains(chatbot_domain_files)
-            statistics['domains_deleted_by_merged'] = statistics['domains_deleted_by_merged'] + len(chatbot_domain_files) - 1
+            statistics['domain_merged'] = statistics['domain_merged'] + len(chatbot_domain_files)
             union_domain['status'] = 'solved-union'
             result_writer.writerow(union_domain)
             statistics['chatbots_all_merge'] += 1
@@ -139,21 +139,21 @@ def check_repository(chatbot_domain_files, result_writer, statistics):
 
 def write_statistics(statistics):
     statistics_file = open(MD_STATISTICS_FILE, 'w', newline='')
-    statistics_file.write(f"Domain files removed as copies: {statistics['domains_deleted_by_same']}\n")
-    statistics_file.write(f"Domain files removed after union: {statistics['domains_deleted_by_merged']}\n")
-    statistics_file.write(f"Chatbots completely unified: {statistics['chatbots_all_merge']}\n")
-    statistics_file.write(f"Chatbots with only domain file copies: {statistics['chatbots_all_same']}\n")
-    statistics_file.write(f"Chatbots left for manual check: {statistics['manual_check']}\n")
+    statistics_file.write(f"Domain file copies removed: {statistics['domains_deleted_by_same']}\n")
+    statistics_file.write(f"Domain files merged: {statistics['domain_merged']}\n")
+    statistics_file.write(f"Chatbots solved by domain files merge: {statistics['chatbots_all_merge']}\n")
+    statistics_file.write(f"Chatbots solved by domain copies removal: {statistics['chatbots_all_same']}\n")
+    statistics_file.write(f"Chatbots discarded: {statistics['discarded']}\n")
     statistics_file.close()
 
 
 def main(): 
     statistics = {
         'domains_deleted_by_same': 0,
-        'domains_deleted_by_merged': 0,
+        'domain_merged': 0,
         'chatbots_all_merge': 0,
         'chatbots_all_same': 0,
-        'manual_check': 0
+        'discarded': 0
     }
 
     if not os.path.isdir(RESULTS_FOLDER):
