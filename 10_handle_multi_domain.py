@@ -2,6 +2,8 @@ import csv
 import ast
 import os
 import zipfile
+import yaml
+from deepdiff import DeepDiff
 
 csv.field_size_limit(100000000)
 INPUT_FOLDER = 'results/09_results/'
@@ -30,8 +32,9 @@ def clean_same_domain(domain_files):
         full_domain_path = d['full-name'].split('/')[-1]+'-'+d['last-commit']+ '/' + d['domain-file']
         with repository.open(full_domain_path) as d_file:
             try:
-                content = d_file.read().decode()
-                contents[d['domain-file']] = content.replace(' ', '').replace('\n', '')
+                file_content = d_file.read().decode()
+                yml_content = yaml.safe_load(file_content)
+                contents[d['domain-file']] = yml_content
             except:
                 print('Decode error')
                 continue
@@ -39,19 +42,27 @@ def clean_same_domain(domain_files):
     different_domain_files = []
 
     for d, c in contents.items():
-        # First domain file
+        # First yml domain 
         if not different_domain_files:
             different_domain_files.append(d)
         else:
+            is_new = True
             for diff_domain in different_domain_files:
-                # Domain file different from others already saved: save in list
-                if c != contents[diff_domain]:
-                   different_domain_files.append(d) 
+
+                # Copy found: domain not new
+                if not DeepDiff(c, contents[diff_domain], ignore_order=True):
+                    is_new = False
+                    break
+                   
+            # YML domain different from others already saved: save in list  
+            if is_new: 
+                different_domain_files.append(d) 
 
     for d_file in domain_files[:]:
         if not d_file['domain-file'] in different_domain_files:
             domain_files.remove(d_file)
             n += 1
+
     return domain_files, n
 
 
@@ -75,10 +86,13 @@ def check_intersection(domain_files):
 def unify_domains(domain_files):
 
     union_domain = domain_files[0]
+    domain_files_names = [domain_files[0]['domain-file']]
 
-    for field in list(union_domain.keys())[11:]:
+    for d in domain_files[1:]:
 
-        for d in domain_files[1:]:
+        domain_files_names.append(d['domain-file'])
+
+        for field in list(union_domain.keys())[11:]:
             if field == 'version':
                 if union_domain[field] == 'unknown' and d[field] != 'unknown':
                     union_domain[field] = d[field]
@@ -87,28 +101,60 @@ def unify_domains(domain_files):
             else:
                 union_domain[field] = union_domain[field] + d[field]
 
-    union_domain['domain-file'] = domain_files
+    union_domain['domain-file'] = domain_files_names
 
     return union_domain
+
+
+def check_repository(chatbot_domain_files, result_writer, statistics):
+    # Check for same domain files
+    chatbot_domain_files, n = clean_same_domain(chatbot_domain_files)
+    statistics['domains_deleted_by_same'] += n
+    
+    if len(chatbot_domain_files) != 1:
+
+        # Check instersection
+        # Intersection between domain files but they are not the same file: manual check required
+        if check_intersection(chatbot_domain_files):
+            for d in chatbot_domain_files:
+                d['status'] = 'manual_check'
+                result_writer.writerow(d)
+            statistics['manual_check'] += 1
+        
+        # No intersection between domain files: domain split into more files
+        else:
+            union_domain = unify_domains(chatbot_domain_files)
+            statistics['domains_deleted_by_merged'] = statistics['domains_deleted_by_merged'] + len(chatbot_domain_files) - 1
+            union_domain['status'] = 'solved-union'
+            result_writer.writerow(union_domain)
+            statistics['chatbots_all_merge'] += 1
+
+    # Only one domain file left
+    else:
+        chatbot_domain_files[0]['status'] = 'solved-copies'
+        result_writer.writerow(chatbot_domain_files[0])
+        statistics['chatbots_all_same'] += 1
+    
         
 
-def write_statistics( domains_deleted_by_same, domains_deleted_by_merged, chatbots_all_merge, chatbots_all_same, manual_check):
+def write_statistics(statistics):
     statistics_file = open(MD_STATISTICS_FILE, 'w', newline='')
-    statistics_file.write(f"Domain files removed as copies: {domains_deleted_by_same}\n")
-    statistics_file.write(f"Domain files removed after union: {domains_deleted_by_merged}\n")
-    statistics_file.write(f"Chatbots completely unified: {chatbots_all_merge}\n")
-    statistics_file.write(f"Chatbots with only domain file copies: {chatbots_all_same}\n")
-    statistics_file.write(f"Chatbots left for manual check: {manual_check}\n")
+    statistics_file.write(f"Domain files removed as copies: {statistics['domains_deleted_by_same']}\n")
+    statistics_file.write(f"Domain files removed after union: {statistics['domains_deleted_by_merged']}\n")
+    statistics_file.write(f"Chatbots completely unified: {statistics['chatbots_all_merge']}\n")
+    statistics_file.write(f"Chatbots with only domain file copies: {statistics['chatbots_all_same']}\n")
+    statistics_file.write(f"Chatbots left for manual check: {statistics['manual_check']}\n")
     statistics_file.close()
 
 
 def main(): 
-
-    domains_deleted_by_same = 0
-    domains_deleted_by_merged= 0
-    chatbots_all_merge = 0
-    chatbots_all_same = 0
-    manual_check = 0
+    statistics = {
+        'domains_deleted_by_same': 0,
+        'domains_deleted_by_merged': 0,
+        'chatbots_all_merge': 0,
+        'chatbots_all_same': 0,
+        'manual_check': 0
+    }
 
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
@@ -138,35 +184,8 @@ def main():
 
                 # The previous repository is completed, ready to be checked
                 if current_repo_id is not None:
-
-                    # Check for same domain files
-                    chatbot_domain_files, n = clean_same_domain(chatbot_domain_files)
-                    domains_deleted_by_same += n
-                   
-                    if len(chatbot_domain_files) != 1:
-
-                        # Check instersection
-                        # Intersection between domain files but they are not the same file: manual check required
-                        if check_intersection(chatbot_domain_files):
-                            for d in chatbot_domain_files:
-                                d['status'] = 'manual_check'
-                                result_writer.writerow(d)
-                                manual_check += 1
-                        
-                        # No intersection between domain files: domain split into more files
-                        else:
-                            union_domain = unify_domains(chatbot_domain_files)
-                            domains_deleted_by_merged = domains_deleted_by_merged + len(chatbot_domain_files) - 1
-                            union_domain['status'] = 'solved-union'
-                            result_writer.writerow(union_domain)
-                            chatbots_all_merge += 1
-
-                    # Only one domain file left
-                    else:
-                        chatbot_domain_files[0]['status'] = 'solved-copies'
-                        result_writer.writerow(chatbot_domain_files[0])
-                        chatbots_all_same += 1
                     
+                    check_repository(chatbot_domain_files, result_writer, statistics)
                     # Previous repository analysis completed, start with new repository
                     current_repo_id = domain['id']
                     chatbot_domain_files = [domain]
@@ -177,13 +196,15 @@ def main():
                     current_repo_id = domain['id']
             else:
                 chatbot_domain_files.append(domain)
+        
+        # Handle last repository
+        check_repository(chatbot_domain_files, result_writer, statistics)
 
+        # Close files
         chatbot_file.close()
         result_file.close()
 
-    write_statistics(domains_deleted_by_same, domains_deleted_by_merged, chatbots_all_merge, chatbots_all_same, manual_check)
+    write_statistics(statistics)
                             
-
-
 
 main()      
