@@ -109,5 +109,11 @@ python 10_handle_multi_domain.py
 ### 11. Chatbot files unification
 Execute script *11_unify_chatbot_dataset* to create a unified CSV with all the chatbots and their type.
 ```
-python 11_unify_chatbot_dataset
+python 11_unify_chatbot_dataset.py
+```
+
+### 12. Configuration language extraction
+Execute script *12_extract_config_language* to extract model configuration language from configuration files.
+```
+python 12_extract_config_language.py
 ```
