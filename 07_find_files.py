@@ -97,7 +97,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
             except:
                 print('JSON parsing error')
         
-        elif file.endswith('.md'):
+        elif file.endswith('.md') and file.split('/')[-1] != 'README.md' and file.split('/')[-1] != 'readme.md':
             # NLU file
             if '## intent:' in content:
                 if 'test' in clean_file_name and not domain_is_test:
