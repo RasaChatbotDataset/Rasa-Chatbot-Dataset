@@ -8,8 +8,6 @@ RESULTS_FOLDER = 'results/11_results/'
 FILES = [INPUT_FOLDER_SD + 'chatbot_repositories_sfsd_info.csv', INPUT_FOLDER_SD + 'chatbot_repositories_mfsd_info.csv', INPUT_FOLDER_MD + 'chatbot_repositories_sfmd_info.csv', INPUT_FOLDER_MD +'chatbot_repositories_mfmd_info.csv']
 TYPES = ['sfsd', 'mfsd', 'sfmd', 'mfmd']
 CSV_SEPARATOR = ';'
-ZIP_FOLDER = 'chatbot_repositories_zip'
-MD_STATISTICS_FILE = RESULTS_FOLDER + 'md_statistics.txt'
 
 
 
