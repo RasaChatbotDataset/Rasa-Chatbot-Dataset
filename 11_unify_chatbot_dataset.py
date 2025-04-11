@@ -1,5 +1,6 @@
 import csv
 import os
+import ast
 
 csv.field_size_limit(100000000)
 INPUT_FOLDER_MD = 'results/10_results/'
@@ -26,13 +27,35 @@ def main():
         chatbots = list(reader)
 
         if type == 'sfsd':
-            result_writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames + ['type'], extrasaction='ignore')
+
+            header = reader.fieldnames + ['type']
+            header[header.index('domain-file')] = 'domain-files'
+            result_writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header, extrasaction='ignore')
             result_writer.writeheader()
         
         for chatbot in chatbots:
-            if type == 'mfmd' or type == 'sfmd':
+
+            if type == 'sfsd' or type == 'mfsd':
+
+                # Change single domain file to list of files
+                chatbot['domain-files'] = [chatbot['domain-file']]
+                del chatbot['domain-file']
+
+            else:
+                # Ignore dicarded chatbots
                 if chatbot['status'] == 'discarded':
                     continue
+
+                # Change single domain file to list of files
+                if '[' not in chatbot['domain-file']:
+                    chatbot['domain-files'] = [chatbot['domain-file']]
+                    del chatbot['domain-file']
+
+                # Change only field name
+                else:
+                    chatbot['domain-files'] = ast.literal_eval(chatbot['domain-file'])
+                    del chatbot['domain-file']
+
             chatbot['type'] = type
             result_writer.writerow(chatbot)
 

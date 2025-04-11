@@ -7,7 +7,7 @@ import os
 
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-RESULTS_FOLDER = 'resultss/09_results'
+RESULTS_FOLDER = 'results/09_results'
 INPUT_FOLDER = 'results/08_results'
 
 FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
@@ -182,7 +182,7 @@ def main():
                     print(f"Analyzing domain file {complete_domain_path}")
                     result = extract_domain_info(repository, complete_domain_path, chatbot_info)
                     if result == -1:
-                        chatbot_info['chatbot-type'] = file.replace('chatbots-2025-files-', '').replace('.csv', '')
+                        chatbot_info['chatbot-type'] = file.replace('chatbot_repositories_', '').replace('.csv', '')
                         error_writer.writerow(chatbot_info)
                     else:
                         analysis_writer.writerow(result)
