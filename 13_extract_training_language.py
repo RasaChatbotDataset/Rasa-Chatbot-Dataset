@@ -258,21 +258,19 @@ def main():
     
     for index, chatbot in chatbots.iterrows():
 
-        if index > 6608:
-
+        if chatbot['n-nlu-files'] > 0 :
+            print(chatbot['full-name'])
+            
             # Check API limit
             language_api_status = detectlanguage.user_status()
             if language_api_status['requests'] == language_api_status['daily_requests_limit'] or language_api_status['bytes'] > language_api_status['daily_bytes_limit'] - 10000:
                 print('Detect language API daily limit exceeded')
                 break
 
-            if chatbot['n-nlu-files'] > 0 :
-                print(chatbot['full-name'])
-
-                # Extract training language
-                version, traning_language = extract_training_language(chatbot)
-                chatbots.at[index, 'training-language'] = traning_language
-                chatbots.at[index, 'version'] = version
+            # Extract training language
+            version, traning_language = extract_training_language(chatbot)
+            chatbots.at[index, 'training-language'] = traning_language
+            chatbots.at[index, 'version'] = version
         
         if chatbot['version'] == 'unknown':
             chatbot['version'] = None

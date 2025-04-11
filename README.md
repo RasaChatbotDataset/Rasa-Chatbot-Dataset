@@ -117,3 +117,9 @@ Execute script *12_extract_config_language* to extract model configuration langu
 ```
 python 12_extract_config_language.py
 ```
+
+### 13. Training language extraction
+Execute script *13_extract_training_language* to extract the language of training phrases via [detectlanguage](https://detectlanguage.com/) API.
+```
+python 13_extract_training_language.py
+```
