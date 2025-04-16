@@ -19,7 +19,7 @@ FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-f
 
 # Initialize chatbot information
 def initialize_chatbot_info(chatbot_info):
-    for key in FIELDS[10:]:
+    for key in FIELDS[11:]:
         if key.startswith('n-'):
             chatbot_info[key] = 0
         else: 
