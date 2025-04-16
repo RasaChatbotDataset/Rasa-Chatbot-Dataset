@@ -188,12 +188,14 @@ def main():
         if 'en' in training_language or 'en' in response_language or 'en' in config_language:
             chatbot['wide-has-english'] = True
 
-            # No configuration language or english in configuration language
-            if not config_language or 'en' in config_language:
-                chatbot['has-english'] = True
+            if 'en' in training_language and 'en' in response_language:
 
-                # English is the only language
-                if len(training_language) <= 1 and len(response_language) <= 1 and len(config_language) <= 1:
+                # No configuration language or english in configuration language
+                if not config_language or 'en' in config_language:
+                    chatbot['has-english'] = True
+
+                    # English is the only language
+                    if len(training_language) <= 1 and len(response_language) <= 1 and len(config_language) <= 1:
                         chatbot['pure-english'] = True
 
 
