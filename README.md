@@ -123,3 +123,21 @@ Execute script *13_extract_training_language* to extract the language of trainin
 ```
 python 13_extract_training_language.py
 ```
+
+### 14. Response language extraction
+Execute script *14_extract_response_language* to extract the language of response phrases via [detectlanguage](https://detectlanguage.com/) API.
+```
+python 14_extract_response_language.py
+```
+
+### 15. Chatbot copies removal
+Execute script *15_delete_duplicate_chatbots* to remove copies of the same chatbot from the dataset. Copies are ordered by version, stars, forks and creation date, and only the first one will be kept; copies with same structure but different action files will be kept.
+```
+python 15_delete_duplicate_chatbots.py
+```
+
+### 16. Chatbot selection
+Execute script *16_select_chatbots* to filter the dataset by complexity and popularity criteria.
+```
+python 16_select_chatbots.py
+```
