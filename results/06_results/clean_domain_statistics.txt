@@ -1,0 +1,3 @@
+Domain files removed: 1494
+Repositories cleaned: 600
+Repositories removed: 60

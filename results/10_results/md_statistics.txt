@@ -1,0 +1,5 @@
+Domain file copies removed: 18
+Domain files merged: 137
+Chatbots solved by domain files merge: 29
+Chatbots solved by domain copies removal: 8
+Chatbots discarded: 74
