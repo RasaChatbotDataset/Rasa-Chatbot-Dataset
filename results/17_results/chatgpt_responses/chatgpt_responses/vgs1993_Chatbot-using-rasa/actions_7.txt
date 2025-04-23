@@ -1,0 +1,92 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List
+
+from rasa_sdk import Tracker
+import json
+
+
+class LeadershipDialog:
+    name = "leadership"
+
+    @staticmethod
+    def run(tracker: Tracker) -> Dict[Text, Any]:
+        message = "Processing your input for Leadership section...\n"
+
+        intent = tracker.latest_message["intent"]["name"]
+        if intent != "leadership" and intent != "done":
+            message += "Could not understand your intent. Let's get highlights for your leadership skills.\n"
+            message += f"I currently have this:\n{LeadershipDialog.get_formatted_leadership_from_tracker(tracker)}"
+            return {"is_complete": False, "message": message, "slots": {}}
+
+        slots = {}
+        if intent == "done":
+            message += "Completed your leadership highlights.\n" \
+                       f"I currently have this:\n{LeadershipDialog.get_formatted_leadership_from_tracker(tracker)}"
+            slots["leadership_complete"] = True
+            return {"is_complete": True, "message": message, "slots": slots}
+
+        leadership = LeadershipDialog.fill_slots_from_tracker(tracker, slots)
+
+        message += f"Continue providing additional highlights (one at a time). " \
+                   f"Just say Done when you are done with all highlights.\n" \
+                   f"I currently have this:\n{LeadershipDialog.get_formatted_leadership(leadership)}"
+        return {"is_complete": False, "message": message, "slots": slots}
+
+    @staticmethod
+    def missing_info_hint(tracker):
+        return "Leadership highlights - Highlight instances where you showed leadership skills " \
+               "(one highlight at a time)"
+
+    @staticmethod
+    def tracker_has_missing_slots(tracker) -> bool:
+        return tracker.get_slot("leadership_complete") is None or \
+               tracker.get_slot("leadership_complete") is False
+
+    @staticmethod
+    def fill_slots_from_tracker(tracker: Tracker, slots):
+        leadership = []
+        leadership_json = tracker.get_slot("leadership")
+        if leadership_json is not None:
+            leadership = json.loads(leadership_json)
+
+        nlu_text = tracker.latest_message["text"]
+        leadership.append(nlu_text)
+
+        slots["leadership"] = str(leadership).replace("'", '"')
+        return leadership
+
+    @staticmethod
+    def get_formatted_leadership_from_tracker(tracker):
+        leadership_json = tracker.get_slot("leadership")
+        leadership = json.loads(leadership_json)
+        return LeadershipDialog.get_formatted_leadership(leadership)
+
+    @staticmethod
+    def get_formatted_leadership(leadership: List[Text]):
+        message = ""
+        for idx, highlight in enumerate(leadership):
+            message += f'{idx + 1}: {highlight}\n'
+        return message
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

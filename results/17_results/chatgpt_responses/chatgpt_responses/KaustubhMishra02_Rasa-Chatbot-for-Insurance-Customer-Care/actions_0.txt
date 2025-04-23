@@ -1,0 +1,80 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from dis import dis
+import imp
+from random import randint
+import string
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+import csv
+import re
+
+class ActionReadCSV(Action):
+    def name(self) -> Text:
+         return "action_csv"
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        id = tracker.get_slot('claim_id')
+        dispatcher.utter_message("Thank you for the information! Please wait a moment while I check your claim status.")
+        with open('claim_status.csv','r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row[1]==id:
+                    dispatcher.utter_message("Your claim is "+row[2]+"\n")
+                    if(row[2]=="Approved"):
+                        dispatcher.utter_message("Your claim amount is "+row[3]+"\n")
+                        return[]
+                    elif(row[2]=="Pending"):
+                        dispatcher.utter_message("We ask that you check again in a few days\n")
+                        return[]
+                    elif(row[2]=="Rejected"):
+                        dispatcher.utter_message("We are sorry but your damages are not covered under the policy that you purchased.\n")
+                        return[]
+        dispatcher.utter_message("Your entered name or id is incorrect, please type again.\n")
+        return[]
+
+class ActionWriteCSV(Action):
+    def name(self) -> Text:
+         return "action_write_csv"
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        id = ""
+        for i in range(6):
+            id+=str(randint(0,9))
+        name=tracker.get_slot('uname')
+        with open('claim_status.csv','a',newline="") as file:
+            writer = csv.writer(file)
+            # tup1={name,id,"Pending","0"}
+            # print(tup1)
+            writer.writerow([name,id,"Pending",0])
+        dispatcher.utter_message("Your request has been accepted. Your Claim Id is "+id+".")
+        dispatcher.utter_message("Please remember this unique claim id for future reference. We will get back to you within a few days.")
+        return[] 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    claim_status.csv
+claim_status.csv
+claim_status.csv
+claim_status.csv
+claim_status.csv
+Databases and services: claim_status.csv
+claim_status.csv
+claim_status.csv
+claim_status.csv
+claim_status.csv
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+claim_status.csv
+
+Purpose of external services:
+claim_status.csv: This file is used as a local database to store and retrieve claim status information.

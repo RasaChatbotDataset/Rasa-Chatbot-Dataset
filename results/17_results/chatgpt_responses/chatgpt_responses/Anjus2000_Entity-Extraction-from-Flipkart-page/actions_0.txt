@@ -1,0 +1,158 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import pandas as pd
+import csv
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+class ActionGetProductDetails(Action):
+    def name(self) -> Text:
+        return "action_get_price_details"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        # Define the filename of your CSV file
+        filename = "Smarttv.csv"
+
+        # Define the model name you want to search for
+        model_name = tracker.get_slot('name')
+
+        # Initialize a boolean variable to check if the model name is found
+        found = False
+
+        # Open the CSV file and read it
+        with open(filename, 'r') as file:
+            # Use the csv.reader method to read the file
+            reader = csv.reader(file)
+
+            # Skip the header row
+            next(reader)
+
+            # Loop through each row of the CSV file
+            for row in reader:
+                # Check if the model name matches the current row
+                if row[3] == model_name:
+                    # Print the values of other attributes in the same row
+                    dispatcher.utter_message(text=f"The price for {model_name} is {row[1]}")
+
+                    
+
+                    # Set the found variable to True
+                    found = True
+                    # Exit the loop as we have found the model
+                    break
+
+        # If the model name is not found, print a message
+        if not found:
+            dispatcher.utter_message(text=f"No data found for {model_name}.")
+            
+        return []
+        
+class ActionGetProductDetails(Action):
+    def name(self) -> Text:
+        return "action_get_ratings_details"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        # Define the filename of your CSV file
+        filename = "Smarttv.csv"
+
+        # Define the model name you want to search for
+        model_name = tracker.get_slot('name')
+
+        # Initialize a boolean variable to check if the model name is found
+        found = False
+
+        # Open the CSV file and read it
+        with open(filename, 'r') as file:
+            # Use the csv.reader method to read the file
+            reader = csv.reader(file)
+
+            # Skip the header row
+            next(reader)
+
+            # Loop through each row of the CSV file
+            for row in reader:
+                # Check if the model name matches the current row
+                if row[3] == model_name:
+                    # Print the values of other attributes in the same row
+                    dispatcher.utter_message(text=f"The ratings for {model_name} is {row[2]}")
+
+                    # Set the found variable to True
+                    found = True
+                    # Exit the loop as we have found the model
+                    break
+
+        # If the model name is not found, print a message
+        if not found:
+            dispatcher.utter_message(text=f"No data found for {model_name}.")
+            
+        return []
+
+class ActionGetProductDetails(Action):
+    def name(self) -> Text:
+        return "action_get_specifications_details"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        # Define the filename of your CSV file
+        filename = "Smarttv.csv"
+
+        # Define the model name you want to search for
+        model_name = tracker.get_slot('name')
+
+        # Initialize a boolean variable to check if the model name is found
+        found = False
+
+        # Open the CSV file and read it
+        with open(filename, 'r') as file:
+            # Use the csv.reader method to read the file
+            reader = csv.reader(file)
+
+            # Skip the header row
+            next(reader)
+
+            # Loop through each row of the CSV file
+            for row in reader:
+                # Check if the model name matches the current row
+                if row[3] == model_name:
+                    # Print the values of other attributes in the same row
+                    dispatcher.utter_message(text=f"The supported apps for {model_name} are {row[4]}, it has a {row[7]} {row[8]} display, {row[9]} storage memory, {row[10]} RAM storage, {row[12]} processor, and supports {row[13]} resolution.")
+
+                    # Set the found variable to True
+                    found = True
+                    # Exit the loop as we have found the model
+                    break
+
+        # If the model name is not found, print a message
+        if not found:
+            dispatcher.utter_message(text=f"No data found for {model_name}.")
+            
+        return []
+
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

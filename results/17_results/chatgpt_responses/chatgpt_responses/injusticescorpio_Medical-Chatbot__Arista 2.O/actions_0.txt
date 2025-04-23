@@ -1,0 +1,93 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import smtplib
+from email.message import EmailMessage
+import os
+from twilio.rest import Client
+#creating server
+#Gmail
+
+def call_sms(blood_group,name,no_of_units,case,required_date,admitted_hopsital,bleeding_place,bleeding_time,district,contact_number,bystander_name,representative_mobile):
+    calls,sms=0,0
+    #Calling purpose
+    try:
+        account_sid =os.environ['hospital_booking_sid']
+        auth_token = os.environ['hospital_booking_token']
+        client = Client(account_sid, auth_token)
+
+        call = client.calls.create(
+            twiml='<Response><Say>There is an emergency for blood details will be forward via sms please check and do the needful</Say></Response>',
+            to=representative_mobile,
+            from_= '+19705368594'
+        )
+
+        print(call.sid)
+    except Exception as e:
+        calls=1
+        print("error from calling part",e)
+    #Messaging Purpose
+
+    try:
+        account_sid =os.environ['hospital_booking_sid']
+        auth_token = os.environ['hospital_booking_token']
+        client = Client(account_sid, auth_token)
+        message = client.messages.create(
+            messaging_service_sid=os.environ['hospital_booking_msid'],
+            body=f'''
+            🛑 URGENT!!!🛑
+            🩸 BLOOD REQUIREMENT🩸
+            Blood group  :   {blood_group}
+            Name of person : {name}
+            No of units :    {no_of_units}
+            Case :           {case}
+            Required Date :  {required_date}
+            Admitted Hospital:{admitted_hopsital}
+            Bleeding Place:  {bleeding_place}
+            Bleeding  Time : {bleeding_time}
+            District:        {district}  
+            Contact number:  {contact_number}
+            Bystanders details: {bystander_name} 
+                    ''',
+            to=representative_mobile
+        )
+        print(message.sid)
+    except Exception as e:
+        sms = 1
+        print(f"error from messaging part",e)
+
+    if calls ==0 and sms==0:
+        return 1
+    else:
+        return 0
+# print(call_sms('O+ve','tony stark','2','heart','24-04-2022','mammen memorial hospital','chengannur','8:00AM',"Alappuzha","9074774118","Arjun",'+919074774118'))
+
+
+
+
+
+
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Twilio
+Twilio
+Twilio
+Twilio
+Twilio
+Twilio
+Twilio
+Twilio
+Twilio
+Twilio
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Twilio
+
+Purpose of external services:
+Twilio: Twilio is used for making phone calls and sending SMS messages to notify representatives about urgent blood requirements.

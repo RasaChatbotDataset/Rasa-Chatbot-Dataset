@@ -1,0 +1,77 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List, Union
+
+import requests
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
+
+class PersonalLoanStatus(Action):
+    """Form action for collecting personal loan status information."""
+
+    def name(self) -> Text:
+        return "action_personal_loan_status"
+
+    def run(
+            self,
+            dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        # Check if the form is active and slots are filled
+        # if tracker.active_form.get("name") == "personal_loan_status_form":
+        #     aadhar_number = tracker.get_slot("aadhar_number")
+        #     pan_number = tracker.get_slot("pan_number")
+        #     phone_number = tracker.get_slot("phone_number")
+
+            # Perform validation of the slot values, if needed
+        # aadhar_number="467809028779"
+        phone_number="6281668227"
+        # pan_number="GWDPB0032C"
+
+
+        response = requests.get(f'http://localhost:8058/efundzz/personalloan/status/{phone_number}')
+
+        # print(response)
+
+
+                # Check the response status code
+        if response.status_code == 200:
+
+            loan_status = response.text
+            dispatcher.utter_message(text=f"Your personal loan status: {loan_status}")
+        else:
+            dispatcher.utter_message(text="Sorry, an error occurred while retrieving the loan status. Please try again later.")
+
+            # Clear the slots after form submission
+
+
+        # Return an empty list if the form is not active
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Databases and services: requests, http://localhost:8058/efundzz/personalloan/status
+Databases and services: requests, http://localhost:8058/efundzz/personalloan/status
+Databases and services: localhost:8058/efundzz
+Databases and services: localhost:8058
+Databases and services: localhost:8058
+Databases and services: localhost:8058
+Databases and services: requests, http://localhost:8058/efundzz/personalloan/status
+External services: requests
+Databases and services: localhost:8058
+requests
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+localhost:8058
+
+Purpose of external services:
+localhost:8058 - This service is used to retrieve the personal loan status information based on the provided phone number.

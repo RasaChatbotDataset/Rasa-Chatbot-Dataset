@@ -1,0 +1,67 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # Generic Utils
+# static methods
+import re
+
+
+class Utils:
+    @staticmethod
+    def parse_activity(act: str) -> str:
+        """
+        This function takes a string, containing numbers, as parameter and returns a copy of it.
+        The copy contains characters instead of numbers and whitespaces between words in the string are removed.
+
+        Args:
+            act: string containing decimals numbers
+
+        Returns:
+            modified string with numbers changed to lower case characters
+        """
+        int_char_map = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h', 8: 'i', 9: 'l', "->": "-> ",
+                        "&&": "&& ", "||": "|| "}
+        for int_key in int_char_map.keys():
+            act = act.replace(str(int_key), int_char_map[int_key])
+        act = re.sub(r"\s\b", "", act)
+        return act
+
+    @staticmethod
+    def normalize_formula(input_formula: str) -> str:
+
+        unary_operators = {"g(": "G(", "x(": "X(", "f(": "F(", "x[!](": "X[!]("}
+
+        binary_operators = {" u ": " U ", "u(": "U(", " r ": " R ", "r(": "R(", " w ": " W ",
+                            "w(": "W(", " m ": " M ", "m(": "M(", " v ": " V ", "v(": "V("}
+
+        formula = Utils.parse_activity(input_formula)
+        formula = formula.lower()
+
+        for key, value in unary_operators.items():
+            formula = formula.replace(key, value)
+
+        for key, value in binary_operators.items():
+            formula = formula.replace(key, value)
+
+        return formula
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+Databases and services: None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

@@ -1,0 +1,130 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from copy import deepcopy
+"""
+Consist all the helpers to process entity obj extracted by rasa.
+"""
+
+
+def findCharIndexForWord(word, question):
+    for i in range(len(question)):
+        found = True
+        currIndex = i
+        for j in range(len(word)):
+            if currIndex >= len(question): 
+                return (None, None)
+            if question[currIndex] == word[j]:
+                currIndex = currIndex +1
+            else:
+                found = False
+                break
+        if found:
+            return (i, currIndex-1)
+    return (None, None)
+
+
+def getEntityValueHelper(entities):
+    entityValues = getEntityAttribute(entities, "value")
+    return entityValues
+
+def getEntityAttribute(entities, attribute):
+    entityAttribute = []
+    for entity in entities:
+        entityAttribute.append(entity[attribute])
+    return  entityAttribute
+
+def getEntityLabel(entities):
+    entityLabels = getEntityAttribute(entities, "entity")
+    return entityLabels
+
+
+def findEntityHelper(entities, key, by="entity"):
+    
+    entitiesFound = findMultipleSameEntitiesHelper(entities, key, by)
+    if len(entitiesFound) == 0:
+        return None
+    return entitiesFound[0]
+
+
+def findMultipleSameEntitiesHelper(entities, key, by= "entity"):
+    res = []
+    for entityObj in entities:
+        if entityObj[by] == key:
+            res.append(entityObj)
+    return res
+
+def copyEntities(entities):
+    entitiesExtractedCopy = deepcopy(entities)
+    return entitiesExtractedCopy
+
+def filterEntities(entities, toFilter):
+    res = []
+    for entityObj in entities:
+        if not entityObj["entity"] in toFilter:
+            res.append(entityObj)
+    return res
+
+def removeDuplicatedEntities(entities):
+    uniqueEntityValuesFound = []
+    uniqueEntities = []
+    for entity in entities:
+        entityValue = entity["value"]
+        if not entityValue in uniqueEntityValuesFound:
+            uniqueEntityValuesFound.append(entityValue)
+            uniqueEntities.append(entity)
+    return uniqueEntities
+    
+
+
+def changeEntityValue(entities, targetLabel, newValue):
+    for entity in entities: 
+        if targetLabel in entity["entity"]:
+            entity["value"] = newValue
+
+def changeEntityValueByRole(entities, targetEntity, targetRole, newValue):
+    for entity in entities: 
+        if targetEntity in entity["entity"] and hasattr(entity, "role") and targetRole in entity["role"]:
+            entity["value"] = newValue
+    
+
+def createEntityObj(entityValue, entityLabel="none",  entityRole=None):
+        res = {"entity": entityLabel, "value": str(entityValue)}
+        if (entityRole):
+            res["role"] = entityRole
+
+        return res
+
+
+
+def removeLowConfidenceEntities(entities):
+    confidenceThreshold = 0.5
+    entityConfidenceKey = "confidence_entity"
+    highConfidenceEntities = []
+    for entity in entities:
+        if entityConfidenceKey in entity.keys():
+            if entity[entityConfidenceKey] >= confidenceThreshold:
+                highConfidenceEntities.append(entity)
+            else: 
+                highConfidenceEntities.append(entity)
+    return highConfidenceEntities 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

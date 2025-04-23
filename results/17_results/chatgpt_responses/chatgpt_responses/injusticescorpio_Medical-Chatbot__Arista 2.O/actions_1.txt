@@ -1,0 +1,111 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import smtplib
+from email.message import EmailMessage
+import os
+from twilio.rest import Client
+#creating server
+#Gmail
+
+def email_call_sms(name,age,hospital_name,place):
+    emails,calls,sms,whatsapp=0,0,0,0
+    arista_password =os.environ['arista_password']
+    d={
+            'lakeshore hospital':['arjunscorpio2000@gmail.com','+919074774118'],
+            'mammen memorial hospital':['Shadow23legend@gmail.com','+917025094995'],
+            'cherian memorial hospital':['g4c5hh1l@gmail.com','+918921799476']
+        }
+    hospital_mail_id = d[hospital_name.lower()][0]
+    hospital_contact_number = d[hospital_name.lower()][1]
+    print(hospital_mail_id)
+    print(hospital_contact_number)
+    try:
+
+        # Emailing purpose
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login('arista.assistant@gmail.com',arista_password)
+        email = EmailMessage()
+        email['From'] = 'arista.assistant@gmail.com'
+        email['To'] = hospital_mail_id
+        email['Subject'] = 'Hospital Booking for patient'
+        email.set_content(f'Hello {hospital_name}\n There is a booking for a patient \n Name:{name}  \n Age:{age}  \n place: {place} \n Please book this at the earliest \n Yours Faithfully \n Arista \n ')
+        server.send_message(email)
+    except Exception as e:
+        emails=1
+        print("error from emailing part",e)
+    #Calling purpose
+    try:
+        account_sid =os.environ['hospital_booking_sid']
+        auth_token = os.environ['hospital_booking_token']
+        client = Client(account_sid, auth_token)
+
+        call = client.calls.create(
+            twiml='<Response><Say>There is a booking for you please check ur sms or mail.</Say></Response>',
+            to=hospital_contact_number,
+            from_= '+13605154394'
+        )
+
+        print(call.sid)
+    except Exception as e:
+        calls=1
+        print("error from calling part",e)
+    #Messaging Purpose
+
+    try:
+        account_sid =os.environ['hospital_booking_sid']
+        auth_token = os.environ['hospital_booking_token']
+        client = Client(account_sid, auth_token)
+        message = client.messages.create(
+            messaging_service_sid=os.environ['hospital_booking_msid'],
+            body=f'hello there is a booking for a patient in this hospital\nDetails are \nName : {name}\nAge : {age}\nplace : {place}',
+            to=hospital_contact_number
+        )
+        print(message.sid)
+    except Exception as e:
+        sms = 1
+        print(f"error from messaging part",e)
+
+    if calls ==0 and sms==0 and emails==0 :
+        return f"Booked successfully in all three modes"
+    elif (calls==1 and  sms==1)and emails==0 :
+        return f"Booked successfully only through mail..Unable to call or send sms "
+    elif calls==1 and (sms==0 and emails==0 ):
+        return "There is a problem while calling"
+    elif sms==1 and (calls==0 and emails==0) :
+        return "There is a problem in sending the booked info via sms"
+    else:
+        return f"Booking Unsuccessful Please try after sometimes.."
+# print(email_call_sms('arjun',20,'lakeshore hospital','cgnr'))
+
+
+
+
+
+
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Gmail, Twilio
+Gmail, Twilio
+Gmail, Twilio
+Gmail, Twilio
+Gmail, Twilio
+Gmail, Twilio
+Databases and services: smtplib, email.message, os, twilio.rest
+Gmail, Twilio
+Gmail, Twilio
+Twilio, Gmail
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Gmail, Twilio
+
+Purpose of external services:
+Gmail: Used for sending emails to the hospital for booking purposes.
+Twilio: Used for making calls and sending SMS to the hospital for booking purposes.

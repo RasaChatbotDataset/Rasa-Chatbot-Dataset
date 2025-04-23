@@ -1,0 +1,144 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+
+# This is a simple example for a custom action which utters "Hello World!"
+
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+import urllib.request, json 
+from difflib import get_close_matches
+from datetime import date, datetime
+
+from rasa_nlu_examples.extractors.dateparser_extractor import DateparserEntityExtractor
+from rasa_sdk.interfaces import Action
+from rasa_sdk.events import (
+    SlotSet,
+    EventType,
+    ActionExecuted,
+    SessionStarted,
+    Restarted,
+    FollowupAction,
+    UserUtteranceReverted,
+    ObjectStringMapper
+)
+url_link= "https://api.presence.io/wsu/v1/events";
+
+fieldMapper = { 'eventName': "Event Name:", 'orgName':'Organised by:', 'StartTimeHumanReadable': 'Starts at:', 'EndTimeHumanReadable': 'Ends at:', 'contactName': 'Contact:', 'location':'Location:'}
+
+class GlobalAction(Action):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.EventDict={}
+        self.OrgWiseEvents={}
+
+    def name(self) -> Text:
+        return ""
+
+    def getEvents(self):
+        return self.EventDict
+
+    def getOrgWiseEvents(self):
+        return self.OrgWiseEvents
+    
+    def getParsedString(self, object_arr, mapper):
+        return ObjectStringMapper.getString(object_arr, mapper)
+
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        with urllib.request.urlopen(url_link) as url:
+            data = json.loads(url.read().decode())
+        data.sort(key = lambda x: datetime.strptime(x['startDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ"))
+        for x in data:
+            try:
+                start_time_readable = datetime.strptime(x['startDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ").strftime("%H:%M:%S on %d %b, %Y")
+                end_time_readable = datetime.strptime(x['endDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ").strftime("%H:%M:%S on %d %b, %Y")
+                self.EventDict[x['eventName']]={'StartTime': datetime.strptime(x['startDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ"), 'StartTimeHumanReadable': start_time_readable,'EndTime': datetime.strptime(x['endDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ"), 'EndTimeHumanReadable': end_time_readable,'contactName':x['contactName'], 'orgName':x['organizationName'], 'location': x['location']}
+                if x['organizationName'] in OrgWiseEvents:
+                    self.OrgWiseEvents[x['organizationName']].append({'StartTime': datetime.strptime(x['startDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ"), 'StartTimeHumanReadable': start_time_readable,'EndTime': datetime.strptime(x['endDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ"), 'EndTimeHumanReadable': end_time_readable,'contactName':x['contactName'], 'eventName':x['eventName'], 'location': x['location']})
+                else:
+                    self.OrgWiseEvents[x['organizationName']] = []
+                    self.OrgWiseEvents[x['organizationName']].append({'StartTime': datetime.strptime(x['startDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ"), 'StartTimeHumanReadable': start_time_readable,'EndTime': datetime.strptime(x['endDateTimeUtc'], "%Y-%m-%dT%H:%M:%SZ"), 'EndTimeHumanReadable': end_time_readable,'contactName':x['contactName'], 'eventName':x['eventName'],'location': x['location']})
+            except:
+                continue
+  
+        # current_time = datetime.now()
+        # events_filtered = [EventDict[key] for key in EventDict if EventDict[key]['StartTime'] > current_time]
+        return []
+
+class EventSpecific(Action, GlobalAction):
+
+    def name(self) -> Text:
+        return "action_event_specific"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        slots = {
+            'org_name': None,
+            'datetime': None
+        }
+        eventDict = {}
+        if Tracker.get_slot("org_name"):
+            slot = Tracker.get_slot("org_name")
+            eventDict = GlobalAction.getOrgWiseEvents()[slot]
+        if eventDict and Tracker.get_slot("datetime"):
+            slot = Tracker.get_slot("datetime")
+            extractor = DateparserEntityExtractor({})
+            dateval = extractor.process(slot)
+            eventDict = [eventDict[key] for key in eventDict if eventDict[key]['StartTime'] > dateval]
+        if eventDict:
+            dispatcher.utter_message("Here are some events:" + GlobalAction.getParsedString(eventDict, fieldMapper))
+        else:
+            dispatcher.utter_message("No events to report.")
+        return []
+class EventDetails(Action, GlobalAction):
+
+    def name(self) -> Text:
+        return "action_event_details"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        eventDict = GlobalAction.getEvents()
+        events_filtered = [eventDict[key] for key in eventDict if eventDict[key]['StartTime'] > datetime.now()]
+        if len(events_filtered) > 5: events_filtered = events_filtered[:5]
+        dispatcher.utter_message("Here are some events:" + GlobalAction.getParsedString(events_filtered, fieldMapper))
+        return []
+
+
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Presence API
+Databases and services: Presence API
+Databases and services: Presence API
+Databases and services: Presence API
+Databases and services: Presence API
+Presence API
+External service: Presence API
+Presence API
+Presence API
+External service: Presence API
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Presence API
+
+Purpose of external services:
+Presence API: The Presence API is used to fetch event data, including event names, start and end times, contact information, organization names, and locations. This data is then processed and used by the chatbot to provide event details to users.

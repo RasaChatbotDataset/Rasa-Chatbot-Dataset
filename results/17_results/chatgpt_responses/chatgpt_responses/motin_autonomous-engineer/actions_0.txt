@@ -1,0 +1,97 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+
+# This is a simple example for a custom action which utters "Hello World!"
+
+from typing import Any, Dict, List, Text
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+from abilities.hello_world.hello_world import get_hello_world_text
+from abilities.tmux.interact import (
+    send_echo_hello_world,
+    split_pane_horizontally,
+    split_pane_vertically,
+)
+
+
+class ActionHelloWorld(Action):
+    def name(self) -> Text:
+        return "action_hello_world"
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        text = get_hello_world_text()
+        dispatcher.utter_message(text=text)
+
+        text = send_echo_hello_world()
+        dispatcher.utter_message(text=text)
+
+        return []
+
+
+class ActionSplitPane(Action):
+    def name(self) -> Text:
+        return "action_split_pane"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        pane_split_direction = tracker.get_slot("pane_split_direction")
+
+        # If the direction is already known, skip the question
+        if pane_split_direction:
+            if pane_split_direction == "horizontally":
+                text = split_pane_horizontally()
+                dispatcher.utter_message(text=text)
+                return []
+            elif pane_split_direction == "vertically":
+                text = split_pane_vertically()
+                dispatcher.utter_message(text=text)
+                return []
+
+        # If the direction is not known, ask the question
+        dispatcher.utter_message(template="utter_ask_split_direction")
+
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+tmux
+None
+None
+None
+None
+None
+tmux
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+tmux
+
+Purpose of external services:
+tmux: Used to interact with terminal multiplexer for splitting panes horizontally or vertically and sending commands.

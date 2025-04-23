@@ -1,0 +1,192 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import operator
+from pydantic import BaseModel
+from rasa_sdk.events import FollowupAction
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from dotenv import load_dotenv
+from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
+from langchain_community.chat_models import ChatOpenAI
+from langgraph.graph import StateGraph, START, END
+from typing import List, Dict, Text, Any, Annotated
+
+load_dotenv()
+
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+class MultiAgentState(BaseModel):
+    messages: Annotated[List[BaseMessage], operator.add]
+
+def create_response(content: str) -> Dict:
+    return {"messages": [AIMessage(content=content)]}
+
+class UserProxyAgent(Action):
+    def name(self) -> str:
+        return "user_proxy_agent"
+
+    def run(self, dispatcher, tracker, domain):
+        user_message = tracker.latest_message.get('text', '')
+        dispatcher.utter_message(text=f"UserProxyAgent received: {user_message}")
+        return [FollowupAction(name="action_operator_agent")]
+
+class ActionGreetingAgent(Action):
+    def name(self) -> str:
+        return "action_greeting_agent"
+
+    def run(self, dispatcher, tracker, domain):
+        response = llm.invoke([HumanMessage(content="The user greeted you. Respond as a helpful medical assistant.")])
+        response_text = response.content if response and response.content else "Hello! How can I assist you today?"
+        dispatcher.utter_message(text=response_text)
+        return {"messages": [AIMessage(content=response_text)]}
+
+class ActionMedicineAgent(Action):
+    def name(self) -> str:
+        return "action_medicine_agent"
+
+    def run(self, dispatcher, tracker, domain):
+        user_message = tracker.latest_message.get('text', '')
+        response = llm.invoke([HumanMessage(content=f"The user asked about medical guidance for: {user_message}.")])
+        response_text = response.content if response and response.content else "I'm here to help with your medical questions. Please ask again."
+        dispatcher.utter_message(text=response_text)
+        return {"messages": [AIMessage(content=response_text)]}
+
+class ActionMedicalHospitalAgent(Action):
+    def name(self) -> str:
+        return "action_medical_hospital_agent"
+
+    def run(self, dispatcher, tracker, domain):
+        user_message = tracker.latest_message.get('text', '')
+        response = llm.invoke([HumanMessage(content=f"The user is asking for hospital recommendations related to: {user_message}.")])
+        response_text = response.content if response and response.content else "I can provide hospital information. Please specify your query."
+        dispatcher.utter_message(text=response_text)
+        return {"messages": [AIMessage(content=response_text)]}
+
+class ActionMedicalDepartmentAgent(Action):
+    def name(self) -> str:
+        return "action_medical_department_agent"
+
+    def run(self, dispatcher, tracker, domain):
+        user_message = tracker.latest_message.get('text', '')
+        response = llm.invoke([HumanMessage(content=f"The user inquired about a medical department for: {user_message}.")])
+        response_text = response.content if response and response.content else "I can help with department inquiries. Please try again."
+        dispatcher.utter_message(text=response_text)
+        return {"messages": [AIMessage(content=response_text)]}
+
+class ActionOperatorAgent(Action):
+    def name(self) -> str:
+        return "action_operator_agent"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        user_message = tracker.latest_message.get('text', '').lower()
+
+        if any(word in user_message for word in ["hello", "hi", "greetings"]):
+            next_agent = "action_greeting_agent"
+        elif any(word in user_message for word in ["cold", "fever", "flu", "sick", "medicine", "prescription", "symptoms"]):
+            next_agent = "action_medicine_agent"
+        elif "hospital" in user_message:
+            next_agent = "action_medical_hospital_agent"
+        elif "department" in user_message:
+            next_agent = "action_medical_department_agent"
+        else:
+            dispatcher.utter_message(text="I'm not sure how to assist with that. Please provide more details.")
+            return []
+
+        return [FollowupAction(name=next_agent)]
+
+multi_agent_graph = StateGraph(MultiAgentState)
+
+multi_agent_graph.add_node(
+    "user_proxy_agent",
+    lambda state: UserProxyAgent().run(
+        CollectingDispatcher(),
+        Tracker("default", {}, {}, [], False, None, {}, "default"),
+        {}
+    ) or {"messages": []}
+)
+
+multi_agent_graph.add_node("action_greeting_agent", lambda state: ActionGreetingAgent().run(
+    CollectingDispatcher(),
+    Tracker("default", {}, {}, [], False, None, {}, "default"),
+    {}
+))
+
+multi_agent_graph.add_node("action_medicine_agent", lambda state: ActionMedicineAgent().run(
+    CollectingDispatcher(),
+    Tracker("default", {}, {}, [], False, None, {}, "default"),
+    {}
+))
+
+multi_agent_graph.add_node("action_medical_hospital_agent", lambda state: ActionMedicalHospitalAgent().run(
+    CollectingDispatcher(),
+    Tracker("default", {}, {}, [], False, None, {}, "default"),
+    {}
+))
+
+multi_agent_graph.add_node("action_medical_department_agent", lambda state: ActionMedicalDepartmentAgent().run(
+    CollectingDispatcher(),
+    Tracker("default", {}, {}, [], False, None, {}, "default"),
+    {}
+))
+
+multi_agent_graph.add_node(
+    "action_operator_agent",
+    lambda state: ActionOperatorAgent().run(
+        CollectingDispatcher(),
+        Tracker("default", {}, {}, [], False, None, {}, "default"),
+        {}
+    ) or {"messages": []}
+)
+
+multi_agent_graph.add_edge(START, "user_proxy_agent")
+multi_agent_graph.add_edge("user_proxy_agent", "action_operator_agent")
+multi_agent_graph.add_edge("action_operator_agent", "action_greeting_agent")
+multi_agent_graph.add_edge("action_operator_agent", "action_medicine_agent")
+multi_agent_graph.add_edge("action_operator_agent", "action_medical_hospital_agent")
+multi_agent_graph.add_edge("action_operator_agent", "action_medical_department_agent")
+multi_agent_graph.add_edge("action_greeting_agent", END)
+multi_agent_graph.add_edge("action_medicine_agent", END)
+multi_agent_graph.add_edge("action_medical_hospital_agent", END)
+multi_agent_graph.add_edge("action_medical_department_agent", END)
+
+compiled_graph = multi_agent_graph.compile()
+
+def run_multi_agent_system(input_message: str):
+    initial_state = MultiAgentState(
+        messages=[HumanMessage(content=input_message)]
+    )
+    for step in compiled_graph.stream(initial_state):
+        if isinstance(step, dict) and 'messages' in step:
+            message = step['messages'][-1] if step['messages'] else None
+            if message and hasattr(message, 'content'):
+                print(message.content)
+            else:
+                print("Unexpected message format.")
+        
+        if "__end__" in step:
+            break
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+ChatOpenAI
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+ChatOpenAI
+
+Purpose of external services:
+ChatOpenAI: This service is used to generate responses based on user input by leveraging the capabilities of the GPT-4 model. It helps in creating dynamic and contextually relevant replies for the chatbot.

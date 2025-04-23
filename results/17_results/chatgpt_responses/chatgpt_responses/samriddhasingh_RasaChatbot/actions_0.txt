@@ -1,0 +1,71 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot 
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+accountdb={
+    12345678900001:{
+        'name': 'samriddha',
+        'phone':'9868849124',
+        'balance':'Rs. 10,000'
+    },
+     12345678900002:{
+        'name': 'rohan singh',
+        'phone':'9868849125',
+        'balance':'Rs. 10,000'
+    }
+}
+
+class ActionHelloWorld(Action):
+
+    def name(self) -> Text:
+        return "action_show_account_details"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        name= tracker.get_slot('name')
+        phone= tracker.get_slot('phone_number')
+        account_number= tracker.get_slot('account_number')
+       
+        account_number=int(account_number)
+     
+        if account_number in accountdb:
+       
+            if accountdb[account_number]['name']==name and accountdb[account_number]['phone']==phone:
+           
+                balance=accountdb[account_number]['balance']
+                message="Dear customer {}  your account number {} has balance {}".format(name,account_number,balance)
+                dispatcher.utter_message(text=message)
+            else:
+                message="Please enter some of your valid account credentials correctly"
+                dispatcher.utter_message(text=message)
+        else:
+            message='Please enter your detail correctly'
+            dispatcher.utter_message(text=message)
+
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    local database
+accountdb
+local database
+accountdb
+accountdb
+accountdb
+accountdb
+local database
+local database
+accountdb
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

@@ -1,0 +1,71 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from __future__ import annotations
+
+from src.Declare4Py.D4PyEventLog import D4PyEventLog
+from src.Declare4Py.ProcessMiningTasks.AbstractConformanceChecking import AbstractConformanceChecking
+from src.Declare4Py.ProcessMiningTasks.ConformanceChecking import MPDeclareResultsBrowser
+from src.Declare4Py.ProcessModels.DeclareModel import DeclareModel
+from src.Declare4Py.Utils.Declare.Checkers import ConstraintChecker
+
+"""
+Provides basic conformance checking functionalities
+"""
+
+
+class MPDeclareAnalyzer(AbstractConformanceChecking):
+
+    def __init__(self, log: D4PyEventLog, declare_model: DeclareModel, consider_vacuity: bool):
+        super().__init__(log, declare_model)
+        self.consider_vacuity = consider_vacuity
+
+    def run(self) -> MPDeclareResultsBrowser:
+        """
+        Performs conformance checking for the provided event log and DECLARE model.
+
+        Parameters
+        ----------
+        consider_vacuity : bool
+            True means that vacuously satisfied traces are considered as satisfied, violated otherwise.
+
+        Returns
+        -------
+        conformance_checking_results
+            dictionary where the key is a list containing trace position inside the log and the trace name, the value is
+            a dictionary with keys the names of the constraints and values a CheckerResult object containing
+            the number of pendings, activations, violations, fulfillments and the truth value of the trace for that
+            constraint.
+        """
+        if self.event_log is None:
+            raise RuntimeError("You must load the log before checking the model.")
+        if self.process_model is None:
+            raise RuntimeError("You must load the DECLARE model before checking the model.")
+
+        log_checkers_results = []
+        for trace in self.event_log.get_log():
+            log_checkers_results.append(ConstraintChecker().check_trace_conformance(trace, self.process_model,
+                                                                                    self.consider_vacuity,
+                                                                                    self.event_log.activity_key))
+        return MPDeclareResultsBrowser(log_checkers_results, self.process_model.serialized_constraints)
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

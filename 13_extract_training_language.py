@@ -277,7 +277,7 @@ def main():
 
     chatbots = chatbots.drop('n-nlu-files', axis=1)
     chatbots = chatbots.drop('nlu-files', axis=1)
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots6.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(RESULTS_FOLDER + 'chatbots.csv', sep=CSV_SEPARATOR, index=False)
 
 
 

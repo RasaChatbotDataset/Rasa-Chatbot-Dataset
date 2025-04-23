@@ -1,0 +1,64 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from .ambulance_service_db import Ambulance_Service
+from .call_sms import call_sms1
+import requests
+import os
+import re
+def distance_btw_two_places(place1,place2):
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+    distanceapi = os.environ['distanceapi']
+    response = requests.get(url + 'origins=' + place1 + '&destinations=' + place2 + '&key=' + distanceapi).json()
+    res=''
+    try:
+        res = response['rows'][0]['elements'][0]['distance']['text']
+    except Exception as e:
+        print(f"error occured {e} and place not available is {place2}")
+        return float('inf')
+    if 'km' in res:
+        return float(''.join([i for i in res if i.isdigit() or i=='.']))
+    return float(''.join([i for i in res if i.isdigit() or i=='.']))/1000
+def Ambulance_Service_Info(name,contact,place):
+    db=Ambulance_Service()
+    ambulance_driver_details=db.fetch()
+    print(ambulance_driver_details)
+    driver_to_be_contacted = []
+    for driver in ambulance_driver_details:
+        if name.title() != driver[1]:  # checking whether the driver not equal to the actual user
+            if distance_btw_two_places(place.title(),driver[-1]) <= 30.0:
+                driver_to_be_contacted.append([driver, distance_btw_two_places(place.title(),driver[-1])])
+    driver_to_be_contacted = sorted(driver_to_be_contacted, key=lambda x: x[1])
+    driver_to_be_contacted_phone = [i[0][2] for i in driver_to_be_contacted]
+    print(f"driver_to_be_contacted=={driver_to_be_contacted}")
+    booking_successful1 = 0
+    for i in driver_to_be_contacted_phone[:3]:
+        booking_successful1 += call_sms1(name,contact,place,i)
+    return f"your ambulance requirement has been sent to {booking_successful1} user successfully"
+
+
+# print(Ambulance_Service_Info('ar','+918590737476','Chengannur,Kerala')) 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Maps Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API
+Ambulance_Service, call_sms1, Google Distance Matrix API,,###
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Ambulance_Service, Google Distance Matrix API
+
+Purpose of external services:
+- Ambulance_Service: This is a local database that stores information about ambulance drivers, including their names, contact details, and locations.
+- Google Distance Matrix API: This external service is used to calculate the distance between two places, which helps in determining the proximity of ambulance drivers to the user's location.

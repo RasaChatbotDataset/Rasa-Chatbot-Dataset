@@ -1,0 +1,66 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot MENU = [
+    {
+        "name": "Lasagne",
+        "price": 16,
+        "preparation_time": 1
+    },
+    {
+        "name": "Pizza",
+        "price": 12,
+        "preparation_time": 0.5
+    },
+    {
+        "name": "Hot-dog",
+        "price": 4,
+        "preparation_time": 0.1
+    },
+    {
+        "name": "Burger",
+        "price": 12.5,
+        "preparation_time": 0.2
+    },
+    {
+        "name": "Spaghetti Carbonara",
+        "price": 15,
+        "preparation_time": 0.5
+    },
+    {
+        "name": "Tiramisu",
+        "price": 11,
+        "preparation_time": 0.15
+    }
+]
+
+OPENING_HOURS = {
+    "Monday": {"open":8,"close":20 },
+    "Tuesday": {"open":8,"close":20 },
+    "Wednesday": {"open":10,"close":16 },
+    "Thursday": {"open":8,"close":20 },
+    "Friday": {"open":8,"close":20 },
+    "Saturday": {"open":10,"close":16 },
+    "Sunday": {"open":0,"close":0 }
+}
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

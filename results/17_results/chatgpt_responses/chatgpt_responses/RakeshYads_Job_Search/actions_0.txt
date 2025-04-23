@@ -1,0 +1,107 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+
+# This is a simple example for a custom action which utters "Hello World!"
+
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import Restarted, AllSlotsReset
+#
+#
+# class ActionHelloWorld(Action):
+#
+#     def name(self) -> Text:
+#         return "action_hello_world"
+#
+#     def run(self, dispatcher: CollectingDispatcher,
+#             tracker: Tracker,
+#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+#
+#         dispatcher.utter_message(text="Hello World!")
+#
+#         return []
+
+class ActionGreet(Action):
+    def name(self) -> Text:
+        return "action_greet"
+
+    def run(self, dispatcher: CollectingDispatcher,
+                        tracker: Tracker,
+                        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        if (user := tracker.get_slot("user")):
+            dispatcher.utter_message(f"Hey {user}! How are you?")
+        else:
+            dispatcher.utter_message("Hi, How are you?")
+
+        return []
+
+class EndChat(Action):
+    def name(self) -> Text:
+        return "action_end_chat"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+                        tracker: Tracker,
+                        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        if (user := tracker.get_slot("user")):
+
+            dispatcher.utter_message(f"Goodbye {user}! It was nice talking with you")
+        else:
+            dispatcher.utter_message("Goodbye! It was nice talking with you")
+
+        # Reset the tracker
+        # tracker.reset()
+
+        return [AllSlotsReset(),Restarted()]
+
+class JobLocation(Action):
+    def name(self) -> Text:
+        return "action_job_location"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+                        tracker: Tracker,
+                        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        location = tracker.get_slot("location")
+        jobtitle = tracker.get_slot("job_title")
+        if (location != None or jobtitle != None):
+            # data = {"location" : location, "jobtitle" : jobtitle}
+            # dispatcher.utter_message(data)
+            dispatcher.utter_message(
+                template = "utter_job_details",
+                jobtitle = jobtitle,
+                location = location
+            )
+        else:
+            dispatcher.utter_message("Required data point is not provided.")
+
+        return []
+
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

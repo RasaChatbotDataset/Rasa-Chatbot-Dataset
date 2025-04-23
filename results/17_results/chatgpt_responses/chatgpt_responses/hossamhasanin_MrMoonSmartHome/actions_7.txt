@@ -1,0 +1,90 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import AllSlotsReset
+from rasa_sdk.executor import CollectingDispatcher
+from actions.firebase_controller.results import Results
+from actions.firebase_controller.firebase_controller import FirebaseController
+from actions.firebase_controller.avialable_operations import AvailableColorsToSet
+
+
+class ActionChangeLightColor(Action):
+
+    def name(self) -> Text:
+        return "action_change_light_color"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        controller = FirebaseController.instance()
+
+        light_color = tracker.get_slot("light_color")
+        colorId = AvailableColorsToSet.map_from_text_to_color(text=light_color) if light_color is not None else None
+
+        if tracker.get_slot("all_devices_selected") is not None:
+            result = controller.updateAllColorLights(
+                color= colorId ,
+                device_type= tracker.get_slot("device_type"),
+                room_name= tracker.get_slot("room_name")
+            )
+
+            if result == Results.DEVICE_NOT_FOUND:
+                dispatcher.utter_message(response="utter_no_devices_found_with_given_specs")
+            elif result == Results.NOT_ALLOWED_COLOR:
+                dispatcher.utter_message(response="utter_not_allowed_color")
+            elif result == Results.NO_COLOR_DETECTED:
+                dispatcher.utter_message(response="utter_no_color_detected")
+            else:
+                if tracker.get_slot("room_name") != None:
+                    dispatcher.utter_message(response="utter_changed_color_all_lights_with_room_name")
+                else:
+                    dispatcher.utter_message(response="utter_changed_color_all_lights")
+        else:
+            result = controller.updateColorLight(
+                color= colorId ,
+                device_type= tracker.get_slot("device_type"),
+                room_name= tracker.get_slot("room_name")
+            )
+
+            if result == Results.NOT_ALLOWED_OPERATION_ON_DEVICE:
+                dispatcher.utter_message(response="utter_can_not_change_color_of_device")
+            elif result == Results.DEVICE_NOT_FOUND:
+                dispatcher.utter_message(response="utter_no_devices_found_with_given_specs")
+            elif result == Results.NOT_ALLOWED_COLOR:
+                dispatcher.utter_message(response="utter_not_allowed_color")
+            elif result == Results.NO_COLOR_DETECTED:
+                dispatcher.utter_message(response="utter_no_color_detected")
+            else:
+                if tracker.get_slot("room_name") != None:
+                    dispatcher.utter_message(response="utter_changed_color_device_with_room_name")
+                else:
+                    dispatcher.utter_message(response="utter_changed_color_device")
+
+        return [] 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Firebase
+Firebase
+Firebase,,###
+Firebase
+Firebase
+Firebase
+Firebase,,###
+Firebase,,###
+Firebase
+Firebase
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Firebase
+
+Purpose of external services:
+Firebase: Firebase is used to manage and update the color of lights in the chatbot's functionality. It acts as the database and controller for the devices and their operations.

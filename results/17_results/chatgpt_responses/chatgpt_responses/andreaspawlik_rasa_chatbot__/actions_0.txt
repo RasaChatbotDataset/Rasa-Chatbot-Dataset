@@ -1,0 +1,105 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+
+# This is a simple example for a custom action which utters "Hello World!"
+
+from typing import Any, Text, Dict, List
+from xml.parsers.expat import model
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet
+from rasa_sdk.executor import CollectingDispatcher
+import pandas as pd
+from fuzzywuzzy import fuzz, process
+
+
+def find_best_match(item_list, user_input, cap = 30):
+    result = user_input
+    ratio = 0
+   
+    for item in item_list:
+        item_ratio = fuzz.ratio(item.lower(), user_input.lower())
+       
+        if item_ratio >= cap and item_ratio > ratio:
+            result = item
+            ratio = item_ratio
+   
+    return result
+
+class ActionProvidePrice(Action):
+
+    def name(self) -> Text:
+        return "action_provide_price"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        brand = tracker.get_slot('brand')
+        model = tracker.get_slot('model')
+        color = tracker.get_slot('color')
+        storage = tracker.get_slot('storage')
+        
+        df = pd.read_pickle('inventory.pkl')
+       
+        # this part of the code allows typos in user input.
+        #  
+        list_brand = df.Brand.unique().tolist()
+        brand = find_best_match(list_brand, brand, cap=60)
+
+        list_model = df.Type.unique().tolist()
+        model = find_best_match(list_model, model, cap=60)
+
+        list_color = df.Color.unique().tolist()
+        color = find_best_match(list_color, color, cap=60)
+    
+        storage = ''.join(i for i in storage if i.isdigit()) ## remove nondigits
+        storage += 'G' ## add unit as in the table
+        
+        msg = f'slot values: {brand}, {model}, {color}, {storage}'
+        dispatcher.utter_message(text=msg)
+
+        try:
+            matches = df[(df.Brand==brand) & (df.Type==model) & (df.Storage==storage) & (df.Color==color)]['Price']
+
+            price = matches.item()
+            msg = f'The price {price} euros!'
+            dispatcher.utter_message(text=msg)
+
+        except:
+
+            msg = 'The item cannot be found in the catalogue.'
+            dispatcher.utter_message(text=msg)
+
+        #return [SlotSet('brand', None), SlotSet('model', None), SlotSet('color', None), SlotSet('storage', None)]
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    inventory.pkl
+inventory.pkl
+inventory.pkl
+inventory.pkl
+inventory.pkl
+inventory.pkl
+inventory.pkl
+inventory.pkl
+inventory.pkl
+inventory.pkl
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+inventory.pkl
+
+Purpose of external services:
+inventory.pkl: This is a local database file that contains the inventory data used by the chatbot to provide information about the price of items based on user input.

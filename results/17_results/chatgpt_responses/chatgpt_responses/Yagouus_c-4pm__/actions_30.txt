@@ -1,0 +1,80 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from __future__ import annotations
+
+from abc import ABC
+from src.Declare4Py.D4PyEventLog import D4PyEventLog
+from src.Declare4Py.ProcessMiningTasks.AbstractPMTask import AbstractPMTask
+from src.Declare4Py.ProcessModels.AbstractModel import ProcessModel
+
+"""
+Initializes class QueryChecking, inheriting from class PMTask
+
+
+Attributes
+-------
+    consider_vacuity : bool
+        True means that vacuously satisfied traces are considered as satisfied, violated otherwise.
+
+    template_str : str, optional
+        if specified, the query checking is restricted on this DECLARE template. If not, the query checking is
+        performed over the whole set of supported templates.
+
+    max_declare_cardinality : int, optional
+        the maximum cardinality that the algorithm checks for DECLARE templates supporting it (default 1).
+
+    activation : str, optional
+        if specified, the query checking is restricted on this activation activity. If not, the query checking
+        considers in turn each activity of the log as activation.
+
+    target : str, optional
+        if specified, the query checking is restricted on this target activity. If not, the query checking
+        considers in turn each activity of the log as target.
+
+    act_cond : str, optional
+        activation condition to evaluate. It has to be written by following the DECLARE standard format.
+
+    trg_cond : str, optional
+        target condition to evaluate. It has to be written by following the DECLARE standard format.
+
+    time_cond : str, optional
+        time condition to evaluate. It has to be written by following the DECLARE standard format.
+
+    min_support : float, optional
+        the minimum support that a constraint needs to have to be included in the result (default 1).
+"""
+
+
+class AbstractQueryChecking(AbstractPMTask, ABC):
+
+    def __init__(self, log: D4PyEventLog, process_model: ProcessModel, min_support: float = 0.1,
+                 return_first: bool = False):
+        super().__init__(log, process_model)
+        self.min_support: float = min_support
+        self.return_first: bool = return_first
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Databases and services: D4PyEventLog, AbstractPMTask, ProcessModel
+Databases and services: D4PyEventLog, AbstractPMTask, ProcessModel
+None
+None
+None
+Databases and services: D4PyEventLog, AbstractPMTask, ProcessModel
+None
+None
+Databases and services: D4PyEventLog, AbstractPMTask, ProcessModel
+Databases and services: D4PyEventLog, AbstractPMTask, ProcessModel
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+D4PyEventLog, ProcessModel
+
+Purpose of external services:
+- D4PyEventLog: Used for handling and processing event logs in the context of process mining tasks.
+- ProcessModel: Represents the process model used for query checking within the process mining framework.

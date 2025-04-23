@@ -1,0 +1,73 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+# This is a simple example for a custom action which utters "Hello World!"
+import json
+from pathlib import Path
+from typing import Any, Text, Dict, List
+import pandas as pd
+import numpy as np
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
+import requests
+
+
+class ActionCheckExistence(Action):
+    weather_cond = pd.read_csv(Path("data/weather_codes.txt"), sep="\t")
+
+    def name(self) -> Text:
+        return "action_get_curr_weather"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        try:
+            response = requests.get("http://api.worldweatheronline.com/premium/v1/weather.ashx?key= ENTER KEY HER&q=Barcelona&format=json").json()
+
+            weather_code = response["data"]["current_condition"][0]["weatherCode"]
+            temperature = response["data"]["current_condition"][0]["temp_C"]
+
+            weather_text = self.weather_cond.loc[self.weather_cond['WeatherCode'] == str(weather_code)].iloc[0]["Condition"]
+
+            dispatcher.utter_message("Currently the weather outside is " + weather_text + " with a temperature of " + temperature + " degree celsius.")
+
+        except:
+            dispatcher.utter_message("Unfortunately I cannot check the weather for you at the moment. Sorry!")
+
+        return []
+
+
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    weather_codes.txt, api.worldweatheronline.com
+World Weather Online
+World Weather Online
+weather_codes.txt, api.worldweatheronline.com
+weather_codes.txt, World Weather Online API
+World Weather Online
+weather_codes.txt, api.worldweatheronline.com,,###
+weather_codes.txt, api.worldweatheronline.com
+World Weather Online
+weather_codes.txt, api.worldweatheronline.com
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+weather_codes.txt, World Weather Online API
+
+Purpose of external services:
+- weather_codes.txt: This is a local file containing weather codes and their corresponding weather conditions.
+- World Weather Online API: This is an external service used to fetch current weather data, including weather conditions and temperature.
