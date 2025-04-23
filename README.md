@@ -141,3 +141,9 @@ Execute script *16_select_chatbots* to filter the dataset by complexity and popu
 ```
 python 16_select_chatbots.py
 ```
+
+### 17. External services extraction
+Execute script *17_extract_external_services* to extract the external services used by the chatbot from the readme and the action files. This phase requires OpenAI API.
+```
+python 16_select_chatbots.py
+```
