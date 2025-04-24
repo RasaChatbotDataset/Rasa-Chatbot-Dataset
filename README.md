@@ -98,7 +98,6 @@ Execute script *09_analyze_domain.py* to extract domain definition data from all
 python 09_analyze_domain.py
 ```
 
-
 ### 10. Handle multi-domain files chatbots
 Execute script *10_handle_multi_domain.py* to remove domain file copies from MD repositories and to automatically merge domains which are divided into more files (domain files in MD chatbots which have no intersection). Results and statistics files will be generated in folder 'results/10_results'. MD chatbots automatically handled are marked as 'solved', while the rest of them (chatbots with domain files that are not the same domain but have an intersection) will be discarded.
 
@@ -145,5 +144,19 @@ python 16_select_chatbots.py
 ### 17. External services extraction
 Execute script *17_extract_external_services* to extract the external services used by the chatbot from the readme and the action files. This phase requires OpenAI API.
 ```
-python 16_select_chatbots.py
+python 17_extract_external_services.py
 ```
+
+### 18. External services filtering
+External services need to be checked as ChatGPT may have extracted also libraries or frameworks other than external services. This check is divided into 2 phases:
+
+1. **Automatic**: execute script *18_filter_external_services* to remove all services that match the *black-list* (common python local framework and libraries). Results will be save in file *1_chatbots.csv*
+2. **Manual**: check the resulting file to:
+    - Remove values that are not external services (e.g., script names, repeated services)
+    - Remove non-working services (deprecated APIs)
+    - Remove non-used services (services that do not appear within the code or the readme)
+    - Normalize services names across chatbots (e.g., mysql, mysql-connector, MySQL)
+    - Normalize database and endpoint names (e.g., "JSON files" instead of "file1.json", or "Local server" instead of localhost endpoints").
+
+After the filtering, you can merge services extracted from action files and readme files into a single field, *external-services*, as in file *3_chatbots.csv*.
+    
