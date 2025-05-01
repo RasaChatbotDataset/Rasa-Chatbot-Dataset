@@ -1,24 +1,20 @@
 REQUEST
-Problem: This is a python actions.py file of Rasa chatbot 
-from typing import Any, Text, Dict, List
+Problem: This is a README file from a Rasa chatbot repository Docker Hub [image](https://hub.docker.com/r/stephens/jokebot/tags?page=1&ordering=last_updated)
 
-from rasa_sdk import Action, Tracker
-from rasa_sdk.executor import CollectingDispatcher
+Notes on building the action agent image:
 
+- Setup build using [rasa-action-server-gha](https://github.com/RasaHQ/rasa-action-server-gha)
 
-class ActionHelloWorld(Action):
+# Local Action Agent Build
 
-    def name(self) -> Text:
-        return "action_hello_world"
+```sh
+cd actions
+export CR_PAT=xxx
+./build.sh
+#docker build -t stephens/jokebot:test .
+#docker tag stephens/jokebot:test stephens/jokebot:1.0.2
+```
 
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
-        dispatcher.utter_message(text="Hello World!")
-
-        return []
- 
         Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
         
     For this problem I received these answers, each with a list of services:

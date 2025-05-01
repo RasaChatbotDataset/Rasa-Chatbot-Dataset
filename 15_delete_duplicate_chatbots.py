@@ -103,7 +103,7 @@ def main():
     chatbots.to_csv(RESULTS_FOLDER + 'chatbots_join_date.csv', sep=CSV_SEPARATOR, index=False)
     
     # Order chatbots to have copies one after another
-    order_fields = FIELDS + ['version', 'stars', 'forks', 'created-at'] # TODO: rivedere insieme priorià 
+    order_fields = FIELDS + ['version', 'stars', 'forks', 'created-at'] 
     # <3.0 becomes 1.5
     chatbots['version'] = chatbots['version'].replace('<3.0', '1.5')
     chatbots[['n-entities', 'n-slots', 'n-slots-from-text', 'n-slots-from-entity', 'n-forms']] = chatbots[['n-entities', 'n-slots', 'n-slots-from-text', 'n-slots-from-entity', 'n-forms']].astype(int)

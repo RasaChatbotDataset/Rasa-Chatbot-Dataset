@@ -35,7 +35,7 @@ def main():
         chatbot['has-english'] = ast.literal_eval(chatbot['has-english'])
         recent = chatbot['version'] == '3.1' or chatbot['version'] == '3.6' or chatbot['version'] == '3.0'
 
-        if chatbot['has-english'] and int(chatbot['stars']) > 0 and int(chatbot['n-actions-files']) > 0 and (int(chatbot['n-entities']) > 0 or int(chatbot['n-slots']) > 0) and recent:
+        if chatbot['has-english'] and int(chatbot['stars']) > 0 and int(chatbot['n-actions']) > 0 and int(chatbot['n-actions-files']) > 0 and (int(chatbot['n-entities']) > 0 or int(chatbot['n-slots']) > 0) and recent:
             del chatbot['wide-has-english']
             del chatbot['has-english']
             writer.writerow(chatbot)
