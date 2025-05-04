@@ -3,8 +3,8 @@ import os
 import ast
 
 CSV_SEPARATOR = ';'
-INPUT_FOLDER = 'results/17_results/'
-RESULTS_FOLDER = 'results/18_results/'
+INPUT_FOLDER = 'results/18_results/'
+RESULTS_FOLDER = 'results/19_results/'
 CHATBOT_FILE = 'chatbots.csv'
 STATISTICS = 'blacklist-statistics.txt'
 
@@ -23,7 +23,7 @@ def main():
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
-    bl_file = open('18_services_black_list.csv', 'r', encoding="utf-8")
+    bl_file = open('19_services_black_list.csv', 'r', encoding="utf-8")
     blacklist = bl_file.read().split(CSV_SEPARATOR)
     print(blacklist)
 

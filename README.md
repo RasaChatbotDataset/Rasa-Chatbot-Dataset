@@ -129,28 +129,34 @@ Execute script *14_extract_response_language* to extract the language of respons
 python 14_extract_response_language.py
 ```
 
-### 15. Chatbot copies removal
-Execute script *15_delete_duplicate_chatbots* to remove copies of the same chatbot from the dataset. Copies are ordered by version, stars, forks and creation date, and only the first one will be kept; copies with same structure but different action files will be kept.
+### 15. Language evaluation
+Since detectlanguage API may identify more languages incorrectly, perform a manual check over chatbots with more than one language to remove - correct them. Save the results in a file named *chatbots_language_check.csv* under folder *results/15_results*. After this check, execute script *15_evaluate_language* to evaluate chatbots languages and the use of English.
 ```
-python 15_delete_duplicate_chatbots.py
-```
-
-### 16. Chatbot selection
-Execute script *16_select_chatbots* to filter the dataset by complexity and popularity criteria.
-```
-python 16_select_chatbots.py
+python 15_evaluate_language.py
 ```
 
-### 17. External services extraction
-Execute script *17_extract_external_services* to extract the external services used by the chatbot from the readme and the action files. This phase requires OpenAI API.
+### 16. Chatbot copies removal
+Execute script *16_delete_duplicate_chatbots* to remove copies of the same chatbot from the dataset. Copies are ordered by version, stars, forks and creation date, and only the first one will be kept; copies with same structure but different action files will be kept.
 ```
-python 17_extract_external_services.py
+python 16_delete_duplicate_chatbots.py
 ```
 
-### 18. External services filtering
+### 17. Chatbot selection
+Execute script *17_select_chatbots* to filter the dataset by complexity and popularity criteria.
+```
+python 17_select_chatbots.py
+```
+
+### 18. External services extraction
+Execute script *18_extract_external_services* to extract the external services used by the chatbot from the readme and the action files. This phase requires OpenAI API.
+```
+python 18_extract_external_services.py
+```
+
+### 19. External services filtering
 External services need to be checked as ChatGPT may have extracted also libraries or frameworks other than external services. This check is divided into 2 phases:
 
-1. **Automatic**: execute script *18_filter_external_services* to remove all services that match the *black-list* (common python local framework and libraries). Results will be save in file *1_chatbots.csv*
+1. **Automatic**: execute script *19_filter_external_services* to remove all services that match the *black-list* (common python local framework and libraries). Results will be save in file *1_chatbots.csv*
 2. **Manual**: check the resulting file to:
     - Remove values that are not external services (e.g., script names, repeated services)
     - Remove non-working services (deprecated APIs)

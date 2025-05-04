@@ -3,8 +3,8 @@ import os
 import csv
 
 
-RESULTS_FOLDER = 'results/16_results/'
-INPUT_FOLDER = 'results/15_results/'
+RESULTS_FOLDER = 'results/17_results/'
+INPUT_FOLDER = 'results/16_results/'
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 
@@ -24,7 +24,6 @@ def main():
     chatbots = list(reader)
 
     header = reader.fieldnames
-    header.remove('wide-has-english')
     header.remove('has-english')
 
     result_file = open(RESULTS_FOLDER + CHATBOT_FILE, 'w', newline='', encoding='utf-8')
@@ -36,7 +35,6 @@ def main():
         recent = chatbot['version'] == '3.1' or chatbot['version'] == '3.6' or chatbot['version'] == '3.0'
 
         if chatbot['has-english'] and int(chatbot['stars']) > 0 and int(chatbot['n-actions']) > 0 and int(chatbot['n-actions-files']) > 0 and (int(chatbot['n-entities']) > 0 or int(chatbot['n-slots']) > 0) and recent:
-            del chatbot['wide-has-english']
             del chatbot['has-english']
             writer.writerow(chatbot)
     

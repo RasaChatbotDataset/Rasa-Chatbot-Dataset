@@ -14,9 +14,9 @@ TOP_P = 0.15
 config = dotenv_values('config.env')
 
 FILES = ['results/08_results/chatbot_repositories_sfsd.csv', 'results/08_results/chatbot_repositories_mfsd.csv', 'results/08_results/chatbot_repositories_sfmd.csv', 'results/08_results/chatbot_repositories_mfmd.csv']
-RESULTS_FOLDER = 'results/17_results/'
+RESULTS_FOLDER = 'results/18_results/'
 CHATGPT_RESPONSE_FOLDER = RESULTS_FOLDER +'/chatgpt_responses'
-INPUT_FOLDER = 'results/16_results/'
+INPUT_FOLDER = 'results/17_results/'
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
