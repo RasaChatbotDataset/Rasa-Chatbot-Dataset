@@ -8,7 +8,7 @@ import csv
 
 RESULTS_FOLDER = 'results/15_results/'
 INPUT_FILE = RESULTS_FOLDER + 'chatbots_language_check.csv'
-OUTPUT_FILE = RESULTS_FOLDER + 'chatbots.csv'
+OUTPUT_FILE = RESULTS_FOLDER + 'chatbots2.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 
@@ -68,8 +68,9 @@ def main():
                 chatbot['pure-english'] = True
         
 
-        # Write chatbot        
-        writer.writerow(chatbot)
+        # Write chatbot 
+        if chatbot['languages']:       
+            writer.writerow(chatbot)
 
     # Close files
     chatbot_file.close()
