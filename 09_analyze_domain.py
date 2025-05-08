@@ -3,6 +3,7 @@ import yaml
 import ast
 import csv
 import os
+import traceback
 
 
 CSV_SEPARATOR= ';'
@@ -11,11 +12,10 @@ RESULTS_FOLDER = 'results/09_results'
 INPUT_FOLDER = 'results/08_results'
 
 FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
-    'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 
-    'slots-type','n-forms', 'forms', 'version'
-]
+    'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 
+    'slots-type','n-forms', 'forms', 'version']
 
-  
+csv.field_size_limit(100000000)
 
 # Initialize chatbot information
 def initialize_chatbot_info(chatbot_info):
@@ -40,6 +40,9 @@ def extract_domain_info(repository, file_path, chatbot_info):
             # Intents extraction
             if 'intents' in domain:
                 intents = []
+                if type(domain['intents']) == str:
+                    chatbot_info['exception'] = 'Intents field is str, expected list'
+                    return -1
                 for intent in domain['intents']:
                     # Intent as a dictionary
                     if type(intent) == dict:
@@ -55,6 +58,9 @@ def extract_domain_info(repository, file_path, chatbot_info):
             # Entities extraction
             if 'entities' in domain:
                 entities = []
+                if type(domain['entities']) == str:
+                    chatbot_info['exception'] = 'Entities field is str, expected list'
+                    return -1
                 for entity in domain['entities']:
                     # Entity as a dictionary
                     if type(entity) == dict:
@@ -70,6 +76,9 @@ def extract_domain_info(repository, file_path, chatbot_info):
             # Forms extraction
             if 'forms' in domain:
                 forms = []
+                if type(domain['forms']) == str:
+                    chatbot_info['exception'] = 'Forms field is str, expected list'
+                    return -1
                 for form in domain['forms']:
                     # Form as a dictionary
                     if type(form) == dict:
@@ -84,6 +93,10 @@ def extract_domain_info(repository, file_path, chatbot_info):
             
             # Slots extraction
             if 'slots' in domain:
+
+                if type(domain['slots']) == str:
+                    chatbot_info['exception'] = 'Slots field is str, expected list'
+                    return -1
 
                 chatbot_info['slots'] = []
                 slot_types = []
@@ -120,6 +133,9 @@ def extract_domain_info(repository, file_path, chatbot_info):
 
             # Actions extraction
             if 'actions' in domain:
+                if type(domain['actions']) == str:
+                    chatbot_info['exception'] = 'Action field is str, expected list'
+                    return -1
                 chatbot_info['actions']= domain['actions']
                 chatbot_info['n-actions'] = len(domain['actions'])
 
@@ -130,13 +146,35 @@ def extract_domain_info(repository, file_path, chatbot_info):
                 chatbot_info['version'] = 'unknown'
 
              
-        except Exception as e:
+        except Exception:
             print(f"Parsing error for repository {chatbot_info['full-name']}")
-            chatbot_info['exception'] = e
+            chatbot_info['exception'] =  traceback.format_exc()
             return -1
 
     #print(chatbot_info)
     print('End domain extraction')
+    return chatbot_info
+
+def analyze_actions(chatbot_info, repository):
+    chatbot_info['actions-custom'] = []
+
+    for file in chatbot_info['actions-files']:
+
+        full_path = chatbot_info['full-name'].split('/')[-1]+'-'+chatbot_info['last-commit']+ '/' + file
+        action_file = repository.open(full_path)
+
+        # Decode error
+        try:
+            content = action_file.read().decode()
+        except:
+            print(f"Decode error")
+            continue
+
+        for action in chatbot_info['actions']:
+            if ('return\"'+str(action) in content.replace(' ', '') or 'return\''+str(action) in content.replace(' ', '') or str(action)=='action_query_knowledge_base') and action not in chatbot_info['actions-custom']:
+                chatbot_info['actions-custom'].append(action)
+
+    chatbot_info['n-actions-custom'] = len(chatbot_info['actions-custom'])
     return chatbot_info
     
 
@@ -165,6 +203,7 @@ def main():
         for chatbot_info in chatbots:
             print(chatbot_info['full-name'])
             chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files'])
+            chatbot_info['actions-files'] = ast.literal_eval(chatbot_info['actions-files'])
 
  
             zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
@@ -185,6 +224,11 @@ def main():
                         chatbot_info['chatbot-type'] = file.replace('chatbot_repositories_', '').replace('.csv', '')
                         error_writer.writerow(chatbot_info)
                     else:
+                        if int(result['n-actions-files']) != 0 and int(result['n-actions'] != 0):
+                            result=analyze_actions(result, repository)
+                        else:
+                            result['actions-custom'] = []
+                            result['n-actions-custom'] = 0
                         analysis_writer.writerow(result)
 
                 else:

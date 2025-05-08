@@ -106,16 +106,16 @@ We would like to express our gratitude to the open-source community for providin
         Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
         
     For this problem I received these answers, each with a list of services:
-    Flask, flask_sqlalchemy, SQLAlchemy, Requests, rasa, rasa-sdk,,##
-Flask-SQLAlchemy, SQLAlchemy, Requests,,##
-Flask-SQLAlchemy, SQLAlchemy, Requests,,##
-Flask, flask_sqlalchemy, SQLAlchemy, Requests, reportlab, rasa, rasa-sdk,,##
-Flask-SQLAlchemy, SQLAlchemy, Requests,,##
-Flask-SQLAlchemy, SQLAlchemy, Requests,,##
-Flask-SQLAlchemy, SQLAlchemy, Requests,,##
-Flask, flask_sqlalchemy, SQLAlchemy, Requests, rasa, rasa-sdk,,##
-Flask, flask_sqlalchemy, SQLAlchemy, Requests, rasa, rasa-sdk,,##
-Flask-SQLAlchemy, SQLAlchemy, Requests,,##
+    Databases and services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose, Bootstrap, Rasa, rasa-sdk
+Databases and Services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose
+Databases and services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose, Bootstrap, Rasa, rasa-sdk
+Databases and Services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose, Bootstrap, Rasa, rasa-sdk
+Databases and Services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose, Bootstrap, Rasa, rasa-sdk
+Databases and Services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose, Bootstrap, Rasa, rasa-sdk
+Databases and Services: Flask SQLAlchemy, SQLAlchemy, Requests, Docker, Docker Compose
+Databases and Services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose
+Databases and services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose
+Databases and services: Flask, flask_sqlalchemy, SQLAlchemy, Requests, Docker, Docker compose, Bootstrap, Rasa, rasa-sdk
     Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
     Different answers may refer to the same service with different names, and there could be missing services that you have to add.
     Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
@@ -124,11 +124,12 @@ Flask-SQLAlchemy, SQLAlchemy, Requests,,##
     If the file doesn't use any external service nor database, answer only with "NO" and nothing else
 
 RESPONSE
-Flask-SQLAlchemy, SQLAlchemy, Requests, rasa, rasa-sdk
+Flask, SQLAlchemy, Docker, Docker Compose, Rasa
 
 ## Purpose of external services
-- **Flask-SQLAlchemy**: An extension for Flask that adds support for SQLAlchemy, making it easier to use SQLAlchemy with Flask applications.
-- **SQLAlchemy**: A SQL toolkit and Object-Relational Mapping (ORM) library for Python, used for database interactions.
-- **Requests**: A simple HTTP library for Python, used for making HTTP requests.
-- **rasa**: An open-source machine learning framework for building AI assistants and chatbots.
-- **rasa-sdk**: A toolkit for developing custom actions for Rasa, allowing the chatbot to perform specific tasks based on user input.
+
+- **Flask**: A micro web framework used for building web applications, providing the necessary tools to create a web interface for the chatbot.
+- **SQLAlchemy**: A SQL toolkit and Object-Relational Mapping (ORM) system for Python, used to interact with databases and manage data persistence.
+- **Docker**: A platform for developing, shipping, and running applications in containers, ensuring consistent environments across different systems.
+- **Docker Compose**: A tool for defining and running multi-container Docker applications, used to manage the deployment of the chatbot and its components.
+- **Rasa**: An open-source machine learning framework for building AI assistants, providing natural language understanding and dialogue management capabilities for the chatbot.

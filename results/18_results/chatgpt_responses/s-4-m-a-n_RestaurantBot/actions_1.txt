@@ -1,12 +1,7 @@
 REQUEST
-Problem: This is a README file from a Rasa chatbot repository # Recipe_Dialog_Bot
-
-Plain Python recipe chatbot written by Jipeng Sun, Joshua Levitas and Komal Thakkar. Based on the recipe link user input, the bot can assist people on preparing ingredients, answering questions related with cooking steps. The rasa version is under construction.
-
-After configure your environment based on the requirements.txt. Please run dialog.py. The bot is still not smart enough to generalize with all possible utterances. To make sure you can get a solid answer, try to follow our example stories.
-
-Thanks!
-
+Problem: This is a python actions.py file of Rasa chatbot import post_order_actions
+import pre_order_actions
+ 
         Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
         
     For this problem I received these answers, each with a list of services:

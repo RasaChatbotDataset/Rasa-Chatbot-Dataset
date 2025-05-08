@@ -131,8 +131,8 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
     file_list = repository.namelist()
 
     # Select python files named actions.py or in folder actions
-    file_regex = re.compile(".*/actions\\.py$")
-    folder_regex = re.compile(".*/actions/.*\\.py$")
+    file_regex = re.compile(".*actions.*\\.py$")
+    folder_regex = re.compile(".*actions.*/.*\\.py$")
 
     actions_file_list = list(filter(file_regex.match, file_list))
     actions_file_list += list(filter(folder_regex.match, file_list))
