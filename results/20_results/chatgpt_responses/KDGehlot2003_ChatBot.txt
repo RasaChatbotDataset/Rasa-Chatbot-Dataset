@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: ChatBot
+                - the description: My first ever chatbot using rasa
+                - the README: 
+                - the list of intents: ['affirm', 'apply_for_leave', 'bank', 'bot_challenge', 'deny', 'get_end_date', 'get_reason_for_leave', 'get_secret_key', 'get_type_of_leave', 'goodbye', 'greet', 'mood_great', 'mood_unhappy', 'get_start_date', 'confirm_details', 'get_start_time', 'get_end_time', 'get_location', 'get_date', 'apply_for_early_going', 'apply_for_late_coming', 'apply_for_od', 'apply_for_od_only']
+                - the list of entities: ['st_dt', 'reason', 'firstN', 'date', 'id', 'l_type', 'st_time', 'sk', 'ed_time', 'location', 'ed_dt']
+                - the list of actions: ['action_create_database', 'action_hello_world', 'action_leave_type', 'action_secret_key', 'utter_ask_end_date', 'utter_ask_reason_for_leave', 'utter_secret_key', 'utter_ask_start_date', 'utter_reason_for_leave', 'utter_type_of_leave', 'action_start_date', 'action_end_date', 'action_reason_type', 'utter_ask_date_of_eg', 'action_date', 'action_start_time', 'action_end_time', 'action_location', 'action_reason', 'action_early_going', 'utter_ask_location', 'utter_ask_start_time', 'utter_ask_end_time', 'action_late_coming', 'action_od_tour', 'utter_ask_date_of_lc', 'utter_thanks_leave', 'utter_thanks_eg', 'utter_thanks_lc', 'utter_thanks_od_tour', 'action_od_only', 'utter_thanks_od_only', 'utter_ask_date_of_od']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Business

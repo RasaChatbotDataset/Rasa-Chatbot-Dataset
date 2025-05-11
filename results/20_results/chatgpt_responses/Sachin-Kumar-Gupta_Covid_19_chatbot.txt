@@ -1,0 +1,17 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Covid_19_chatbot
+                - the description: None
+                - the README: # Covid_19_chatbot
+
+To run chatbot locally first open cmd, go to your env(if created) then run "rasa run -m models --enable-api --cors "*" --debug".
+After runinng the above code, open another cmd and run "python app.py(flask file name).
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'basic_info', 'bot_challenge', 'age_risk', 'time', 'symptoms', 'precautions', 'spread_air', 'treatment_at_home', 'spreading_of_covid', 'vitamins', 'about_sanitizer', 'about_mask', 'about_vaccine', 'state_wise_cases', 'state_wise_doses', 'children_mask_info', '5year_or_less_age_children_mask_condition', 'children_health_condition', 'children_mask_type', 'children_mask_at_home', 'children_mask_when_playing', 'children_mask_alternative', 'medicines', 'out_of_scope', 'testing_qna', 'immunity_booster', 'immunity_booster_foods', 'corona_community', 'corona_infected_person', 'Thanks']
+                - the list of entities: ['state', 'dose']
+                - the list of actions: ['action_corona_cases', 'action_vaccine_done', 'utter_greet', 'utter_age_risk', 'utter_basic_info', 'utter_goodbye', 'utter_iamabot', 'utter_spread_air', 'utter_symptoms', 'utter_time', 'utter_precautions', 'utter_treatment_at_home', 'utter_spreading_of_covid', 'utter_vitamins', 'utter_sanitizer', 'utter_about_mask', 'utter_about_vaccine', 'utter_children_mask_condition', 'utter_5year_or_less_age_children_mask_condition', 'utter_children_health_condition', 'utter_children_mask_type', 'utter_children_mask_at_home', 'utter_children_mask_when_playing', 'utter_children_mask_alternative', 'utter_medicines', 'utter_out_of_scope', 'utter_testing', 'utter_immunity_booster', 'utter_immunity_booster_foods', 'utter_corona_community', 'utter_corona_infected_person', 'utter_Thanks']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical

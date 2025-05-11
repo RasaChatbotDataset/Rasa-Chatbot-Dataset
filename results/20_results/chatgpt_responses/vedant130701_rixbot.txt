@@ -1,0 +1,15 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rixbot
+                - the description: This a personal chatbot made to try out the RASA 3.0 framework
+                - the README: # rixbot
+This a personal chatbot made to try out the RASA 3.0 framework
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'chitchat', 'joke', 'inform_name']
+                - the list of entities: ['time', 'joke_type', 'name']
+                - the list of actions: ['action_tell_joke']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Personalization

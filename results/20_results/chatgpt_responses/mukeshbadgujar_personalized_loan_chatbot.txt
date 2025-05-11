@@ -1,0 +1,69 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: personalized_loan_chatbot
+                - the description: None
+                - the README: 
+![ScreenShot](static/img/banner.png)
+
+
+  ***An Open Source ChatBot widget easy to connect to RASA bot through [Rest](https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/#rest-channels) Channel.***
+
+
+![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
+[![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/uses-html.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/uses-css.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
+
+## Features
+
+- Text 
+- Markdown
+- Buttons
+- Images
+- Video 
+- PDF Attachment
+- Dropdown
+- Quick replies
+- Cards carousel
+- Charts
+- Collapsible
+- Bot typing indicator
+- Location access
+
+
+
+## Instructions
+- You can read the instructions here in [instructions.md](docs/instructions.md)
+
+## Documentation
+- Check out the documentation on how to send bot response from Rasa in [response.md](docs/responses.md)
+- If you want to modify the UI elements, you can read on how to do here: [modifications.md](docs/modifications.md)
+
+## Gallery:
+- Check out the sample pics here [gallyery.md](docs/gallery.md)
+
+## Library used:
+- [Materialize CSS](https://materializecss.com) for CSS
+- [Showdownjs](https://github.com/showdownjs/showdown) for Markdown suppport
+- [Chart.js](https://www.chartjs.org/) for Charts
+
+
+
+
+
+
+                - the list of intents: ['greet', 'goodbye', 'order_pizza', 'affirm', 'request_pizza_list']
+                - the list of entities: ['pizza_type', 'pizza_size']
+                - the list of actions: ['utter_greet', 'utter_ask_pizza_type', 'utter_slots_values', 'utter_ask_pizza_size', 'utter_confirm_order', 'utter_no_pizza_type', 'utter_goodbye', 'utter_affirm', 'actions.pizza_actions.ActionCheckPizzaAvailability', 'actions.pizza_actions.ActionUtterPizzaList', 'actions.general_actions.ActionUtterGreet', 'actions.general_actions.ActionUtterAffirm', 'action_check_pizza_availability']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

@@ -1,0 +1,67 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rasa_chatbot
+                - the description: None
+                - the README: # rasa_chatbot
+
+## Introduction
+
+This repo is a result of the Zeiss ZDP hackathon challenge in 06/2022. 
+
+## Goal
+
+Build a chatbot to implement a self-service channel to customers. 
+
+- Provide Q&A in a customer self-service scenario
+- Use RASA technology for building contextual text-based assistants
+- Bot should respond to questions of device-specific information
+- Bot should use data from tabular database
+
+## Getting Started
+
+### Requirement
+
+- python 3.7 or 3.8
+- pandas
+- rasa 3.1 ([Here for step-by-step installation](https://rasa.com/docs/rasa/installation/))
+- fuzzywuzzy: `pip install fuzzywuzzy`
+
+### Starting the bot
+
+Code has been only set up locally. To run the bot, follow these steps: 
+
+1. Start the action server.
+    1. Navigate to your rasa directory. 
+    2. `rasa run actions` . This starts the server for the custom action. 
+    3. Keep this tab open and running when testing the bot. 
+2. Start the bot. 
+    1. Open a second terminal 
+    3. Train the bot by `rasa train`
+    2. Start the bot by `rasa shell`
+    2. You can now chat with the bot :) 
+
+## Known issues
+
+- slot values persist after inquiry. 
+- still some typo intolerance. 
+- asking "how much is an iphone 13", and the bot asks "which brand do you want?" (bot should infer the brand!)
+
+## Future features
+
+Due to time constraint, following nice-to-have features haven't been implemented yet:
+
+- Run bot on a server
+- Use endpoint to connect bot with MS teams
+- if an item could not be found (e.g., Samsung iphone), the bot should propose an alternative (e.g., "did you mean Apple iphone?")
+- Implementation of different languages (DE, CN etc)
+- More semantic logics, e.g. “give top-tier smartphone” -> return the most phones
+- Contextual understanding
+
+                - the list of intents: ['ask_bot_name', 'ask_feelings', 'ask_other_articles', 'ask_price', 'bot_challenge', 'buy_phone', 'goodbye', 'greet', 'offend', 'out_of_scope']
+                - the list of entities: ['color', 'model', 'storage', 'brand']
+                - the list of actions: ['action_provide_price', 'utter_ask_feelings', 'utter_phone_form_filled', 'utter_slots_values']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

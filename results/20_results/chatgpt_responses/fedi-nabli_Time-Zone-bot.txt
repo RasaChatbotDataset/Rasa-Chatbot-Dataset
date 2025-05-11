@@ -1,0 +1,44 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Time-Zone-bot
+                - the description: ✨ A simple chat bot made with rasa ✨
+                - the README: # Time Zone Bot
+
+The time zone bot is bot created using the rasa framework, it shows an example of how to create a simple or even more complex chatbots with the rasa framework without
+any need to have a deep understanding a chatbot.
+
+This project is perfect for:
+- People who are experienced in ML and ChatBot creations and want to learn new technologies
+- As well as beginners in the field of chat bots and want to have a general understanding of how it works
+
+# Installation:
+**Recommended way**\
+You need to have installed:
+- [Pyhon 3.9 or above](https://www.python.org/downloads/release/python-390/)
+- [Rasa](https://rasa.com/docs/rasa/installation/installing-rasa-open-source/)
+
+If you want to or already have went through the hassle of installing Python and Rasa, you can ```git clone``` this repository, then ```cd Time-Zone-Bot```.
+
+# Running the project:
+- To train the model run ```rasa train```, if it doesn't work try running ```python -m rasa train```, otherwise check your installation.
+- To run the model run ```rasa shell```, if it doesn't work try running ```python -m rasa shell``` to talk with the bot.
+- to run the NLU model run ```rasa shell nlu```, if it doens't work try running ```python -m rasa shell nlu``` to see the accuracy and entities
+- **Important**\
+- run the custom actions before running the shell by ```rasa run actions```, if it doens't work ```python -m rasa run actions```.
+
+# Screenshots
+<img src="./demo/bot_response.png" />
+<img src="./demo/bot_response_2.png" />
+
+- to stop the running bot type: ```/stop```
+
+<img src="./demo/stop_bot.png" />
+
+                - the list of intents: ['greet', 'goodbye', 'find_time_zone', 'find_time_zone_for_location', 'city_info', 'thanks']
+                - the list of entities: ['city']
+                - the list of actions: ['action_show_time_zone']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

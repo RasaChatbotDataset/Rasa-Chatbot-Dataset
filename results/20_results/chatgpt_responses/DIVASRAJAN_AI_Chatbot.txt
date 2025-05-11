@@ -1,0 +1,26 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: AI_Chatbot
+                - the description: AI chatbot created using rasa
+                - the README: # AI_Chatbot
+AI chatbot created using rasa
+
+python 3.9
+
+rasa init command gives the files which we want to create a chatbot in the specified folder.
+what we want to do is just change it based on our need.
+
+I created this as a basic restaurant booking chatbot.
+
+create a database in mysql add details of restaurants 
+created two 'action' functions to fetch the location and the restaurants in the specific location based on user's interst
+used 'slot' to remember what was the location which user said to verify at the final point 
+
+                - the list of intents: ['affirm', 'book_restaurant', 'bot_challenge', 'deny', 'goodbye', 'greet', 'mood_great', 'mood_unhappy', 'num_people', 'rest_name', 'user_location']
+                - the list of entities: ['number', 'hotel', 'place']
+                - the list of actions: ['utter_people', 'action_reservation_confirm', 'action_fetch_hotel_mysql', 'utter_success', 'utter_location', 'action_fetch_data_mysql', 'utter_rest_name']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Food & Drink

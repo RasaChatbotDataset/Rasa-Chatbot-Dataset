@@ -1,0 +1,35 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: RasaChatbot
+                - the description: None
+                - the README: <h1>Rasa Chatbot</h1>
+
+<h2>Overview</h2>
+
+<p>Chatbot</p>
+
+<h2>Requirement</h2>
+
+python3<br>
+Rasa Framework<br>
+Django Framework<br>
+
+
+
+
+<h2>Outcome</h2>
+
+![Screenshot 2023-06-28 113834](https://github.com/samriddhasingh/RasaChatbot/assets/59139917/dc9de81a-cb04-4212-aabb-7cc3b9a5ad85)
+
+
+
+![Screenshot 2023-06-28 113912](https://github.com/samriddhasingh/RasaChatbot/assets/59139917/9ff7156a-1ebb-4f31-b754-d59840662e86)
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'name_entry', 'account_number_entry', 'phone_number_entry', 'check_balance']
+                - the list of entities: ['account_number', 'name', 'phone_number']
+                - the list of actions: ['action_show_account_details']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

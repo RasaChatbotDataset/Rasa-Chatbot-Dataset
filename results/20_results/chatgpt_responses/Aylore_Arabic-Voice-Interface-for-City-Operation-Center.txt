@@ -1,0 +1,435 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Arabic-Voice-Interface-for-City-Operation-Center
+                - the description: A  multi-language virtual assistant
+                - the README: # **Arabic-Voice-Interface-for-City-Operation-Center**
+
+## **About**
+
+A city operations center (COC) enables smart city operators to integrate data from different sectors and agencies, manage resources, relate to the citizens and address their concerns.
+
+Giza Systems offers a software platform for city operation center that enables the operators to manage IoT assets in smart cities by collecting data from these assets, create alarms based on the received data, calculate KPIs, configure schedulers, manage Standard Operation Procedures (SOPs), build dashboards, and train ML models. 
+
+## **Description**
+
+In this project, we aimed to build a voice interface for the Asset-360 view screen. The COC operator can simply use this voice interface by asking questions related to the asset and the interface will reply with the answers to the operator questions.
+
+The answer to the operator's question will be in the same language of the question (AR -> AR) or (ENG -> ENG). This can save time for the operators instead of navigating through the screens of different assets.
+
+The target of this project is to map the operator questions to pieces of information related to the asset. 
+
+## **Table of Contents**
+1. [Introduction](#introduction)
+2. [Project Structure](#project-structure)
+3. [Getting Started](#getting-started)
+4. [Pipeline](#pipeline)
+    1. [Speech to Text](#speech-to-text)
+    2. [Text Translation 1](#text-translation-1)
+    3. [Rasa Chatbot](#rasa-chatbot)
+    4. [Text Translation 2](#text-translation-2)
+    5. [Text to Speech](#text-to-speech)
+    6. [LipSync](#lipsync)
+    7. [Face Restoration](#face-restoration)
+    8. [Django Integration](#django-integration)
+5. [Running The Pipeline](#running-the-pipeline)
+6. [Examples](#examples)
+7. [Team Members](#team-members)
+8. [Contributing](#contributing)
+9. [Future Work](#future-work)
+10. [Acknowledgments](#acknowledgements)
+
+
+## **Introduction**
+This repository contains the full code for an Arabic & English virtual assistant 
+
+> **It was developed as a final graduation project for ITI Intake 43 AI Mansoura Branch in July 2023 Under the supervision of [Giza Systems](https://gizasystems.com/).**
+
+
+## **Project Structure**
+```
+├── Interface
+│   ├── google_app
+│   ├── interface
+├── data
+├── notebooks
+├── src
+│   ├── rasa
+│   ├── speechtotext
+│   ├── texttospeech
+│   ├── translation
+│   └── wav2lip
+└── utils
+```
+
+The repository is organized as follows:
+
+- **Interface/:** This directory is the django project and contains `google_app` as the django app.  
+
+- **data/:** This directory contains the dataset used for training and evaluation. It includes both the raw data and preprocessed versions, if applicable.
+
+- **notebooks/:** This directory contains Jupyter notebooks that provide step-by-step explanations of the data exploration, preprocessing, model training, and evaluation processes.
+
+- **src/:** This directory contains the source code for the project, including data preprocessing scripts, model training scripts, and evaluation scripts.
+
+- **utils/:** This directory contains utility functions and helper scripts used throughout the project.
+
+## Getting Started
+
+*   It is recommended to set up a virtual environment for this project using **python 3.8.16**
+*   You need to provide API keys for **Google Cloud Services** and **Azure Cognitive Speech Services**, in the following modules:
+    * utils/detect_language.py
+    * src/translation/azure_translator.py
+    * src/translation/google_translator.py
+    * src/texttospeech/google_text_to_speech.py
+    * src/texttospeech/azure_text_to_speech.py
+    * src/speechtotext/google_speech_to_text.py
+    * src/speechtotext/azure_speech_to_text.py
+
+
+To get started with the project, follow these steps:
+
+1. Clone the repository: 
+   ```
+   git clone https://github.com/Aylore/Arabic-Voice-Interface-for-City-Operation-Center
+   ```
+2. Change directory into the repository:
+   ```
+   cd Arabic-Voice-Interface-for-City-Operation-Center
+   ```
+
+3. Install the **required** dependencies:
+     ```
+     make install
+     ```
+
+  > You will only need to do this for your first time (feel free to use your own)
+    
+1. Download this pretrained model for the `wav2lip` model using 
+   ```
+   make wav2lip-model
+   ```
+2. Train rasa chatbot using 
+   ```
+   make rasa-train
+   ```
+
+## **Pipeline**
+
+
+1. ### Speech To Text
+
+    The first step of the pipeline is to transcribe the user's spoken question into text using a speech-to-text system. We use the **Azure Speech Services API** to perform this task,
+    for more information check [SST-online](https://github.com/Ayloretree/STT-online)  branch README, where we compare between speech-to-text services including **AWS** and **Google Cloud**.
+
+2. ### Text Translation 1
+
+    If the user asked the question in arabic, the text is translated to english before feeding the question to the chat bot.
+   
+3. ### Rasa Chatbot
+
+    After getting the transcript of the question, The chatbot generates a response to the user's question based on the intent and entities identified in the question. it calls an API endpoint to retrieve the answer.
+
+4. ### Text Translation 2
+
+    If the user asked the question was in arabic, the text is translated from english to arabic after getting the answer from the chat bot and before generating audio file.
+
+5. ### Text To Speech
+   
+    After getting the response from our chatbot We then use the Azure Speech SDK to synthesize the response into an audio file. The audio file can be played back to the user as the chatbot's spoken response.
+   
+6. ### LipSync
+   
+    After getting the audio response we had to present the answer to the user in a convenient way so we trained -on an agent of our chosing- a LipSync model using the current SOTA model [wav2lip](https://github.com/Rudrabha/Wav2Lip) , check the [training notebook](notebooks/AE_Expert_Discriminator.ipynb)
+    for more information refer to this [branch](https://github.com/Aylore/Arabic-Voice-Interface-for-City-Operation-Center/tree/wav2lip)
+
+7. ### Face Restoration
+   
+    Due to the output result of the wav2lip model we used an image enhancement model to restore the quality using [Code Former](https://github.com/sczhou/CodeFormer)
+
+8. ### Django Integration
+   
+   After the video response is generated, we send the response to a Django web application. The Django application can then display the video response to the user, along with any additional information or functionality needed.
+
+## **Running The Pipeline**
+
+1. Run the uvicorn server of fastapi
+   ``` 
+   make fastapi
+   ```
+2. Activate the rasa api.
+   ``` 
+   make rasa-run
+   ```
+3. Run rasa actions to get the data from the api.
+   ``` 
+   make rasa-actions
+   ```
+4. Run the django server to use the interface.
+   ``` 
+   make django
+   ```
+
+
+## **Execution Time**
+
+*   Speech To Text  : ~ 2s
+*   Translation : ~ 2s
+*   Chatbot : ~ 250ms
+*   Text To Speech : ~ 2s
+*   Wav2Lip : ~ 30:40s
+*   Face restoration : ~ 4m:7m
+
+**These numbers were achieved on M1 macbook air with 16GB of RAM**
+
+
+## **Examples**
+
+## Chatbot
+
+<img src="examples/chatbot-example.png" />
+
+<br>
+<br>
+
+## English 
+
+
+https://github.com/Aylore/Arabic-Voice-Interface-for-City-Operation-Center/assets/125658326/13f86c65-f2eb-4510-9590-5bc98fcefa54
+
+
+
+<br>
+<br>
+
+## Arabic
+
+
+https://github.com/Aylore/Arabic-Voice-Interface-for-City-Operation-Center/assets/125658326/2892bc35-f942-40b5-a665-1da1ec41a31b
+
+
+
+
+
+
+
+## **Team Members**
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>LinkedIn</th>
+      <th>GitHub</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ahmed Elghitany</td>
+      <td align="center">
+        <a href="https://eg.linkedin.com/in/ahmed-elghitany">
+          <img src="https://i.stack.imgur.com/gVE0j.png">
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/Aylore/">
+          <img src="https://i.stack.imgur.com/tskMh.png">
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Israa Okil</td>
+      <td align="center">
+        <a href="https://eg.linkedin.com/in/israa-okil">
+          <img src="https://i.stack.imgur.com/gVE0j.png">
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/esraaokil">
+          <img src="https://i.stack.imgur.com/tskMh.png">
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Khaled Ehab</td>
+      <td align="center">
+        <a href="https://www.linkedin.com/in/aleedo/">
+          <img src="https://i.stack.imgur.com/gVE0j.png">
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/Aleedo">
+          <img src="https://i.stack.imgur.com/tskMh.png">
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Osama Oun</td>
+      <td align="center">
+        <a href="https://eg.linkedin.com/in/osama-fayez">
+          <img src="https://i.stack.imgur.com/gVE0j.png">
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/osamaoun97">
+          <img src="https://i.stack.imgur.com/tskMh.png">
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## **Contributing**
+If you would like to contribute to this project, Feel Free to make a pull request or contact one of our team members via the links above. 
+
+
+
+
+## **Future Work**
+* Edit the face restoration model to use a simpler model for face detection or combining it with wav2lip some how.  *needs further research*
+* Taking feedback from the user after receiving his answer to find areas of development and better enhance the pipeline.
+* Applying an end to end arabic pipeline with arabic chat bot and no translation needed.
+
+
+## **Acknowledgements**
+1. [wav2lip](https://github.com/Rudrabha/Wav2Lip), "A Lip Sync Expert Is All You Need for Speech to Lip Generation In the Wild", published at ACM Multimedia 2020.
+
+2. [Code Former](https://github.com/sczhou/CodeFormer), [NeurIPS 2022] Towards Robust Blind Face Restoration with Codebook Lookup Transformer.
+
+
+## **Table of Contents**
+1. [Rasa Chatbot](#rasa-chatbot)
+2. [Rasa Components](#rasa-components)
+3. [Project Structure](#project-structure)
+4. [Getting Started](#getting-started)
+5. [FastAPI](#fastapi)
+6. [API Endpoints](#api-endpoints)
+7. [Getting Started](#getting-started)
+8. [Example](#example)
+
+## Rasa Chatbot
+
+- Rasa is an open-source framework for building conversational AI chatbots and assistants. It provides tools for natural language understanding, dialogue management, and integration with external services, making it easy to create powerful and flexible chatbots for a variety of use cases.
+  
+## Rasa Components
+Rasa is made up of several components that work together to create a chatbot:
+
+- **NLU Pipeline**: The NLU pipeline is responsible for understanding the meaning of user messages and extracting relevant information, such as intents and entities.
+
+- **Dialogue Manager**: The dialogue manager is responsible for managing the state of the conversation and deciding what actions to take based on user input and the current dialogue state.
+
+- **Actions**: Actions are the tasks that the chatbot can perform, such as providing information, making recommendations, or initiating external processes.
+
+- **Training Data**: Training data is used to teach the chatbot how to understand user messages and respond appropriately. *This includes examples of user messages, their corresponding intents and entities, and example conversations or stories.*
+
+- **Models**: Models are machine learning models that are trained on the training data and used to make predictions about the meaning of user messages and the appropriate actions to take.
+
+- **Endpoints and Integration**: Endpoints and integrations are used to connect the chatbot to external services, such as APIs or databases.
+
+## Project Structure
+- `actions/`: Contains custom actions used by the chatbot that retrieves data from an API endpoint based on user input..
+- `data/`: Contains the json data used to train the Rasa model.
+  - `nlu.yml`: Contains examples of user inputs and their corresponding intents and entities.
+  - `rules.yml`: Contains rules that define the flow of the conversation and trigger actions based on user input and bot responses.
+  - `stories.yml`: Contains rules that define the flow of the conversation and trigger actions based on user input and bot responses.
+- `models/`: Contains the trained Rasa models.
+- `config.yml`: Contains the configuration settings for the Rasa model.
+- `credentials.yml`: Contains the credentials for any external services used by the chatbot.
+- `domain.yml`: Contains the domain information for the chatbot, including intents, entities, and responses.
+- `endpoints.yml`: Contains the endpoint information for the Rasa server and any external services used by the chatbot.
+
+## FastAPI
+- FastAPI is a modern, fast (high-performance) web framework for building APIs with Python. It is designed to be easy to use, efficient, and scalable, making it a great choice for building web applications and APIs, including chatbots. It allows you to easily integrate Rasa's natural language processing and dialogue management capabilities. This means that you can take advantage of Rasa's powerful features while benefiting from FastAPI's performance and scalability.
+
+## API Endpoints
+
+The chatbot calls an API endpoint to return an answer based on user input question. 
+
+> The project provides the following API endpoints:
+
+1. GET `/by-id/alert_id={id}`: Retrieves data for a specific alert ID.
+2. GET `/supervised_job_asset={job_id}`: Retrieves data for a specific job id.
+3. GET `/control_kpi/={kpi_id}"`: Retrieves data a specific KPI ID.
+4. GET `/domain_id={domain_id}`: Retrieves data for a specific domain ID.
+5. GET `/count/{domain_name}`: Retrieves the count of data records for a specific domain name.
+6. GET `/count/domain_name={domain_name}`: Retrieves data for a specific domain name.
+
+
+**To Run the server**
+  
+   ```
+   make fastapi
+   ```
+
+**To check that the api is up and running you can try**
+```
+curl http://localhost:8000/domain_id=[domain_id]
+```
+> This will send a GET request to the GET `/domain_id` endpoint with the domain_id
+
+Here is corresponding response that you can expect from The endpoint returns a JSON object with the following format after replacing `[domain_id]` with `2`:
+
+```json
+{
+   "result": {
+   "id": 2,
+   "name": "Device 2",
+   "device_name": "Device B",
+   "device_id": 5678,
+   "domain_id": 1002,
+   "device_attribute": "Attribute 2",
+   "device_longitude": 34.0522,
+   "device_latitude": -118.2437,
+   "generation_time": "2015-11-22",
+   "opened": false,
+   "criticality": "Medium",
+   "domain_name": "Domain B",
+   "device_code": "DEF456",
+   "closure_reason": "",
+   "removal_time": null,
+   "alert_id": 9876,
+   "reading_value": "75",
+   "sop_ids": "SOP003",
+   "message_id": "MSG002",
+   "last_updated_date": "2021-09-09",
+   "vertical_id": 202,
+   "vertical_name": "Vertical Y",
+   "site_id": 890,
+   "site_name": "Site 2"
+   }
+}
+```
+
+## Getting Started
+
+**After running `FastAPI Server` you can test the chatbot by running these 3 commands:**
+
+1. Running Rasa Actions
+   ```
+   make rasa-actions
+   ```
+
+2. Running Rasa Api
+   ```
+   make rasa-run
+   ``` 
+3. Running python script to chat with the bot
+   ```
+   make rasa-chat
+   ```
+
+
+## Example
+<br>
+
+![](../../examples/chatbot-example.png)
+
+Place all your checkpoints (.pth files) here. The code for Face Detection in this folder has been taken from the wonderful [face_alignment](https://github.com/1adrianb/face-alignment) repository. This has been modified to take batches of faces at a time. Temporary files at the time of inference/testing will be saved here. You can ignore them.
+                - the list of intents: ['get_domain_count', 'get_domain_id', 'by_alert_id_alert_status', 'by_alert_id_associated_domain', 'by_alert_id_closure_reason', 'by_alert_id_message_id', 'by_alert_id_last_update', 'by_alert_id_vertical_id', 'by_alert_id_sop_ids', 'by_alert_id_device_attribute', 'by_alert_id_criticality_level', 'by_alert_id_reading_value', 'by_alert_id_removal_time', 'by_alert_id_generation_time', 'meta_features_dataset_instances', 'meta_features_dataset_ratio', 'meta_features_ratio_num_to_cat', 'meta_features_total_missing_values', 'meta_features_avg_missing_values', 'meta_features_num_cat_features', 'meta_features_sum_symbols', 'meta_features_avg_symbols', 'meta_features_std_symbols', 'meta_features_num_stati_features', 'meta_features_num_non_stati_features', 'meta_features_num_first_differences', 'meta_features_num_second_differences', 'meta_features_num_lagged_features', 'meta_features_pacf', 'meta_features_sampling_rate', 'meta_features_fractal_dimension', 'check_control_kpi_enabled', 'describe_control_kpi', 'get_expression_control_kpi', 'get_output_attribute_control_kpi', 'get_calendar_unit_control_kpi', 'get_created_time_control_kpi', 'get_created_by_control_kpi', 'get_last_modified_by_control_kpi', 'get_last_modified_time_control_kpi', 'get_last_calculated_time_control_kpi', 'domain_device_open_status', 'domain_criticality_status', 'domain_closure_reason', 'domain_reading_value', 'domain_device_attributes', 'domain_removal_time', 'domain_device_id', 'domain_device_name', 'domain_device_longitude', 'domain_device_latitude', 'domain_generation_time', 'by_domain_id_device_status', 'by_domain_id_criticality_status', 'by_domain_id_closure_reason', 'by_domain_id_reading_value', 'by_domain_id_device_attributes', 'by_domain_id_removal_time', 'by_domain_id_device_id', 'by_domain_id_device_name', 'by_domain_id_device_longitude', 'by_domain_id_device_latitude', 'by_domain_id_generation_time']
+                - the list of entities: ['ratio_num_to_cat', 'device_attribute', 'criticality', 'message_id', 'domain_name', 'alert_id', 'sop_ids', 'pacf', 'last_modified_by', 'num_stati_features', 'output_attribute_id', 'device_longitude', 'avg_missing_values', 'num_1st_diff', 'removal_time', 'last_modified_at', 'expression', 'vertical_id', 'created_at', 'std_symbols', 'num_non_stati_features', 'sampling_rate', 'opened', 'domain_id', 'dataset_ratio', 'is_enabled', 'last_calculated_at', 'num_cat', 'name', 'domain_count', 'last_updated_date', 'device_id', 'fractal_dim', 'job_id', 'generation_time', 'calendar_unit', 'num_instances', 'closure_reason', 'reading_value', 'num_lagged_features', 'total_missing_Values', 'sum_symbols', 'description', 'control_kpi', 'device_latitude', 'created_by', 'device_name', 'num_2st_diff', 'avg_symbols']
+                - the list of actions: ['action_get_domain_count', 'action_get_domain_id', 'action_by_alert_id_alert_status', 'action_by_alert_closure_reason', 'action_by_alert_id_associated_domain', 'action_by_alert_id_message_id', 'action_by_alert_id_last_update', 'action_by_alert_id_vertical_id', 'action_by_alert_id_sop_ids', 'action_by_alert_id_device_attribute', 'action_by_alert_id_criticality_level', 'action_by_alert_id_reading_value', 'action_by_alert_id_removal_time', 'action_by_alert_id_generation_time', 'action_meta_features_dataset_instances', 'action_meta_features_dataset_ratio', 'action_meta_features_ratio_num_to_cat', 'action_meta_features_total_missing_values', 'action_meta_features_avg_missing_values', 'action_meta_features_num_cat_features', 'action_meta_features_sum_symbols', 'action_meta_features_avg_symbols', 'action_meta_features_std_symbols', 'action_meta_features_num_stati_features', 'action_meta_features_num_non_stati_features', 'action_meta_features_num_first_differences', 'action_meta_features_num_second_differences', 'action_meta_features_num_lagged_features', 'action_meta_features_pacf', 'action_meta_features_sampling_rate', 'action_meta_features_fractal_dimension', 'action_check_control_kpi_enabled', 'action_describe_control_kpi', 'action_get_expression_control_kpi', 'action_get_output_attribute_control_kpi', 'action_get_calendar_unit_control_kpi', 'action_get_created_time_control_kpi', 'action_get_created_by_control_kpi', 'action_get_last_modified_by_control_kpi', 'action_get_last_modified_time_control_kpi', 'action_get_last_calculated_time_control_kpi', 'action_domain_device_open_status', 'action_domain_criticality_status', 'action_domain_closure_reason', 'action_domain_reading_value', 'action_domain_device_attributes', 'action_domain_removal_time', 'action_domain_device_id', 'action_domain_device_name', 'action_domain_device_longitude', 'action_domain_device_latitude', 'action_domain_generation_time', 'action_by_domain_id_device_status', 'action_by_domain_id_criticality_status', 'action_by_domain_id_closure_reason', 'action_by_domain_id_reading_value', 'action_by_domain_id_device_attributes', 'action_by_domain_id_removal_time', 'action_by_domain_id_device_id', 'action_by_domain_id_device_name', 'action_by_domain_id_device_longitude', 'action_by_domain_id_device_latitude', 'action_by_domain_id_generation_time']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

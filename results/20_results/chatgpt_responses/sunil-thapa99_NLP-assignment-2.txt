@@ -1,0 +1,22 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: NLP-assignment-2
+                - the description: None
+                - the README: # NLP-assignment-2
+
+### Steps:
+  - Step 1: pip install rasa
+  - Step 2: rasa train [To train model]
+  - Step 3: rasa run actions [To run all the action and create an endpoint: view endpoints.yml]
+  - Step 4: rasa shell [To use command line to interact with chatbot]
+  - Step 5: rasa run -m models --enable-api --cors "*" --debug
+
+> Step 3 & 5 should be run in two different terminals as our project contains action to perform as per intent classification
+                - the list of intents: ['affirm', 'availability_pricing', 'bot_challenge', 'cancel_tour', 'deny', 'goodbye', 'greet', 'lease_details', 'mood_great', 'mood_unhappy', 'parking_info', 'pet_policy', 'property_details', 'schedule_tour', 'search_properties', 'show_more', 'gender_query', 'floor_query', 'bedroom_query']
+                - the list of entities: ['sorting', 'gender', 'bedrooms', 'location', 'floor_type']
+                - the list of actions: ['action_provide_property_details', 'action_search_properties', 'action_greet', 'action_goodbye', 'action_search_properties_no_location', 'action_availability_pricing', 'action_provide_lease_details', 'action_cancel_tour', 'action_provide_parking_info', 'action_provide_pet_policy', 'action_schedule_tour', 'action_show_more', 'action_query_gender', 'action_query_basement', 'action_query_bedrooms']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+House & Home

@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Rasa-Weather-Forecast-Chatbot
+                - the description: Rasa chatbot for weather forecasting using weather api for custom actions
+                - the README: 
+                - the list of intents: ['greet', 'goodbye', 'weather', 'info_date', 'info_address']
+                - the list of entities: ['address', 'date-time']
+                - the list of actions: ['utter_ask_address', 'utter_ask_date-time', 'utter_goodbye', 'utter_greet', 'utter_default', 'action_weather_form_submit']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Weather

@@ -1,0 +1,33 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: F1_Stats_ChatBot
+                - the description: F1 statistics and general info on races, pilots, circuits from 1950 season up to now.
+                - the README: # F1_Stats_ChatBot
+Chatbot implemented through RASA framework on F1 statistics and generic info about races, pilots, circuits from 1950 season up to now.
+
+Data retrival is made through 2 API:
+ - Fast-F1: 
+   - *pip install fastf1*
+   - more info and code at:
+      - https://github.com/theOehrly/Fast-F1 
+      - https://theoehrly.github.io/Fast-F1/examples/index.html
+ - Ergast:
+   - more info at: http://ergast.com/mrd/
+ 
+External library used:
+- Request cache: *pip install requests-cache*
+- Flask: *pip install flask*
+  - run server through *python app.py*
+- Spacy Model:
+  - *pip install -U pip setuptools wheel*
+  - *pip install -U spacy*
+  - python -m spacy download en_core_web_md
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'stop', 'help', 'full_help', 'curiosity', 'next_race', 'next_race_schedule', 'last_race', 'last_race_results', 'last_race_qualifying_results', 'nth_race', 'nth_race_schedule', 'nth_race_results', 'nth_race_circuit', 'highlights', 'qualifying_highlights', 'nth_race_highlights', 'nth_race_qualifying_highlights', 'next_race_tv', 'nth_race_tv', 'standings', 'dummy_intent', 'driver_standing', 'driver_info', 'championship_leader', 'driver_lap_times', 'driver_constructors', 'telemetry', 'constructor_standings', 'constructor_info', 'constructor_wiki', 'season_standings', 'season_info', 'season_winner']
+                - the list of entities: ['circuit', 'driver2', 'race', 'race_name_t', 'driver1t', 'driver2t', 'session_type', 'constructor_name', 'race_name', 'season', 'driver']
+                - the list of actions: ['utter_fetching', 'utter_ask_full_help', 'utter_want_more_driver_info', 'utter_help', 'utter_full_help', 'utter_reply_to_deny', 'utter_ask_more', 'utter_agree', 'utter_curiosity', 'utter_noquestion_greet', 'action_next_race', 'action_next_race_schedule', 'action_last_race', 'action_last_race_results', 'action_last_race_qualifying_results', 'action_nth_race', 'action_nth_race_schedule', 'action_nth_race_results', 'action_nth_race_circuit', 'action_highlights', 'action_qualifying_highlights', 'action_nth_race_highlights', 'action_nth_race_qualifying_highlights', 'action_show_constructor_standings', 'action_show_standings_year', 'action_show_standings', 'action_telemetry', 'action_reset_slots', 'action_show_driver_standing', 'action_show_driver_info', 'action_show_driver_lap_times', 'action_show_driver_constructors', 'action_show_championship_leader', 'action_constructor_wikipedia', 'action_list_constructors', 'action_show_winner_year', 'action_championship_wikipedia', 'action_next_race_on_tv', 'action_race_on_tv']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Sports

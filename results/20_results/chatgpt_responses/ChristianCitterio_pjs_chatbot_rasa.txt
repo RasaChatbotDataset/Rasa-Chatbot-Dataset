@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: pjs_chatbot_rasa
+                - the description: None
+                - the README: 
+                - the list of intents: ['greet', 'goodbye', 'conf_deny', 'order_food', 'get_menu', 'get_open_hours', 'give_address']
+                - the list of entities: ['address', 'address_confirmed', 'days', 'food_items', 'food', 'confirm_deny', 'delivery_home', 'times', 'order_confirmed']
+                - the list of actions: ['action_return_menu', 'action_return_week_hours', 'action_return_order_summary', 'action_save_order']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Food & Drink

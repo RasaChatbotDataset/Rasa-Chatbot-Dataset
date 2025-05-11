@@ -1,0 +1,87 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Rasa-chatbot-
+                - the description: chatbot based on rasa framework as an assessment NLP task for Master-linux company jan-2022 done by Ahmed Salama
+                - the README: # salama4ai-chatbot
+chatbot based on rasa framework as an assessment NLP task for Master-linux company jan-2022
++ **Note**:- now the chatbot have an issue just because the endpoint that was provided by master-linux firm is not valid anymore, please replace the existing endpoint with a working one, and the model will work properly
+
+## Objective:-
+The goal is to create Rasa Chatbot that can provide answers for users questions about the Population and the capitel city of collecton of countries, where the chatbot use the restful API to get that information from third-party website
+
+## initialization tips:-
+to clone the repository:
+```bash
+git clone https://github.com/salama4ai/salama4ai-chatbot.git
+```
+to install rasa
+visit https://www.youtube.com/playlist?list=PL75e0qA87dlEWUA5ToqLLR026wIkk2evk```
+install anaconda or miniconda
+
+to ensure that you installed anaconda successfully
+```
+conda -V
+```
+then open anaconda prompt, and update conda 
+```bash
+conda update conda
+```
+to create new virtual environment
+```bash
+conda create -n yourenvname python=3.8 
+```
+you must install python3.8 or 3.7 as rasa compatable with these two
+
+
+create new folder and go to it and activate you environment
+```bash
+conda activate test_env
+```
+install rasa
+```
+pip install rasa
+```
+initialize you first project
+```
+rasa init 
+```
+if you need to train your bot after modifing files
+```
+rasa train
+```
+if you need to interact with your bot
+```
+rasa shell
+```
+or 
+```
+rasa interactive
+```
+if you use ```rasa interactive``` so you can train the bot by chatting and interacting with it 
+if you write custom action so you need to open anaconda prompt and activate the bot and in the prompt run
+```rasa run actions``` 
+and leave it open in the background to be able to use the custom action with another prompt
+you also can run shell in debug mode using ```rasa shell --debug```
+and you can use ```rasa train --force``` to enforce retraining
+if you make changes in action.py file you don't need to retrain again just rerun ```rasa run actions```
+
+#
+this work done by Ahmed Salama at JAN-2022
+
+salama4ai@gmail.com
+
+[github.com/salama4ai](https://www.github.com/salama4ai/)
+
+[linkedin.com/in/salama4ai](https://www.linkedin.com/in/salama4ai/)
+
+
+
+
+                - the list of intents: ['country_pop_cap_query', 'greet', 'bot_challenge', 'goodbye', 'thank']
+                - the list of entities: ['pop_cap', 'country']
+                - the list of actions: ['utter_greet', 'utter_offer', 'utter_iamabot', 'utter_thank', 'utter_goodbye', 'utter_ask_country', 'utter_ask_pop_cap', 'utter_not_found', 'utter_server_failure', 'utter_answer_cap', 'utter_answer_pop', 'utter_typo', 'validate_country_pop_cap_form', 'action_answer']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Travel & Local

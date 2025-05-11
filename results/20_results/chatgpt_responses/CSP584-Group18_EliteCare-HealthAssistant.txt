@@ -1,0 +1,234 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: EliteCare-HealthAssistant
+                - the description: None
+                - the README: 
+# EliteCare - Health Assistant
+Overview: EliteCare is an enterprise-level web application designed for the healthcare sector, focusing on online pharmacy services. The primary goal of this project is to streamline the customer experience in selecting and understanding medications by integrating an AI-powered virtual assistant. This assistant helps users with real-time answers to their medication queries, personalized product recommendations, dosage guidance, and potential side-effect checks.
+
+The application leverages RASA AI to handle natural language understanding (NLU) and dialogue management, allowing the system to engage with users in a conversational manner. By analyzing symptoms and preferences, the chatbot can recommend suitable medications and help users navigate through a large variety of pharmaceutical products.
+
+Key Features:
+
+Medication Inquiry Support: Assisting customers with instant suggestions for medications based on symptoms.
+Personalized Recommendations: Offering products tailored to user needs, enhancing the overall shopping experience.
+Drug Interaction & Side Effect Checks: Providing critical information regarding medication safety.
+RASA AI Integration: RASA’s open-source framework plays a central role in the AI functionalities of EliteCare, enabling both natural language understanding and personalized dialogue flow. The system is configured using several key components:
+
+NLU to extract intents (e.g., medication inquiries) and entities (e.g., drug names or dosage).
+Rules and Stories to manage the conversational flow, ensuring users receive the right information at the right time.
+Domain & Actions to define the scope of the AI’s responses and custom logic for the recommendations.
+This setup allows the assistant to continuously learn from interactions, improving its efficiency and accuracy in providing healthcare advice over time.
+
+
+---
+
+**Technologies Used**
+
+- **Server Side**: Express.js
+- **Frontend**: React.js, Axios
+- **Database**: MongoDB
+- **AI Platform**: Rasa (Python)
+- **Other Libraries**: Axios (for HTTP requests)
+
+---
+
+## Project Structure
+
+```
+/backend   # Node.js Express server code
+/database  # MongoDB setup and configuration
+/frontend  # React.js client-side application
+/rasa      # Rasa AI Agent (NLP and machine learning models)
+```
+
+---
+
+## Getting Started
+
+To get started with the project, follow the steps below:
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/CSP584-Group18/Health-Assistant.git
+cd Health-Assistant
+```
+
+### 2. Backend Setup
+
+1. Install **Visual Studio Code**: Download and install from [here](https://code.visualstudio.com/).
+2. Install **Node.js** and **npm**: Download and install from [Node.js Official Site](https://nodejs.org/en).
+
+#### Start the Node Backend:
+
+- Navigate to the `/backend` directory:
+  ```bash
+  cd /backend
+  ```
+
+- Install backend dependencies:
+  ```bash
+  npm install
+  ```
+
+- Start the backend server:
+  ```bash
+  node server.js
+  ```
+
+---
+
+### 3. Frontend Setup
+
+1. Ensure **npm** is installed (as in the backend setup).
+
+#### Start the React Frontend:
+
+- Navigate to the `/frontend` directory:
+  ```bash
+  cd /frontend
+  ```
+
+- Install frontend dependencies:
+  ```bash
+  npm install
+  ```
+  or if fails
+  ```bash
+  npm install --legacy-peer-deps
+  ```
+
+- Start the client-side React application:
+  ```bash
+  npm start
+  ```
+
+- The app should now be running at `http://localhost:3000`.
+
+---
+
+### 4. AI (Rasa) Setup
+
+1. Ensure you have Rasa installed (requires Python environment).
+
+#### Start the Rasa AI Agent:
+
+- Navigate to the `/rasa` directory:
+  ```bash
+  cd /rasa
+  ```
+
+- Train the Rasa model:
+  ```bash
+  rasa train
+  ```
+
+- Run Rasa actions:
+  ```bash
+  rasa run actions
+  ```
+
+- Start the Rasa server:
+  ```bash
+  rasa run --cors "*"   
+  ```
+
+---
+
+## Additional Notes
+
+- Ensure that **MongoDB** is properly set up and running before starting the backend.
+- The project relies on several third-party APIs; make sure to configure any required API keys in `.env` files as per the needs of your application.
+  
+---
+
+Feel free to adjust any paths or commands according to your development environment.
+
+---
+
+## Contributors
+
+- [Dhruv Patel](https://github.com/dhruvpatel77741)  
+- [Dirgh Patel](https://github.com/dirghpatel3110)  
+- [Sakshi Patel](https://github.com/sakshipatel29)  
+- [Dhruvi Patel](https://github.com/dhruvipatel-24)  
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+                - the list of intents: ['greet', 'mood_happy', 'mood_sad', 'symptom_report', 'select_severity', 'provide_medicine', 'ask_side_effects', 'confirm_purchase', 'goodbye', 'confirm_purchase_yes_no', 'order_status', 'product_issue', 'upload_image', 'fraud_issue', 'upload_fraud_image']
+                - the list of entities: ['total_amount', 'fraud_image_url', 'fraud_issue_decision', 'medicine_name', 'product_issue_decision', 'order_status', 'symptoms', 'severity', 'image_url', 'operator_task', 'delivery_date', 'medicine_ids', 'customer_name', 'response', 'selected_medicine', 'order_id', 'issue_type', 'transaction_id']
+                - the list of actions: ['action_greet_user', 'action_process_symptoms', 'action_provide_medicine', 'action_medicine_details', 'action_provide_side_effects', 'action_checkout', 'action_confirm_purchase', 'action_operator_agent', 'action_handle_order_tracking', 'action_handle_product_issue', 'action_handle_fraud_issue']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical

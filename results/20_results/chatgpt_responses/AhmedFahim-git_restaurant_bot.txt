@@ -1,0 +1,42 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: restaurant_bot
+                - the description: A Rasa chatbot that finds restaurants and coffee houses using the FOURSQUARE Places API
+                - the README: # Restaurant Bot
+
+Restaurant Bot is a simple chat bot that searches for restaurants, coffee houses, or both near given locations.
+
+This is a sample project. It uses [Rasa](https://rasa.com/) as the chat bot framework and the [FOURSQUARE Places API](https://developer.foursquare.com/docs/places-api-overview) to search for the places of interest.
+
+In order to use the chatbot first install Rasa in a virtual environment and activate it. Clone and move into the repository, and run the following command.
+
+```terminal
+rasa train
+```
+
+This may take a while as it trains the machine learning model.
+
+Once the model is trained, in one terminal run the following command.
+
+``` terminal
+rasa run actions
+```
+
+Then in another terminal run the following command
+
+``` terminal
+rasa run --enable-api --cors='*'
+```
+
+Finally open the index.html file in the Chatbot-UI folder using your browser.
+
+![The final chat bot!](/images/chatbot_UI.gif "The end result")
+
+                - the list of intents: ['giving_place_type', 'goodbye', 'thanks', 'giving_radius', 'giving_address', 'out_of_scope', 'ask_purpose', 'greet', 'mood_unhappy', 'mood_great', 'affirm', 'bot_challenge']
+                - the list of entities: ['address', 'radius', 'lat_lon', 'place_type']
+                - the list of actions: ['action_places_search', 'action_reset_address', 'action_beginning_search', 'action_validate_slot_mappings', 'utter_ask_place_type', 'utter_cheer_up', 'utter_goodbye', 'utter_greet', 'utter_happy', 'utter_out_of_scope', 'utter_purpose', 'utter_welcome', 'validate_places_search_form']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Food & Drink

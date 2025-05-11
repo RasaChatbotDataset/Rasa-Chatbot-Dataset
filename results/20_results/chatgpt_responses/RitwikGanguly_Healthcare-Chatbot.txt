@@ -1,0 +1,23 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Healthcare-Chatbot
+                - the description: Healthcare Chatbot Using RASA and NLP
+                - the README: # Healthcare-Chatbot
+### Healthcare Chatbot Using RASA and NLP
+- it is a healthcare chatbot where user will say about his symptoms and the chatbot will revert back with precautions and what the probable disease he is suffering.
+- It's a user friendly chatbot where user can talk with the bot and get the solution sooner
+- we will update all the intents and blocks frequently to make the chatbot smoother.
+- **STAY CONNECTED AND STAY UPDATED.**
+
+> **Nearest Hospital Finder - [Live App](https://nearesthospitalchatbot-adbivic97cq.streamlit.app/)**
+
+> **Article on Chatbot Using Rasa(Medium Link) - [Rasa Chatbot](https://medium.com/@gangulyritwik2003/healthcare-chatbot-using-rasa-59e9ae96d4ef)**
+
+                - the list of intents: ['greet', 'goodbye', 'thanks', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'question', 'challenge', 'intro_love', 'intro_cute', 'intro_unhappy', 'get_name', 'ask_disease', 'inform_symptoms', 'question_disease', 'give_time', 'inform_disease', 'hospital']
+                - the list of entities: ['disease']
+                - the list of actions: ['action_get_diagnosis', 'action_give_time', 'action_disease_info']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical

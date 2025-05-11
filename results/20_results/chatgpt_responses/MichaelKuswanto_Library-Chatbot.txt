@@ -1,0 +1,67 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Library-Chatbot
+                - the description: None
+                - the README: ## Instalasi
+
+- Download atau melakukan git clone terhadap file github yang ada
+    ```
+    git clone https://github.com/MichaelKuswanto/Library-Chatbot.git
+    ```
+
+- Masuk ke dalam project yang sudah di download atau di gitclone
+
+- Buka terminal lalu melakukan instalasi requirements (disarankan menggunakan virtual environment)
+    ```
+    pip install -r requirements.txt
+    ```
+
+- Jika direktori "models" kosong maka anda bisa melakukan rasa train dan rasa train nlu, jika ada maka langkah ini adalah langkah opsional
+    ```
+    rasa train
+    rasa train nlu
+    ```
+
+## Pemakaian
+
+- Buka aplikasi ngrok dan lakukan login dan autentikasi
+
+- Setelah itu ketik ngrok http 5005 untuk mendapatkan link forwarding
+    ```
+    ngrok http 5005
+    ```
+
+- Copy link forwarding tersebut untuk di paste dalam kode file credentials.yml
+    ```
+    webhook_url: "<ngrok link>/webhooks/telegram/webhook"
+    ```
+
+- Ketik rasa run actions di satu terminal untuk mengaktifkan cutom actions (virtual environment disarankan)
+    ```
+    rasa run actions
+    ```
+
+- setelah selesai/berjalan buka terminal baru (virtual environment disarankan) lalu ketik
+    ```
+    rasa run
+    ```
+
+- setelah selesai/berjalan maka anda bisa bercakap dengan chatbot melalui link telegram dibawah ini:
+    ```
+    t.me/nrp043739_bot
+    ```
+
+
+
+## License
+
+Project ini mengambil template dari https://github.com/shamspias/The-Rasa-Answer-Machine-GPT3.git
+
+                - the list of intents: ['affirm', 'ask_author', 'ask_book_from_synopsis', 'ask_genre', 'ask_synopsis', 'bot_challenge', 'deny', 'goodbye', 'greet', 'mood_great', 'mood_unhappy', 'provide__book_title', 'provide__synopsis']
+                - the list of entities: ['author', 'synopsis', 'genre', 'book_title']
+                - the list of actions: ['utter_greet', 'action_provide_author', 'utter_ask_another_question', 'action_provide_genre', 'utter_goodbye', 'utter_provide_author', 'action_provide_synopsis', 'action_provide_book_title', 'action_provide_book_info', 'action_ask_book_title', 'action_ask_synopsis', 'action_gpt3_fallback']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Books & Reference

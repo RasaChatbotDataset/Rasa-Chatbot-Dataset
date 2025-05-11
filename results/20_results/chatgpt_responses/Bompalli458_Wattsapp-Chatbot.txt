@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Wattsapp-Chatbot
+                - the description: None
+                - the README: # Rasa
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'apply_loan', 'status_efundzz_loan', 'apply_personal_loan', 'apply_Business_loan', 'apply_Startup_loan']
+                - the list of entities: ['startup_loan', 'content_type', 'personal_loan', 'apply', 'business_loan']
+                - the list of actions: ['action_personal_loan_status', 'action_greet_based_on_time', 'kind_of_loans', 'action_gupshup_interaction', 'action_apologize']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

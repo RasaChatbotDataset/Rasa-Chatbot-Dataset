@@ -1,0 +1,241 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: AI-Chatbot
+                - the description: None
+                - the README: # AI-Chatbot
+
+This project is designed to create an interactive chatbot using Rasa,
+integrated with a MySQL database for user authentication.
+The chatbot provides various functionalities, including:
+
+- Greeting users
+- Understanding their moods
+- Responding to queries
+
+Additionally, the project includes a visualization component
+to illustrate the flow of conversation using D3.js and Dagre-D3 libraries.
+
+## Features
+
+### Chatbot Functionality:
+
+- Handles various user intents, such as greetings, mood tracking, and service inquiries.
+- Provides tailored responses based on user input, including positive and negative feedback paths.
+
+### Database Integration:
+
+- User authentication is facilitated through a MySQL database.
+- Secure password handling using `getpass` to ensure user credentials are not exposed.
+
+### Visualization:
+
+- An HTML page visualizes the Rasa Core conversation flow.
+- Uses D3.js and Dagre-D3 for interactive and dynamic graph rendering.
+
+## Usage
+
+- Interact with the chatbot through the command line or a connected frontend interface.
+- Utilize the visual representation to understand the flow of conversations and actions taken by the bot.
+
+## Contributors
+
+Samu, Mika, Samuel, Zehra, Jukka
+
+## Ohjelmistotuotantoprojekti
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Technologies Used](#technologies-used)
+- [Features](#features)
+- [Setup Instructions](#setup-instructions)
+- [How to Run](#how-to-Run-the-Project)
+- [Contributing](#Contributing)
+- [License](#License)
+- [Contributors](#contributors)
+
+## Introduction
+
+# Essi-bot - Interactive Quiz bot
+
+This project is designed to create an interactive quiz bot using Rasa, intended for customer service purposes. It supports users by answering queries.
+
+- **Responding to queries**
+- **Record user interactions in a MySQL database**
+
+## Technologies Used
+
+### Main Technologies
+
+- **Rasa**: An open-source framework for building conversational AI.
+
+- **Flask**: A micro web framework used to serve the Rasa model and handle API requests.
+
+- **MySQL**: A relational database for user data storage and authentication.
+
+### Frontend Technologies
+
+- **HTML/CSS:** For structuring and styling the user interface.
+- **JavaScript**: To manage interactions within the chat interface.
+
+### Python Libraries
+
+- **Mysql-connector-python**: To connect to the MySQL database.
+- **Flask-Cors**: To handle cross-origin resource sharing for API requests.
+
+### Development Tools
+
+- **Visual Studio Code**: Code editor for development.
+- **Pycharm**: Code editor for development.
+- **Postman**: For testing API endpoints.
+- **MySQL Workbench:** For database management.
+
+### AI-Tools used
+
+- **ChatGPT**
+
+## Features
+
+### Chatbot Functionality
+
+- Handles service inquiries.
+- Provides responses based on user input.
+
+### Database Integration:
+
+- Records timestamp from start of the chat.
+- Returns localized welcome message after registration based on the selected language of the page.
+- Saves user information about registered users.
+
+### Visualization:
+
+- An HTML page visualizes the Rasa Core conversation flow.
+
+## How to Run the Project
+
+### Prerequisites
+
+- Python 3.x installed on your machine.
+- MySQL Server set up and running.
+- Node.js installed.
+
+### Setup Instructions
+
+1. **Clone the Repository:**
+
+```
+git config --global http.postBuffer 524288000
+git clone https://github.com/Samupietila/AI-Chatbot.git
+```
+
+cd repository-folder
+
+2. **Install Required Packages:** Create a virtual environment and activate it:
+
+# For Mac/Linux
+
+```
+source venv/bin/activate
+
+python3 -m venv venv
+```
+
+# For Windows
+
+```
+python -m venv venv
+venv\Scripts\activate
+```
+
+**Install the required Python packages**:
+
+```
+pip install -r Chatbot/requirements.txt
+pip install -r Flask-Website/requirements.txt
+```
+
+3. **Configure Database Settings:** Create the Flask-Website/Database/config.py file with your MySQL credentials.
+```
+DB_CONFIG = {
+'user': 'yourdatabaseuser',
+'password': 'yourdatabasepassword',
+'host': 'localhost',
+'database': 'ChatAppDatabase',
+'charset': 'utf8mb4',
+'collation': 'utf8mb4_unicode_ci',
+'raise_on_warnings': True
+}
+```
+
+
+
+
+4. **Set Up the Database**: Run the SQL scripts provided in **Flask-Website/Database/database.sql** to create the necessary tables in your MySQL database.
+
+5. **First terminal to train and run rasa:**
+   From your project root folder go to "Chatbot"-folder:
+
+   ```
+   cd Chatbot
+   rasa train
+   ```
+
+### After successfully trained new rasa model
+
+   ```
+   rasa run
+```
+
+6. **Second terminal to run rasa actions:**
+   ```
+   cd Chatbot
+   rasa run actions
+   ```
+
+7. **Third terminal to run Flask server:**
+   ```
+   cd Flask-Website
+   python main.py
+   ```
+
+9. **Interact with the Chatbot:**
+   Access the chatbot via the web interface from the link that Flask server gives.
+   e.g. "Running on http://127.0.0.1:5000"
+
+**Check TroubleShootingGuide.md from Documents if you run to any problems during installation**
+
+## How to use Essi-bot
+
+1. **Open the bot-window from chatbot icon at the sites right bottom corner**
+2. **Greet the bot by sending a message to it** e.g. "Hello"
+3. **The bot asks what you need help with**
+4. **User will choose the subject and the bot will answer**
+
+## Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature-branch`)
+3. Make your changes and commit (`git commit -m 'Add feature'`)
+4. Push to the branch (`git push origin feature-branch`)
+5. Open a pull request
+
+## License
+
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.  
+You can view the full license [here](https://creativecommons.org/licenses/by-nc/4.0/).
+
+## Contributors
+
+Samu, Mika, Samuel, Zehra, Jukka
+
+## Ohjelmistotuotantoprojekti
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'ask_rules', 'button_test', 'ask_poker_rules', 'ask_blackjack_rules', 'ask_roulette_odds', 'select_option', 'mood_great', 'mood_unhappy', 'service_technical', 'service_bonuses', 'service_bonus', 'bonus_claim', 'bonus_wagering_requirements', 'bonus_status', 'service_deposit_withdrawal', 'service_game_rules', 'service_security_fairplay', 'service_responsible_gaming', 'service_technical_game_froze', 'service_technical_status_error', 'service_technical_deposit_error', 'service_technical_game_froze_refresh', 'service_technical_game_froze_clean_cache', 'service_technical_game_froze_update_browser', 'service_technical_status_server_error', 'service_technical_status_connection_issue', 'service_technical_status_connection_timed_out', 'service_technical_account_status', 'service_technical_banks_supported', 'service_technical_availability_info', 'ask_for_real_person', 'approval_yes', 'approval_no', 'set_language', 'service_deposit_methods', 'deposit_credit_card', 'deposit_bank_transfer', 'deposit_e_wallet', 'service_withdrawal_time', 'withdrawal_credit_card', 'withdrawal_bank_transfer', 'withdrawal_e_wallet', 'service_fees', 'security_casino', 'security_fairness', 'security_personal_data', 'service_account_registration', 'service_account_creation', 'service_account_password', 'service_account_information', 'service_account_reset_email', 'service_account_reset_phone', 'roulette_basic_rules', 'roulette_best_strategies', 'roulette_odds_specific_bets', 'roulette_game_rules_overview', 'blackjack_basic_rules', 'blackjack_card_counting', 'blackjack_advanced_strategies', 'blackjack_odds_specific_bets', 'blackjack_game_rules_overview', 'poker_basic_rules', 'poker_advanced_strategies', 'poker_odds_specific_bets', 'poker_game_rules_overview', 'responsible_gaming_setting_limits', 'responsible_gaming_self_exclude', 'responsible_gaming_gambling_addiction']
+                - the list of entities: ['option', 'language']
+                - the list of actions: ['action_set_language']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

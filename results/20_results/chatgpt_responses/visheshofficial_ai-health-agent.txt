@@ -1,0 +1,54 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: ai-health-agent
+                - the description: This code represents my work for the dissertation project of my MSc at the University of St Andrews.
+                - the README: # Health Agent
+
+
+pip install rasa
+pip install "rasa[transformers]"
+pip install scispacy
+pip install pandas
+pip install https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.0/en_ner_bc5cdr_md-0.5.0.tar.gz
+
+### Rasa server
+To run the server, use the following command:
+
+```commandline
+rasa run --cors "*"
+```
+
+
+The --cors "*" command is used to solve the cross-origin resource sharing (CORS) problem between client and Rasa servers.
+
+
+### Action server
+
+```commandline
+rasa run actions
+```
+
+Web client server
+Run the following command:
+
+```commandline
+python -m http.server
+```
+
+This will start an HTTP-based server in the local 8000 port. We can visit http://localhost:8000 in a browser to visit the chatbot.
+
+
+
+# Validations 
+rasa data validate
+
+
+
+                - the list of intents: ['greet', 'goodbye', 'healthy_patient', 'unhealthy_patient', 'bot_challenge', 'inform_symptoms', 'out_of_scope']
+                - the list of entities: ['symptoms', 'DISEASE', 'disease']
+                - the list of actions: ['action_remember_symptoms', 'utter_greet', 'utter_healthy_bye', 'utter_unhealth_bye', 'utter_goodbye', 'action_predict_disease', 'action_repeat_information']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical

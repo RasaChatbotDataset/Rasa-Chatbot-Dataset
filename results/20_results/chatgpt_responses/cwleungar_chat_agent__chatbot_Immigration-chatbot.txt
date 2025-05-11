@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: chat_agent
+                - the description: None
+                - the README: 
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_unhappy', 'mood_great', 'mood_unmotivated', 'bot_challenge', 'check_food', 'asking_should_i_eat', 'asking_nutrition_cumulated', 'asking_recommend_exercise', 'asking_recommend_meal', 'tell_info', 'ask_name', 'ask_weight', 'ask_height', 'give_name', 'give_age', 'give_weight', 'give_height', 'inquire_bmi', 'i_play_sport', 'ask_for_activitylevel', 'asking_should_i_exercise']
+                - the list of entities: ['difficulty', 'total_carbohydrate_cumulated', 'nutrition_requested', 'protein_cumulated', 'food', 'activitylevel', 'sport', 'cholesterol_cumulated', 'name', 'potassium_cumuulated', 'calories_cumulated', 'age', 'weight', 'sodium_cumulated', 'fat_cumulated', 'duration', 'dietary_fiber_cumulated', 'exercise_type', 'muscle_gp', 'sugar_cumulated', 'saturated_fat_cumulated', 'bmi', 'height']
+                - the list of actions: ['action_receive_weight', 'action_receive_height', 'action_say_name', 'utter_greet', 'action_say_weight', 'action_say_height', 'action_say_bmi', 'action_calculate_bmi', 'action_check_food', 'action_analyis_sport', 'action_activitylevel', 'action_report_nutrition', 'action_report_exercise', 'action_fallback', 'action_suggest_healthy_meal']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Health & Fitness

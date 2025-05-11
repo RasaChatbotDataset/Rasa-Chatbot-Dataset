@@ -1,0 +1,41 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rasa_is
+                - the description: Rule based coversational chat bot using RASA framework
+                - the README: # Chatbots to Combat Disinformation 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Implemented using RASA framework:
+[**Suraj Bodapati**](https://www.linkedin.com/in/suraj-bls/)
+
+Deception Awareness & Resilience Training (DART) NSF Convergence Accelerator
+
+## Abstract
+- Build a conversational AI agent to combat disinformation at scale by targeting senior citizens with scams to get personal information.
+- The idea is to direct the senior citizens to Deception Awareness and Resiliency Training(DART) post being scammed by the conversational agent.
+- [**Documentation**](https://github.com/lbodapat/rasa_is/blob/master/report.pptx.pdf)
+
+### Datasets:
+[**End-to-End Trainable Non-Collaborative Dialog System**](https://arxiv.org/abs/1911.10742): https://gitlab.com/ucdavisnlp/antiscam
+
+### Installation and Running the code
+1. [**Install RASA**](https://rasa.com/docs/rasa/installation/installing-rasa-open-source/)
+2. Clone the repository
+3. RUN command on CLI - ```rasa train```
+4. To test the model RUN command on CLI - ```rasa shell```
+5. To test the model in DEBUG mode, RUN command on CLI - ```rasa interactive```
+6. In the new terminal window RUN command on CLI - ```rasa run actions``` This is required to run the action server.
+7. Finally In another new terminal run the Duckling Extractor in Docker. ```sudo docker run -p 8000:8000 rasa/duckling```
+
+### Output Screenshot
+
+![Alt text](/Notebooks/output.png?raw=true "Output ScreenShot")
+
+                - the list of intents: ['bot_challenge', 'greeting', 'nonresponsive_statement', 'open_question', 'elicitation', 'provide', 'positive_answer', 'yes_no_question', 'thanking', 'negative_answer', 'refusal', 'apology', 'responsive_statement', 'response_to_thanking', 'closing', 'convo_started', 'reclassify', 'greeting_question', 'yes_no_help', 'test', 'surprise', 'busy', 'denial']
+                - the list of entities: ['addr', 'phone_num', 'cvv', 'name', 'exp_date', 'credit_card', 'email']
+                - the list of actions: ['action_test_rasa', 'utter_slot_test']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

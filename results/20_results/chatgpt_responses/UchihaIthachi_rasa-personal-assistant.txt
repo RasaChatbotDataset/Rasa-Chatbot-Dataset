@@ -1,0 +1,238 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rasa-personal-assistant
+                - the description: None
+                - the README: # Hotel Assistant Chatbot
+
+Welcome to the Hotel Assistant Chatbot project! This repository contains a conversational AI powered by the Rasa framework, integrating Language Model capabilities from OpenAI. The chatbot assists users with various hotel-related queries, leveraging both structured data and natural language understanding.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Training the Model](#training-the-model)
+  - [Running the Action Server](#running-the-action-server)
+  - [Interacting with the Bot](#interacting-with-the-bot)
+  - [Using Rasa X](#using-rasa-x)
+- [Web Application Implementations](#web-application-implementations)
+  - [HTML + JS + CSS](#html--js--css)
+  - [React + Vite](#react--vite)
+- [Configuration](#configuration)
+- [File Structure](#file-structure)
+- [Makefile Commands](#makefile-commands)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Installation
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/your-username/hotel-assistant-bot.git
+   cd hotel-assistant-bot
+   ```
+
+2. **Create and activate a virtual environment:**
+
+   ```sh
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+## Usage
+
+### Training the Model
+
+To train the Rasa model with your current data, run:
+
+```sh
+make train
+```
+
+This command will train the Rasa model using the domain, data, and configuration files, and save the trained model in the `models` directory.
+
+### Running the Action Server
+
+To start the action server, which handles custom actions, run:
+
+```sh
+make run-actions
+```
+
+### Interacting with the Bot
+
+You can interact with the bot using Rasa Shell:
+
+```sh
+make shell
+```
+
+This will start the action server and open the Rasa shell, allowing you to chat with the bot in the terminal.
+
+Alternatively, you can run the bot and interact with it via HTTP API:
+
+```sh
+make run
+```
+
+Once the server is running, you can interact with the bot using either of the following web applications:
+
+- **[chatbot-html-js-css-web-app](./chatbot-html-js-css-web-app)**: Basic interface for chatting with the bot using HTML, JavaScript, and CSS.
+  - **Directory**: [Chatbot HTML + JS + CSS](https://github.com/JiteshGaikwad/Chatbot-Widget/tree/main)
+- **[chatbot-react-vite-web-app](./chatbot-react-vite-web-app)**: Modern and dynamic web application using React + Vite.
+  - **Directory**: [React Chat Widget](https://github.com/Wolox/react-chat-widget/tree/master)
+
+To run the React application, navigate to its directory and execute `npm run dev`.
+
+### Using Rasa X
+
+To use Rasa X for managing and improving your bot, run:
+
+```sh
+make run-x
+```
+
+Open Rasa X in your web browser at `http://localhost:5002`. Rasa X provides an interface for chatting with your bot, reviewing conversations, annotating data, and retraining models.
+
+## Configuration
+
+- **Domain File:** `configs/domain.yml` contains the intents, entities, slots, responses, and forms used by the bot.
+- **Training Data:** `data` directory contains the NLU and Core training data.
+- **Config File:** `configs/config.yml` specifies the pipeline and policies for training the model.
+- **Endpoints File:** `configs/endpoints.yml` defines the endpoints for the action server and other external services.
+
+## File Structure
+
+```plaintext
+hotel-assistant-bot/
+├── .rasa/
+├── configs/
+│   ├── domain.yml
+│   ├── config.yml
+│   └── endpoints.yml
+├── data/
+│   ├── nlu.yml
+│   ├── rules.yml
+│   └── stories.yml
+├── models/
+├── actions/
+│   └── actions.py
+├── chatbot-react-vite-web-app/
+├── chatbot-html-js-css-web-app/
+├── requirements.txt
+├── Makefile
+└── README.md
+```
+
+## Makefile Commands
+
+Here are some useful commands to manage and run your Hotel Assistant Chatbot:
+
+- **`make train`**: Train the Rasa model with domain, data, and config files.
+- **`make train-nlu`**: Train only the NLU model.
+- **`make run-actions`**: Start the action server for handling custom actions.
+- **`make shell`**: Start the action server and open Rasa shell for interaction.
+- **`make run`**: Start the action server and Rasa server with API enabled.
+- **`make validate`**: Validate the Rasa configuration and training data.
+- **`make help`**: Display help information with available targets.
+
+## Contributing
+
+Contributions are welcome! Please create a new issue or submit a pull request if you have any improvements or bug fixes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+```
+
+### Explanation:
+
+- **Introduction**: Provides a concise overview of the Hotel Assistant Chatbot project, highlighting its purpose and technologies used.
+- **Web Application Implementations**: Details the two implementations for the web interface using HTML + JS + CSS and React + Vite, linking directly to their respective GitHub repositories.
+- **Updated Sections**: Ensures all sections (installation, usage, configuration, file structure, makefile commands, contributing, license) are clear and up-to-date with the latest project details.
+
+Feel free to further customize the README to fit your specific project requirements and provide additional information as needed.
+```
+## 🔥 **[Widget 2.0](https://github.com/JiteshGaikwad/Chatbot-Widget/tree/Widget2.0) released, built using React JS & Tailwind CSS**
+
+![ScreenShot](static/img/banner.png)
+
+
+  ***An Open Source ChatBot widget easy to connect to RASA bot through [Rest](https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/#rest-channels) Channel.***
+
+
+![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
+[![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/uses-html.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/uses-css.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
+
+## Features
+
+- Text 
+- Markdown
+- Buttons
+- Images
+- Video 
+- PDF Attachment
+- Dropdown
+- Quick replies
+- Cards carousel
+- Charts
+- Collapsible
+- Bot typing indicator
+- Location access
+
+
+
+## Instructions
+- You can read the instructions here in [instructions.md](docs/instructions.md)
+
+## Documentation
+- Check out the documentation on how to send bot response from Rasa in [response.md](docs/responses.md)
+- If you want to modify the UI elements, you can read on how to do here: [modifications.md](docs/modifications.md)
+
+## Gallery:
+- Check out the sample pics here [gallyery.md](docs/gallery.md)
+
+## Library used:
+- [Materialize CSS](https://materializecss.com) for CSS
+- [Showdownjs](https://github.com/showdownjs/showdown) for Markdown suppport
+- [Chart.js](https://www.chartjs.org/) for Charts
+
+## Demo:
+
+Check out the widget in action here [demo](https://www.youtube.com/watch?v=mnolLtOWykk)
+
+
+
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+                - the list of intents: ['greet', 'deny', 'mood_unhappy', 'mood_great', 'what', 'affirm', 'check_availability', 'goodbye', 'bot_challenge', 'cancel_reservation', 'book_room', 'room_packages', 'room_types', 'faq', 'faqbreakfast', 'faqcancellationpolicy', 'faqcheckin', 'faqcheckinage', 'faqcheckout', 'faqchildrenage', 'faqearlycheckin', 'faqlatecheckin', 'faqlatecheckout', 'faqroomcount', 'faqbabycot', 'faqbreakfasttime', 'faqrefundable', 'faqreceptiontime', 'faqparking', 'faqparkingcost', 'faqpartialcancel', 'faqpetpolicy', 'faqpetcost', 'faqreservaconfirm', 'faqnearestairport', 'faqmodifyreservation', 'faqmeetingroom', 'faqsecurity', 'faqluggage', 'faqcontact', 'faqservices']
+                - the list of entities: ['booking_date', 'room_type']
+                - the list of actions: ['utter_greet', 'utter_cheer_up', 'utter_did_that_help', 'utter_happy', 'utter_goodbye', 'utter_iamabot', 'utter_book_room', 'utter_room_packages', 'utter_room_types', 'utter_cancel_reservation', 'utter_check_availability', 'utter_faqbreakfast', 'utter_faqcancellationpolicy', 'utter_faqcheckin', 'utter_faqcheckinage', 'utter_faqcheckout', 'utter_faqchildrenage', 'utter_faqearlycheckin', 'utter_faqlatecheckin', 'utter_faqlatecheckout', 'utter_faqroomcount', 'utter_faqbabycot', 'utter_faqbreakfasttime', 'utter_faqrefundable', 'utter_faqreceptiontime', 'utter_faqparking', 'utter_faqparkingcost', 'utter_checkout', 'utter_latecheckin', 'utter_receptiontime', 'utter_faqcarparking', 'utter_reservationconfirm', 'utter_faqnearestairport', 'utter_faqmodifyreservation', 'utter_faqmeetingroom', 'utter_faqsecurity', 'utter_faqluggage', 'utter_faqcontact', 'utter_faqpartialcancel', 'utter_faqpetpolicy', 'utter_faqpetcost', 'utter_faq_prompt', 'utter_faqservices', 'action_default_fallback', 'action_generate_fallback_response']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Travel & Local

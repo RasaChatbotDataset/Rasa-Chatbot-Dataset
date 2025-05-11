@@ -1,0 +1,94 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Coren--OpenAI-Chatbot
+                - the description: None
+                - the README: # Coren--OpenAI-Chatbot
+
+## Overview
+Provide a brief description of what your project is about. Explain its purpose and any important features or functionality.
+
+## Prerequisites
+- Rasa Version: 3.6.15
+- Compatible Python Version: 3.7, 3.8, or 3.9
+
+## Installation
+To set up the project on your local machine, follow these steps:
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-username/your-repository.git
+   ```
+
+2. **Install Rasa**:
+   It's important to use the same Rasa version as specified in the prerequisites.
+   ```bash
+   pip install rasa==3.6.15
+   ```
+
+3. **Install Rasa SDK**:
+   ```bash
+   pip install rasa-sdk==3.6.2
+   ```
+   
+## Dependencies
+   Download these dependencies for smooth running of the bot:
+
+   Flask:
+   ```bash
+   pip install Flask
+   ```
+
+## Configuration
+Describe any necessary configuration steps, such as setting up environment variables or external services.
+
+## Training the Model
+To train the Rasa model, use the following command:
+```bash
+rasa train
+```
+
+## Running the Bot
+To run the Rasa bot, execute:
+```bash
+rasa shell
+```
+
+## Testing
+Provide instructions on how to run any tests you've written for your project.
+
+## Deployment
+Detail the steps required to deploy the project, if applicable.
+
+## Contributing
+Outline the process for contributing to the project, including any coding standards or guidelines.
+
+## License
+Specify the license under which your project is released, if any.
+
+## Using rasa shell
+- If you update the code, before running code, run the following command to train the bot( If you make changes to it)
+```bash
+rasa train
+```
+- followed by
+```bash
+rasa shell
+```
+
+## For running on browser
+
+```bash
+rasa run --enable-api --cors "*"
+```
+- on other terminal
+```bash
+python app.py
+```
+                - the list of intents: ['greet', 'goodbye', 'thank_you', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'ask_about_bulking', 'ask_about_cutting', 'ask_about_maintenance', 'ask_about_nutrition', 'ask_about_nutrition_bulk', 'ask_about_nutrition_cut', 'ask_about_nutrition_maintenance', 'express_goal', 'inform_diet_preference', 'inform_allergies', 'give_feedback', 'why_exercise', 'benefits_of_exercise', 'disadvantages_of_exercise', 'how_to_start_exercising', 'exercise_recommendations', 'best_time_for_weightlifting', 'training_session_duration', 'eating_before_strength_training', 'supplements_for_strength_training', 'weekly_strength_training_frequency', 'difference_between_strength_training_and_bodybuilding', 'strength_training_for_weight_loss', 'need_for_personal_trainer', 'warm_up_before_weightlifting', 'choosing_right_weight_for_lifting', 'muscle_soreness_post_training', 'tracking_strength_training_progress', 'common_mistakes_in_strength_training', 'importance_of_rest_and_recovery', 'strength_training_for_sports_performance', 'choosing_between_machines_and_free_weights', 'balancing_strength_training_with_other_exercise', 'risks_of_overtraining', 'overall_health_benefits_of_strength_training', 'strength_training_without_heavy_weights', 'ask_strength_training', 'ask_for_beginner_tips', 'start_strength_training', 'benefits_of_strength_training', 'strength_training_routine', 'different_strength_training_exercises', 'importance_of_strength_training', 'building_muscle_strength', 'resistance_training', 'strength_training_frequency', 'effective_strength_workout_tips', 'equipment_needed_for_strength_training', 'back_health_importance', 'general_back_exercises', 'back_pain_prevention', 'back_injury_risk_factors', 'back_stretching_benefits', 'back_posture_importance', 'ask_pull_ups', 'ask_rows', 'ask_lat_pulldowns', 'ask_deadlifts', 'ask_tbar_row', 'ask_lat_pull', 'ask_seated_cable_row', 'ask_face_pulls', 'upper_body_exercises', 'lower_body_exercises', 'upper_body_care', 'lower_body_care', 'upper_body_training_tips', 'lower_body_training_tips', 'chest_exercises_overview', 'benefits_of_chest_training', 'chest_training_techniques', 'chest_equipment_recommendations', 'ask_bench_press', 'ask_incline_dumbbell_press', 'ask_push_ups', 'ask_chest_flyes', 'ask_dips', 'ask_close_grip_bench_press', 'ask_decline_bench_press', 'ask_chest_dumbbell_pullovers', 'ask_machine_chest_press', 'ask_chest_cable_crossovers', 'leg_anatomy', 'leg_stretching_benefits', 'leg_injury_prevention', 'leg_strength_training', 'leg_pain_management', 'leg_posture_importance', 'leg_care_tips', 'ask_squats', 'ask_lunges', 'ask_leg_press', 'ask_calf_raises', 'ask_leg_curls', 'ask_leg_extensions', 'ask_sumo_deadlift', 'ask_leg_workout_tips', 'ask_leg_strength_training', 'ask_glute_bridge', 'ask_lunges_for_glutes', 'ask_donkey_kicks', 'ask_glute_workout_tips', 'ask_squats_for_glutes', 'ask_hip_thrusts', 'arm_anatomy', 'arm_stretching_benefits', 'arm_injury_prevention', 'arm_strength_training', 'arm_pain_management', 'arm_posture_importance', 'arm_care_tips', 'ask_bicep_curls', 'ask_tricep_dips', 'ask_barbell_shrugs', 'ask_forearm_curls', 'ask_skull_crushers', 'ask_hammer_curl', 'ask_forearm_exercises', 'ask_dumbbell_shrug', 'ask_overhead_tricep_extension', 'ask_zottman_curl', 'ask_bicep_exercises', 'ask_tricep_exercises', 'bicep_importance', 'tricep_importance', 'general_bicep_care', 'general_tricep_care', 'bicep_training_tips', 'tricep_training_tips', 'core_anatomy', 'core_stretching_benefits', 'core_injury_prevention', 'core_strength_training', 'core_pain_management', 'core_posture_importance', 'core_care_tips', 'ask_plank_technique', 'ask_russian_twists_variations', 'ask_ab_rollouts_technique', 'ask_twisting_leg_raises', 'ask_mountain_climbers_technique', 'shoulder_anatomy', 'shoulder_stretching_benefits', 'shoulder_injury_prevention', 'shoulder_strength_training', 'shoulder_pain_management', 'shoulder_posture_importance', 'shoulder_care_tips', 'ask_military_press_technique', 'ask_lateral_raises', 'ask_face_pulls_variations', 'ask_arnold_press', 'ask_shrugs_technique', 'ask_shoulder_benefits', 'cardio_what', 'cardio_why', 'cardio_how', 'cycle_what', 'cycle_why', 'cycle_how', 'run_what', 'run_why', 'run_how', 'sprint_what', 'sprint_why', 'sprint_how', 'treadmill_what', 'treadmill_why', 'treadmill_how', 'burpees_what', 'burpees_why', 'burpees_how', 'walking_what', 'walking_why', 'walking_how', 'skipping_what', 'skipping_why', 'skipping_how', 'swimming_what', 'swimming_why', 'swimming_how']
+                - the list of entities: ['goal', 'diet', 'allergy']
+                - the list of actions: ['action_generate_weight_loss_plan', 'action_adjust_meal_plan', 'action_generate_muscle_gain_plan', 'action_generate_general_fitness_plan']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Health & Fitness

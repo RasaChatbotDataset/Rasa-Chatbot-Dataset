@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: RasaChatbot
+                - the description: Chatbot for appointmentApp
+                - the README: 
+                - the list of intents: ['affirm', 'appointment_number', 'book_appointment', 'bot_challenge', 'cancel_appointment', 'check_status_appointment', 'deny', 'fees_intent', 'fill_book_form', 'goodbye', 'greet', 'mood_great', 'thank_you', 'wr_otp']
+                - the list of entities: ['age', 'city', 'sentOTP', 'name', 'AID', 'otp', 'email']
+                - the list of actions: ['action_send_otp', 'action_book_appointment', 'utter_greet', 'utter_slots_values', 'utter_thank_you', 'action_cancel_appointment', 'action_check_status_appointment']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Business

@@ -1,0 +1,15 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Medical-Chatbot
+                - the description: None
+                - the README: # Arista-2.O
+Added new features and resolved some bugs as well.
+
+                - the list of intents: ['fine', 'name', 'greet', 'covid_19', 'goodbye', 'hospital_booking', 'diease_symptoms', 'healthy_lifestyle_tips', 'bmi_calculate', 'hospital_recommender', 'pill_remainder', 'ambulance_service', 'news_teller', 'calorie_info', 'calorie_tracker', 'manufactured', 'blood_bank', 'add_ambulance_driver', 'update_ambulance_driver', 'add_blood_bank_repersentative', 'update_blood_bank_repersentative']
+                - the list of entities: ['hospital_place', 'bystander_number', 'contact', 'case', 'bleeding_place', 'representative_place1', 'admitted_hospital', 'symptoms', 'any_other_symptoms', 'number_of_medicine', 'medicine_details', 'food_info', 'district', 'hospital_name', 'name_of_person', 'weight_info', 'patient_name', 'required_date', 'place1', 'name', 'driver_id', 'no_of_units', 'age', 'name3', 'representative_name', 'contact_number', 'representative_mobile1', 'place', 'representative_id', 'driver_name', 'weight', 'full_details', 'driver_name1', 'food_items', 'blood_group', 'driver_mobile1', 'name1', 'representative_name1', 'bleeding_time', 'representative_place', 'name2', 'driver_place', 'lifestyle', 'driver_place1', 'height', 'representative_mobile', 'ambulance_place', 'driver_mobile']
+                - the list of actions: ['action_hospital', 'action_place', 'action_symptoms', 'utter_greet', 'utter_help', 'utter_name', 'action_healthy_tips', 'utter_healthy_tips', 'action_bmi_calculator', 'action_pill_remainder', 'action_ambulance_service', 'action_hospital_recommender', 'action_calorie_tracker', 'action_calorie_info', 'action_health_news', 'utter_news', 'utter_made', 'action_blood_bank', 'action_add_blood_bank_repersentative', 'action_update_blood_bank_repersentative', 'action_update_ambulance_driver', 'action_add_ambulance_driver']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical

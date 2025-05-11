@@ -1,0 +1,15 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rasa_chatbot
+                - the description: Trained chatbot to understand user's intent to check account balance, transaction history, and provide appropriate responses.
+                - the README: # rasa_chatbot
+Trained chatbot to understand user's intent to check account balance, transaction history, and provide appropriate responses.
+
+                - the list of intents: ['greet', 'goodbye', 'check_balance', 'transaction_history', 'provide_details', 'deny', 'transaction_details']
+                - the list of entities: ['account_number', 'name', 'phone_number']
+                - the list of actions: ['action_show_balance', 'action_show_transaction_history']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Chatbot
+                - the description: None
+                - the README: 
+                - the list of intents: ['affirm', 'ask_definition', 'ask_add_definition', 'ask_help_definition', 'ask_add_def', 'give_full_definition', 'bot_challenge', 'deny', 'Site_Classify_Ask', 'Site_Solution_Ask', 'Site_Questions', 'goodbye', 'inform_problem', 'inform_problem_ML', 'predict_traffic_ML', 'greet', 'inform_about_reseau_phy', 'ask_for_reseau_phy', 'add_phy_net']
+                - the list of entities: ['site', 'definition', 'problem']
+                - the list of actions: ['Action_Validate_feature', 'action_reset_all_slots', 'utter_another_def', 'utter_did_that_help', 'action_site_info', 'utter_def_added', 'utter_greet', 'utter_ask_def', 'utter_happy', 'action_Site_Problem', 'action_Info_Problem', 'action_classify_site_ML', 'inform_problem_ML', 'utter_reseau_phy_slots', 'action_problem_solve', 'action_problem_solve_ML', 'action_predict_traffic_ML']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

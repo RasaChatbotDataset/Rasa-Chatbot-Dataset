@@ -1,0 +1,84 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Interview-schedule-bot
+                - the description: The bot is used to converse with potential candidates, gives a brief description of the company and the job role then asks the candidate if they are willing to take up the job and  schedules an interview.
+                - the README: # Interview-schedule-bot
+
+The bot is used to converse with potential candidates. The chatbot gives a brief description of the company and the job role then asks the candidate if they are willing to take up the job and schedules an interview.
+
+Developed using Rasa 3.x
+
+## Steps to run the Bot
+
+### Create and run a python environemnt 
+
+Using Anaconda Prompt, run the following commands in the your preferred directory 
+```bash
+conda create -n envname python=3.6 anaconda
+conda activate envname
+```
+Or refer [here](https://www.geeksforgeeks.org/set-up-virtual-environment-for-python-using-anaconda/)
+
+### Create a new rasa project
+
+Run the following commmand after activating the python environment 
+```bash
+rasa init
+```
+
+### Install dependencies for the bot
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Run 'pip install rasa-sdk' in the python environment
+
+### Overview of the files( also reffered to as dependencies)
+
+`data/nlu/nlu.yml` - contains NLU training data
+
+`data/nlu/rules.yml` - contains rules training data
+
+`data/stories/stories*.yml` - contains stories training data
+
+`actions.py` - contains custom action/api code
+
+`domain.yml` - the domain file, including bot response templates
+
+`config.yml` - training configurations for the NLU pipeline and policy ensemble
+
+`tests/` - end-to-end tests
+
+### Replace the files
+
+Replace the default contents of the files with files in the repository 
+
+### Run the bot
+
+Use `rasa train` to train a model.
+
+Then, to run, first set up your action server in one terminal window :
+```bash
+rasa run actions
+```
+In another prompt window, run the duckling server (for entity extraction):
+
+```bash
+docker run -p 8000:8000 rasa/duckling
+```
+Then to talk to the bot, run:
+```
+rasa shell --debug
+```
+Note that `--debug` mode will produce a lot of output meant to help you understand how the bot is working
+under the hood. To simply talk to the bot, you can remove this flag.
+
+Use should now be able to communicate with the bot in developer mode
+
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'query_company_info', 'query_work_mode', 'query_location', 'query_job_description', 'query_salary_description', 'query_working_hours', 'candidate_time_slot', 'getnumber', 'free', 'busy', 'interested', 'uninterested']
+                - the list of entities: ['time']
+                - the list of actions: ['utter_greet', 'utter_obtain_alternate_number', 'utter_ask_for_alternate_number', 'utter_thank', 'utter_sorry', 'utter_call_another_time', 'utter_ask_candidate_goodtimetotalk', 'utter_sales_pitch', 'utter_company_description', 'utter_job_description', 'utter_salary', 'utter_location', 'utter_workmode', 'utter_work_hours', 'utter_wrong_question', 'utter_any_more_questions', 'utter_ask_schedule', 'utter_first_scheduler', 'utter_ask_date_scheduler', 'utter_ask_time_scheduler', 'utter_invalid_date', 'utter_invalid_time', 'utter_final_scheduler', 'utter_get_in_touch', 'utter_goodbye', 'utter_iamabot', 'candidate_time_slot', 'action_candidate_time_slot', 'utter_ask_if_interested']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Business

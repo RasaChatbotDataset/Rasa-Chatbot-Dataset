@@ -1,0 +1,26 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Medibot-Rasa-chatbot
+                - the description: Chat Bot using RASA Framework for health care industry. This Bot can assist the users to book appointment, confirm the appointment status and users can enquire about usage and side effects of any medicine. Bot will web scrape that information and will provide it to the user. Appointment details would be stored in SQL server using pyodbc.
+                - the README: # MediBot-A-RASA-chat-Bot
+
+Chat Bot using RASA Framework for health care industry.This Bot can assist the users to book appointment, confirm the appointment status and users can enquire about usage and side effects of any medicine. 
+Bot will web scrape that information and will provide it to the user. Appointment details would be stored in SQL server using pyodbc.  
+
+This bot has 3 major functionalities.
+It can be used to book appointment, confirm the exising appointment and to know about the uses, side effects and dosage  of an medicine/tablet.
+Custom actions has been created to do web scrapping from third party websites when information about any medicine has been asked for.
+When users ask to book appointment, RASA forms would be triggered to get the information about First name, Last name, appointment date from user and these information would be added to sql server table , appointment number would be generated and provided to user.
+When user ask to confirm their appointment status, another Rasa form would be used to get the appointment number which would have been provided while booking appointment , connects to sql server to check status of that appointment using given appointment number.
+
+
+Tools:  Python and sql 
+Libraries:Bs4,lxml,requests,pyodbc,pandas,regex,nltkpickle,google search,rasa_sdk,Flask.
+                - the list of intents: ['affirm', 'appointment_confirmation', 'appointment_date', 'book_appointment', 'bot_challenge', 'deny', 'doctor_availability', 'goodbye', 'greet', 'medicine_enquiry', 'mood_great', 'mood_unhappy', 'out_patient_consultation', 'thanks', 'timing']
+                - the list of entities: ['first_name', 'appointment_date', 'medicine_name', 'appoint_no', 'last_name', 'PERSON']
+                - the list of actions: ['action_appointment_booking', 'action_appointment_confirmation', 'action_doctor_availability', 'action_medicine_info', 'utter_cheer_up', 'utter_greet', 'utter_happy', 'utter_reply_thank', 'validate_appointment_confirmation_form', 'validate_appointment_form']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical
