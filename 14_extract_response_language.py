@@ -57,11 +57,8 @@ def extract_response_language_from_file(chatbot, file, repository):
 
             if 'responses' in domain and domain['responses']: 
                 responses = domain['responses']
-            # Rasa version <3.0
             elif 'templates' in domain and len(domain['templates']) > 0:
                 responses = domain['templates']
-                if not chatbot['version']:
-                    chatbot['version'] = '<3.0'
             else:
                 return languages
             

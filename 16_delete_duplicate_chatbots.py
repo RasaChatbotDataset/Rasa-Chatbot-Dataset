@@ -100,6 +100,15 @@ def select_best_copies(copies):
 
     return best_copies
 
+# Update version of chatbot not updated after Rasa 2
+def update_version(chatbot):
+    if isinstance(chatbot['last-commit-date'], str) and chatbot['last-commit-date'][0:10] < '2020-10-07' and pd.isna(chatbot['version']):
+        print('change')
+        chatbot['version'] = '1.0'
+    if not isinstance(chatbot['last-commit-date'], str):
+        print(chatbot['last-commit-date'])
+    return chatbot
+
 
 
 def main():
@@ -174,6 +183,7 @@ def main():
 
 
     # Reorder dataset
+    chatbots = chatbots.apply(update_version, axis=1)
     chatbots = chatbots.drop('actions-files', axis=1)
     chatbots = chatbots.sort_values(by= 'id')
     chatbots = chatbots[ORDER_COLUMNS]
