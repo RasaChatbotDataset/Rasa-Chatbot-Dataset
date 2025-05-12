@@ -20,15 +20,17 @@ def select_best_copies(copies):
 
     # The first copy is the best one based on our sorting
     best_copies = []
-    diff_action_files = []
+    diff_action_files_set = []
 
     # No action file: keep only best one
     if copies[0]['n-actions-files'] == 0:
         best_copies = [copies[0]]
 
-    # One action file: check content
-    elif copies[0]['n-actions-files'] == 1:
+    # Action files
+    else:
         for copy in copies:
+
+            copy_action_files_contents = []
 
             # Open zip
             zip_path = ZIP_FOLDER + '/' + copy['full-name'].replace('/', '_') + '.zip'
@@ -38,46 +40,62 @@ def select_best_copies(copies):
                 print(copy['full-name'])
                 return
         
-            # Check action file
-            action_file = ast.literal_eval(copy['actions-files'])[0]
-            full_action_path = copy['full-name'].split('/')[-1]+'-'+copy['last-commit']+ '/' + action_file
-            with repository.open(full_action_path) as d_file:
-                try:
-                    content = d_file.read().decode()
-                    clean_content = content.strip().replace('\n', '').replace(' ', '')
-                    # Verify file similarity with others already saved
-                    is_new = True
-                    for c in diff_action_files:
-                        if SequenceMatcher(None, clean_content, c).ratio() >= 0.95:
-                            is_new = False
-                            break
-                    if is_new:
-                    #if clean_content not in diff_action_files: 
-                        diff_action_files.append(clean_content)
-                        best_copies.append(copy)
-
-                except Exception as e:
-                    print(f"Decode error for {copy['id']}")
-                    print(e)
-                    continue
-
-    # Multiple action files: check names
-    else:
-
-        for copy in copies:
-
-            # Get clean action file name
+            # Extract all action files content and save them in alphabetical order
             action_files = ast.literal_eval(copy['actions-files'])
-            clean_action_files = []
             for action_file in action_files:
-                clean_action_files.append(action_file.split('/')[-1])
             
-            # Sort
-            clean_action_files.sort()
+                full_action_path = copy['full-name'].split('/')[-1]+'-'+copy['last-commit']+ '/' + action_file
+                with repository.open(full_action_path) as d_file:
+                    try:
+                        # Decode file content
+                        content = d_file.read().decode()
+                        clean_content = ''.join(content.split())
 
-            if clean_action_files not in diff_action_files:
-                diff_action_files.append(clean_action_files)
+                        # Add content
+                        copy_action_files_contents.append(clean_content)
+
+                    except Exception as e:
+                        print(f"Decode error for {copy['id']}")
+                        print(e)
+                        continue
+
+            # Sort action files contents            
+            copy_action_files_contents.sort()
+
+            if not diff_action_files_set:
+                diff_action_files_set.append(copy_action_files_contents)
                 best_copies.append(copy)
+                continue
+                        
+            # Verify copy's action files similarity with actions files of other copies already saved
+            is_new = True
+            # For each set of files (files of a copy) saved
+            for contents_set in diff_action_files_set:
+
+                all_files_same = True
+                # For each file  in the current copy set
+                for copy_file in copy_action_files_contents:
+                    found_copy = False
+                    # For each file in the saved files set
+                    for saved_file in contents_set:
+                        # If the file matches with the file of the considered save set
+                        if SequenceMatcher(None, saved_file, copy_file).ratio() >= 0.95:
+                            found_copy = True
+                            break
+                    all_files_same = all_files_same and found_copy
+                    # file not found in considered saved set: check new set
+                    if not found_copy:
+                        break
+                # If we found a copy of each file in a file set already saved: chatbot is a copy
+                if all_files_same:
+                    is_new = False
+                    break
+
+            # If chatbot new save its file files set
+            if is_new:
+                diff_action_files_set.append(copy_action_files_contents)
+                best_copies.append(copy)
+
 
 
     return best_copies
@@ -104,8 +122,6 @@ def main():
     
     # Order chatbots to have copies one after another
     order_fields = FIELDS + ['version', 'stars', 'forks', 'created-at'] 
-    # <3.0 becomes 1.5
-    chatbots['version'] = chatbots['version'].replace('<3.0', '1.5')
     chatbots[['n-entities', 'n-slots', 'n-slots-from-text', 'n-slots-from-entity', 'n-forms']] = chatbots[['n-entities', 'n-slots', 'n-slots-from-text', 'n-slots-from-entity', 'n-forms']].astype(int)
     chatbots = chatbots.sort_values(by=order_fields, ascending=[True, True, True, True, True, True, True, True, True, True, False, False, False, True])
 
@@ -158,7 +174,6 @@ def main():
 
 
     # Reorder dataset
-    chatbots['version'] = chatbots['version'].replace('1.5', '<3.0')
     chatbots = chatbots.drop('actions-files', axis=1)
     chatbots = chatbots.sort_values(by= 'id')
     chatbots = chatbots[ORDER_COLUMNS]
