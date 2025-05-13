@@ -1,0 +1,22 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Rasa-chatbot-for-Travel-Assistant
+                - the description: None
+                - the README: # Rasa-chatbot-for-Travel-Assistant
+###  Travel Assistant ###
+I wanted to create a simple project that would response to the user queries i.e Contextual A.I chatbot.
+
+Introduction
+This application was developed for the Travel Assitant using Python. The application takes user query in the form of  text and gives response. Varrious intents and responses are created for better interaction between the user and chatbot.
+Installation:
+    RASA Framework  # PIP Install RASA
+    Python 3.9.0 Framework.
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'flight_booking', 'search_best_hotels', 'search_tourist_spots']
+                - the list of entities: ['city']
+                - the list of actions: ['action_flight_booking', 'action_best_hotels', 'action_tourist_spots']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Travel & Local

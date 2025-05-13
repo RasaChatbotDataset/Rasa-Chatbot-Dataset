@@ -1,0 +1,126 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import abc
+from dataclasses import dataclass
+from typing import List
+
+import requests
+
+from . import create_logger
+
+logger = create_logger("storage")
+
+
+@dataclass
+class Meter:
+
+    meterID: str
+    meterReading: str
+    maxDiff: str
+    lastYear_meterReading: str
+
+    @staticmethod
+    def from_dict(dict):
+        return Meter(
+            meterID=dict.get("meterID"),
+            meterReading=dict.get("meterReading"),
+            maxDiff=dict.get("maxDiff"),
+            lastYear_meterReading=dict.get("lastYear_meterReading"),
+        )
+
+
+@dataclass
+class Customer:
+    customerNumber: str
+    meters: List[Meter]
+
+    # Ignore the first character (the letter)
+    def findMeterFuzzy(self, meterID: str) -> Meter:
+        if self is not None and meterID is not None:
+            for meter in self.meters:
+                if meter.meterID[1:] == meterID[1:]:
+                    return meter
+        return None
+
+
+class HttpException(Exception):
+    def __init__(self, response: requests.Response) -> None:
+        super().__init__(
+            f"HTTP {response.request.method} request to {response.request.url} failed with status code {response.status_code} and message: {response.text}"  # noqa: E501, F401
+        )
+
+
+class MeterReadingStorage(abc.ABC):
+    @abc.abstractmethod
+    def getCustomer(self, customerNumber: str) -> Customer:
+        pass
+
+    @abc.abstractmethod
+    def submitMeterReading(self, meterID: str, newReading: str):
+        pass
+
+    @abc.abstractmethod
+    def findMeter(self, meterID: str) -> Meter:
+        pass
+
+
+class InMemoryStorageImpl(MeterReadingStorage):
+    storage: List[Customer] = []
+
+    def getCustomer(self, customerNumber) -> Customer:
+        if (
+            customerNumber == None or           # The customerNumber MUST
+            not customerNumber.isnumeric() or   # only contain digits
+            len(customerNumber) != 6 or         # be 6 digits long
+            not customerNumber.startswith("4")  # start with a 4
+        ):
+            return None
+
+        for customer in self.storage:
+            if customer.customerNumber == customerNumber:
+              return customer
+        meters = [
+            Meter("A39" + customerNumber, None, "1000", "2000"), # You should not be able to set a meter reading higher than 3000
+            Meter("B42" + customerNumber, "38000", None, None),  # You will be ask, if you want to overwrite the meter reading 
+        ]
+        customer = Customer(customerNumber, meters)
+        self.storage.append(customer)
+        return customer
+
+    def submitMeterReading(self, meterID: str, newReading):
+        meter = self.findMeter(meterID)
+        if meter is None:
+          raise KeyError("meter not found: " + str(meterID))
+        meter.meterReading = newReading
+
+    def findMeter(self, meterID: str) -> Meter:
+        for customer in self.storage:
+            for allMeters in customer.meters:
+                if allMeters.meterID == meterID.upper():
+                  return allMeters
+        return None
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    requests
+requests
+requests
+requests
+None
+requests
+requests
+requests
+requests
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+requests
+
+Purpose of external services:
+requests: The 'requests' library is used to make HTTP requests to external services or APIs. In this file, it is used to handle HTTP exceptions and potentially interact with external services for meter reading storage and retrieval.

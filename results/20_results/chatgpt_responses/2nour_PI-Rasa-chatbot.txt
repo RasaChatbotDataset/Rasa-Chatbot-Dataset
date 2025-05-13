@@ -1,0 +1,26 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: PI-Rasa-chatbot
+                - the description: A Banking chatbot solution built with RASA using four languages: Arabic, English, French and Tunisian dialect This solution aims to provide users with response to commonly asked questions about bank services as well as taking actions such as:  User sign-up User sign-in (Flask interface) Currency convertor Money Transfer Email notifications Id card verification through camera using AI The chat bot was deployed on Messanger and on a Flask web site
+                - the README: # PI-Rasa-chatbot
+A Banking chatbot solution built with RASA using four languages: Arabic, English, French and Tunisian dialect 
+This solution aims to provide users with response to commonly asked questions about bank services as well as taking actions such as:
+  - User sign-up
+  - User sign-in (Flask interface)
+  - Currency convertor 
+  - Money Transfer
+  - Email notifications
+  - Id card verification through camera using AI
+
+The chat bot was deployed on Messanger and on a Flask web site 
+  
+ 
+
+                - the list of intents: ['possible_credit', 'get_salary', 'get_duration5', 'get_duration7', 'get_duration10', 'get_duration15', 'get_duration20', 'create_new_id', 'identity', 'greet', 'goodbye', 'affirm', 'deny', 'ask_for_help', 'check_human', 'consult_human', 'thanking', 'check_balance', 'transfer_money', 'previous_transactions_and_earnings', 'check_bank_offers_and_services', 'check_type_of_accounts', 'create_new_account', 'pay_cc', 'delete_account', 'mood_great', 'mood_unhappy', 'bot_challenge', 'Name', 'email', 'birthdate', 'number', 'address', 'login', 'savings_account_ty', 'current_account_ty', 'salary_account_ty', 'choose_account', 'get_credit', 'personal_credit', 'car_credit', 'real_estate_credit', 'desired_amount', 'last_five_trans', 'all_trans', 'complaint_request', 'complaint_typee', 'submit_problem', 'submit_rib', 'check_complaint_status', 'track_location', 'nearest_agency_position', 'reciever_rib', 'amount_sent', 'convert_currency', 'extrait_bnk', 'check_agencies', 'how_create_account', 'request_cheque', 'why_your_bank', 'tunisian', 'resident', 'cheque_request_status', 'cheque_request_number', 'last_Name', 'submit_n', 'sign_in', 'log_me_out']
+                - the list of entities: ['rib', 'first_name', 'salary', 'choose_account', 'last_name', 'Person', 'account', 'phone_number', 'birth_date', 'currency_dep', 'currency_arriv', 'transactions', 'addresse', 'credit_type', 'problem', 'residency', 'sub_type', 'amount-of-money', 'address', 'salaryy', 'credit', 'number', 'transactions_type', 'request_num', 'complaint_type', 'duration', 'balancee', 'birthdate', 'mail', 'account_type', 'track_status', 'email']
+                - the list of actions: ['action_account_type', 'action_ask_why', 'action_check_earnings', 'action_create_account', 'action_create_id', 'action_delete', 'action_pay_cc', 'action_possible_credit', 'action_show_balance', 'action_sign_in', 'action_transfer_money', 'action_personal_credit_duration', 'action_car_credit_duration', 'action_real_estate_credit_duration', 'action_credit_type', 'action_create_credit', 'action_create_complaint', 'action_complaint_type', 'action_check_complaint_status', 'action_transactions_type', 'action_show_agencies', 'action_use_location', 'action_nearest_agency', 'action_currency_calculator', 'action_validate_creation', 'action_take_pic', 'action_tunisian_resident', 'action_cheque_request_status', 'action_cheque_request', 'action_create_account1', 'action_create_complaint_without_signin', 'action_verif_rib_name', 'action_logout', 'action_logout_verif', 'action_check_mandat_state', 'action_send_mandat', 'action_check_all_earnings', 'action_activate_cc', 'action_extrait_bnk', 'action_check_balance_null', 'action_rhan', 'action_rouge']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

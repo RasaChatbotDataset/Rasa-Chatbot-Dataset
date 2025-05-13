@@ -1,0 +1,108 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # A dictionary for account information of customers with account number as key
+account_details = {
+    "9874563210123687": {
+        "name": "John Doe",
+        "phone": 9812345678,
+        "balance": 1000,
+    },
+    "9874563210123688": {
+        "name": "somenme",
+        "phone": 9812345008,
+        "balance": 1002,
+    }
+}
+# A dictionary for transaction history where a nested disctionary is used to record the balance with description in the key as timestamp
+transaction_history = {
+    "9874563210123687": {
+        "2023-05-05" :{
+            "balance": 50,
+            "description": "salary"
+        },
+        "2023-05-06" :{
+            "balance": 60,
+            "description": "bonus"
+        }
+    },
+    "9874563210123688": {
+        "2023-04-05" :{
+            "balance": 150,
+            "description": "salary"
+        },
+        "2023-04-06" :{
+            "balance": 160,
+            "description": "bonus"
+        }
+    }
+    
+}
+
+
+
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+#to return balance in a format as per task.
+class ActionCheckBalance(Action):
+    def name(self) -> Text:
+        return "action_check_balance"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        account_number = tracker.get_slot("account_number")
+        if account_number in account_details:
+            balance = account_details[account_number]["balance"]
+            response = f"Dear {account_details[account_number]['name']}, your {account_number} has a balance of Rs. {balance}"
+        else:
+            response = "Sorry, I couldn't find any account with the provided account number."
+        dispatcher.utter_message(text=response)
+        return []
+
+#to return transaction history 
+class ActionCheckTransactionHistory(Action):
+    def name(self) -> Text:
+        return "action_check_transaction_history"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        account_number = tracker.get_slot("account_number")
+        if account_number in transaction_history:
+            getTransHistory = transaction_history[account_number]
+            response = "Here is your transaction history:\n"
+            for transaction in getTransHistory:
+                timestamp = transaction
+                amount = getTransHistory[str(timestamp)]['balance']
+                description = getTransHistory[str(timestamp)]['description']
+                response += f"- {timestamp}: Rs. {amount}, {description}\n"
+        else:
+            response = "Sorry, I couldn't find any account with the provided account number."
+
+        dispatcher.utter_message(text=response)
+        return []
+    
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

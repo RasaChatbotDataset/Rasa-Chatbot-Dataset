@@ -1,0 +1,61 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.types import DomainDict
+from typing import Any, Text, Dict, List
+import re
+
+class AddSubAction(Action):
+    
+    def name(self) -> Text:
+        return "add_sub_action"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        
+        y = tracker.events
+        print(len(y))
+        found_value = False
+        for i in range(len(y), -1, -1):
+            try:
+                value = y[i]['parse_data']['entities'][0]['value']
+                print(value)
+                found_value = True
+                break
+            except:
+                pass
+
+        dispatcher.utter_message(f"your subscriptions added {value} days") 
+        return []
+class ShowPriceAndAffrim(Action):
+    def name(self) -> Text:
+        return "show_price_and_affrim"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        x = tracker.latest_message['entities']
+        print(x)
+        dispatcher.utter_message(f"its cost {int(x[0]['value']) * 2000} toman are you sure?") 
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

@@ -1,0 +1,54 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Capstone2
+                - the description: None
+                - the README: # GadgetBot
+GadgetBot provides innovative and automated system that helps customer to buy gadgets at best deal.
+A web-based software powered with AI that allows customer to browse the gadgets and bargain with the chatbot for the flexible price.
+
+## Technologies
+* Python
+* HTML/CSS
+* Javascript
+* Django
+* Rasa
+* SQLite
+
+## Front end
+### All the front-end pages
+#### Home Page
+![image](https://github.com/ShrutikaDRaut/Capstone2/blob/main/ProjectRefFiles/welcome%20screen.png)
+
+#### All Product Listing
+![image](https://github.com/ShrutikaDRaut/Capstone2/blob/main/ProjectRefFiles/All%20products.png)
+
+#### Product Description Page
+![image](https://github.com/ShrutikaDRaut/Capstone2/blob/main/ProjectRefFiles/product%20description.png)
+
+#### Cart Page
+![image](https://github.com/ShrutikaDRaut/Capstone2/blob/main/ProjectRefFiles/cart.png)
+
+#### Customer Information/ Order Summary Page
+![image](https://github.com/ShrutikaDRaut/Capstone2/blob/main/ProjectRefFiles/customer.png)
+
+
+## Contributors
+
+* **Lawrence Wanderi Mwangi** [mwangidyce](https://github.com/mwangidyce)
+* **Tejas Devani** [tejasdevani83](https://github.com/tejasdevani83)
+* **Vaibhavi Thakkar** [TVaibhavi](https://github.com/TVaibhavi)
+* **Shrutika Raut** [ShrutikaDRaut](https://github.com/ShrutikaDRaut)
+* **Smriti Raina** [smriti26raina](https://github.com/smriti26raina)
+
+
+
+
+# Capstone2
+                - the list of intents: ['user_made_offer', 'user_offer_accepted', 'user_offer_denied', 'user_end', 'user_random']
+                - the list of entities: ['max_price', 'attribute', 'mention', 'user_offer', 'min_price', 'accept_offer']
+                - the list of actions: ['utter_ask_new_offer', 'utter_chat_begin', 'utter_counter_offer', 'utter_congrats', 'utter_thankyou', 'action_counter_offer', 'action_reject_accept_offer']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Shopping

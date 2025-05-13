@@ -1,0 +1,138 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rhit_IRPA_2023
+                - the description: Rose-hulman Institute of Technology Class of Senior Design 2023 IRPA Chatbots Project
+                - the README: # rhit_IRPA_2023
+
+Rose-hulman Institute of Technology Class of Senior Design 2023 IRPA Chatbots Project
+
+## Setup instructions:
+
+1. Install Anaconda.
+
+2. Open Anaconda Terminal.
+
+3. Run "conda env create -f environment.yml" in anaconda terminal this will create an environment called irpa_chatbot and install the necessary libraries.
+
+4. Activate the environment that was created by running "conda activate irpa_chatbot"
+
+5. Run "pip install farm-haystack==1.16.0"
+
+6. Create an .env file with the following fields:
+  - SECRET_KEY
+  - ROOT_USERNAME
+  - ENVIRONMENT #Options: development, production
+
+  See the .env_template file for an example.
+  SECRET_KEY specifies a a key used to create authorization token for the admin
+  ROOT_USERNAME specifies the initial root administrator user who can access the system and add admins. It should be a Rose-Hulman username.
+  ENVIRONMENT specifies the environment the software is in. The options are development and production.
+
+## Running Locally
+
+- Open four anaconda terminal and each should be in the irpa_chatbot environment. (conda activate irpa_chatbot). Each
+  terminal is for starting each of the services below:
+
+  ### Starting Rasa API
+  In the anaconda terminal, run "python -m  rasa run --cors "*" --enable-api"
+  
+  ### Starting Rasa Action Server
+  In the anaconda terminal, run "python -m rasa run actions"
+
+  ### Starting Backend API
+  In the anaconda terminal, run "uvicorn general_api:app --reload"
+
+  ### Starting Frontend
+  1. cd into chatbot_app folder
+  2. Run "npm install"
+
+## Testing:
+Open anaconda terminal, cd into the project directory
+### Test Rasa Model:
+ Type rasa test in the terminal. The test results will be in failed_stories.yml in the results directory.
+### Unit Test and Integration Test
+ Don't need to cd into test directory. At the project's root directory run the following command:
+   - To run all test: python -m unittest discover tests test*.py
+   - To run individual test: python -m unittest tests/{name of test}.py 
+      - For example: python -m unittest tests/test_knowledgebase.py
+      - Note: all test files should start with prefix "test"
+
+# Getting Started with Create React App
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'enrollment', 'cohort', 'admission', 'transfer_admission', 'basis_for_selection', 'freshman_profile', 'academic_offering_and_policy', 'student_life', 'financial_aid', 'faculty_and_class_size', 'sat_act_policy', 'general_info', 'definition', 'annual_expense', 'degree_conferred', 'change_year', 'get_year', 'get_available_options', 'event_occured', 'mood_great', 'mood_unhappy', 'bot_challenge']
+                - the list of entities: ['financial_aid_type', 'standarized_test', 'is_first_time', 'range', 'distance_learning', 'unit_type', 'money', 'program_offered', 'academic_credit', 'deadline', 'post', 'undergraduate_grade_level', 'other_aid', 'disability', 'lastTopicIntentAsked', 'major', 'college_relation', 'enrollment_status', 'international_domestic', 'policy', 'transportation', 'service_offered', 'military_branch', 'lastUserQuestionAsked', 'contact_hour', 'no_aid', 'net_price_calculator', 'exemptions', 'academic_term', 'age', 'self-help_aid', 'number', 'rotc', 'financial_aid_degree_met', 'degree-goal', 'race', 'allow_transfer_credit', 'test_component', 'methodology', 'lastAnswersProvided', 'need_non_need_base_aid', 'online', 'yearRangeSelected', 'indebtedness', 'education_level', 'aggregation', 'activity_offered', 'time', 'class_rank', 'student_level', 'category', 'non_academic_factor', 'type', 'degree_level', 'scholarship_grants', 'is_first_year', 'other', 'for_profit_non_profit', 'gender', 'loan_lender', 'unit_of_measure', 'percentile', 'cohort_initial_final', 'academic_factor', 'calendar_system', 'industry_experience', 'financial_aid_term', 'school_supply', 'size', 'academic_process', 'condition', 'access_level', 'citizen_non_citizen', 'waiting-list', 'year', 'action', 'section_subsection', 'subject', 'form', 'early-admission', 'student_enrollment_result', 'way_of_contact', 'defer', 'open_admission', 'allow_transfer', 'living_cost', 'organizational_term', 'housing', 'people', 'admission_decision_date', 'academic_credential', 'completion-requirement', 'placement']
+                - the list of actions: ['action_query_knowledgebase', 'action_set_year', 'action_get_year', 'action_get_available_options', 'action_ask_more_question', 'action_answer_not_helpful', 'action_store_asked_question', 'action_store_isHelpful_statistic', 'action_nlu_fallback', 'action_event_occured']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Education

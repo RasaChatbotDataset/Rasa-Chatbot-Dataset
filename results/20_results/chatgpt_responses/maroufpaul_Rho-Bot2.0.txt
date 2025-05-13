@@ -1,0 +1,97 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Rho-Bot2.0
+                - the description: None
+                - the README: # Rasa Chatbot for Rhodes College 
+
+
+This Rasa-based chatbot is designed to provide information about the various department, answering queries related to faculty specialization, course requirements, and more.
+
+
+## Features
+
+- **Faculty Specialization Inquiries**: Find out which faculty member specializes in a particular area.
+- **Major Requirement Details**: Get detailed information about major requirements in Computer Science.
+- **Course Guidance**: Guidance on what courses to take for a CS major.
+
+## Installation
+
+To run this chatbot, you need to install Rasa Open Source. Follow these steps:
+
+1. **Install Rasa**: 
+   ```bash
+   pip install rasa
+2. **Clone the Repository: **
+    ```bash
+    git clone <repository-url>
+    cd <repository-directory>
+
+4. **Train the Model**:
+    ```bash
+    rasa train
+5. **Run the Actions Server (In a separate terminal):**:
+    ```bash
+    rasa run actions
+
+6. **Start Talking to Your Bot:**:
+   ```bash
+   rasa shell
+## Project Structure
+
+- `data/`
+  - `nlu.yml`: NLU training data for the Rasa model.
+  - `stories.yml`: Sample stories representing conversation flows.
+  - `rules.yml`: Rules to define deterministic behavior of the bot.
+- `actions/`
+  - `actions.py`: Custom actions for dynamic responses.
+- `tests/`
+  - `test_stories.yml`: Test stories for evaluating the bot.
+- `domain.yml`: Defines the chatbot's universe, including intents, entities, actions, and responses.
+- `config.yml`: Configuration for the NLU pipeline and policies.
+- `endpoints.yml`: Configures external services like action server.
+
+## Usage
+
+- Start a conversation with a greeting like "Hello".
+- Ask about faculty specializations, e.g., "Who specializes in machine learning?"
+- Inquire about major requirements, e.g., "What are the CS major requirements?"
+
+## Customization
+
+You can customize and extend the chatbot by:
+
+- Adding more intents and examples in `data/nlu.yml`.
+- Creating new stories in `data/stories.yml`.
+- Defining additional rules in `data/rules.yml`.
+- Implementing more custom actions in `actions/actions.py`.
+
+## Contributing
+
+Contributions to this project are welcome. Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes and commit (`git commit -am 'Add some feature'`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Create a new Pull Request.
+
+## License
+
+MIT License
+
+
+
+
+
+
+
+
+
+                - the list of intents: ['greet', 'goodbye', 'bot_challenge', 'ask_faculty_specialization', 'ask_course_details', 'ask_program_admissions', 'ask_event_info', 'ask_general_info', 'provide_feedback', 'affirm', 'deny', 'ask_department_chair', 'ask_department_description', 'ask_major_requirements', 'ask_minor_requirements', 'ask_link']
+                - the list of entities: ['service', 'specialization', 'link_context', 'topic', 'subject', 'department']
+                - the list of actions: ['utter_greet', 'utter_goodbye', 'utter_iamabot', 'utter_fallback', 'utter_thank_feedback', 'utter_how_can_i_help', 'utter_more_help', 'utter_what_else_can_i_do', 'utter_did_that_help', 'utter_let_me_clarify', 'utter_can_i_help', 'utter_ask_for_feedback', 'utter_anything_else', 'utter_feedback_request', 'action_handle_and_analyze_feedback', 'action_faculty_specialization', 'action_custom_fallback', 'action_custom_classifier', 'action_retrieve_department_chair', 'action_retrieve_faculty_info', 'action_provide_course_details', 'action_retrieve_information', 'action_provide_major_requirements', 'action_provide_minor_requirements', 'action_provide_link', 'action_set_link_context']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Education

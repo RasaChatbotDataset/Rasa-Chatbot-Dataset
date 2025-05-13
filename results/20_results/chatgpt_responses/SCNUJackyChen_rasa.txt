@@ -1,0 +1,47 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rasa
+                - the description: A coffee chatbot using rasa
+                - the README: # Coffee Fun! -- Intelligent Coffee Ordering Chatbot
+
+An end-to-end conversational system configured on the Flask framework, with a backend chatbot configured on the RASA framework running on Docker. The chatbot supports 3 use cases: Chitchat, Coffee order and Feedback. See our demo by clicking the picture below.
+
+[![Demo](https://github.com/SCNUJackyChen/rasa/blob/master/pics/overview.png)](https://drive.google.com/file/d/1d4lvbny-Xwi0GmAkEFfn_gQfmta_6WPI/view?usp=sharing)
+
+
+# How to use
+
+## Docker Images
+### RASA backend
+We deploy the RASA backend in Docker, you can either build from Dockerfile or pull from our released image.
+
+Use `docker build -t <image_name> .` to build a docker image locally.
+
+Use `docker pull scnujackychen/coffeefun` to pull image remotely.
+
+### MySql
+The MySql Docker can be pulled from our released image.
+
+Use `docker pull scnujackychen/rasa_mysql`
+
+Unzip the data volumn `mysql.zip` to `/rasa/`.
+
+## Create container
+
+### MySql
+`docker run -it -v path_to_mysql_data_volumn --name database scnujackychen/rasa_mysql:latest`
+
+### RASA backend
+`docker run -it --name rasa -p 5005:5005 --link database:db scnujackychen/rasa_coffeefun:latest`
+
+## Run Flask
+`python UI\app.py`
+
+                - the list of intents: ['ask_coffee_list', 'order_coffee', 'inform_Sweetness', 'greet', 'inform_coffee_name', 'inform_Size', 'inform_Milkness', 'inform_State', 'inform_Strength', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'inform_email', 'inform_address', 'inform_customer_name', 'inform_select_preference', 'inform_feedback', 'feedback', 'chitchat_trigger', 'nlu_fallbacks']
+                - the list of entities: ['address', 'service', 'environment', 'coffee_name_is_collected', 'Strength', 'ABSA_result', 'is_end', 'Sweetness', 'State', 'Size', 'Milkness', 'customer_name', 'coffee_name', 'email']
+                - the list of actions: ['action_coffee_list', 'action_confirm_coffee_name', 'action_reset_customer_info_form', 'action_reset_coffee_preference_form', 'action_set_coffee_name_by_preference', 'action_select_coffee_name_by_preference', 'action_submit_order', 'validate_coffee_name_form', 'validate_coffee_preference_form', 'action_feedback_collection_form', 'action_get_sentiments_score', 'action_submit_user_feedback', 'validate_chitchat_form', 'action_reset_is_end']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Food & Drink

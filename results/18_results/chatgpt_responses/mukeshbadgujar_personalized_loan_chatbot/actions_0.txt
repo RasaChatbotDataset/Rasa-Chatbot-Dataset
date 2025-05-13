@@ -1,0 +1,65 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
+
+AVAILABLE_PIZZA_TYPES = [
+    "pepperoni", "vegetarian", "margherita", "Hawaiian",
+    "BBQ Chicken", "Four Cheese", "Meat Lovers'", "Paneer Tikka", "Mushroom", "Veggie Supreme"
+]
+
+class ActionCheckPizzaAvailability(Action):
+    def name(self) -> Text:
+        return "action_check_pizza_availability"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict]:
+
+        pizza_type = tracker.get_slot("pizza_type")
+
+        if pizza_type is not None:
+            if pizza_type.lower() in [pizza.lower() for pizza in AVAILABLE_PIZZA_TYPES]:  # Case-insensitive comparison
+                dispatcher.utter_message(text=f"Great! We have {pizza_type}. What size would you like?")
+                return []
+            else:
+                dispatcher.utter_message(text=f"Sorry, we don't have {pizza_type} available. Our available pizzas are: {', '.join(AVAILABLE_PIZZA_TYPES)}")
+                return [SlotSet("pizza_type", None)]  # Reset the slot
+        else:
+            dispatcher.utter_message(text="What kind of pizza would you like?")
+            return []
+
+class ActionUtterPizzaList(Action): # New Action example
+    def name(self) -> Text:
+        return "action_utter_pizza_list"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict]:
+
+        dispatcher.utter_message(text=f"Our available pizzas are: {', '.join(AVAILABLE_PIZZA_TYPES)}")
+        return [] 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

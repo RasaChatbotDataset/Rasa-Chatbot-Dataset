@@ -1,0 +1,14 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: mentalai
+                - the description: None
+                - the README: # Mental Health Chatbot - Made with Rasa 3
+
+                - the list of intents: ['abort', 'affirm', 'bot_challenge', 'deny', 'emergency', 'goodbye', 'greet', 'inform_mood', 'mood_anxiety', 'mood_depressed', 'mood_great', 'nlu_fallback', 'request_condition', 'test']
+                - the list of entities: ['mental_condition', 'mental_condition_level']
+                - the list of actions: ['action_hello_world', 'utter_anxiety_action_plan', 'utter_anything_else', 'utter_cheer_up', 'utter_continue', 'utter_depression_action_plan', 'utter_did_that_help', 'utter_goodbye', 'utter_greet', 'utter_happy', 'utter_helpline', 'utter_how_help', 'utter_please_rephrase', 'utter_slots_values', 'utter_submit']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Health & Fitness

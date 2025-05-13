@@ -1,0 +1,16 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: CougPresenceChatBot
+                - the description: RASA powered Chat bot that can answer questions related to events and organizations at WSU
+                - the README: #Chat Bot - Coug Presence
+
+This is a chat bot that can answer questions about WSU Pullman events and activities. The bot's output channel is Facebook Messenger. The bot is powered by RASA. 
+
+                - the list of intents: ['event_details', 'event_datetime', 'event_org', 'greet', 'goodbye', 'fallback']
+                - the list of entities: ['datetime', 'org_name']
+                - the list of actions: ['utter_fallback', 'utter_greet', 'utter_ask_itention', 'utter_loader_text', 'action_event_specific', 'action_event_details']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Events

@@ -1,0 +1,139 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from actions.ticker_mapping import get_ticker
+from typing import Any, Text, Dict, List
+import yfinance as yf
+import pandas as pd
+import numpy as np
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+class ActionGetPredictionsGraph(Action):
+    def name(self) -> Text:
+        return "get_predictions_graph" 
+    
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        try:
+            company_name = next(tracker.get_latest_entity_values("stock_name"), None)
+            if company_name:
+                company_name = company_name.lower()
+            else:
+                company_name = tracker.get_slot("stock_name")
+
+            print("Company name extracted:", company_name)
+            stock_ticker = get_ticker(company_name)
+            stock_data = yf.Ticker(stock_ticker)
+            df = stock_data.history(period="max")
+            df = self.preprocess_data(df)
+            model = self.train_model(df)
+            self.plot_predicted_prices(model, df, dispatcher)
+        
+        except Exception as e:
+            print(f"Error: {e}")
+            dispatcher.utter_message(text="Sorry, I encountered an error while processing your request.")
+
+        return []
+
+    def preprocess_data(self, df):
+        df.dropna(inplace=True)
+        features = ['Open', 'High', 'Low', 'Volume', 'Close']
+        df = df[features]
+        return df
+
+    def train_model(self, df):
+        df['Target'] = df['Close'].shift(-30)
+        df.dropna(inplace=True)
+        X = df.drop(columns=['Target'])
+        y = df['Target']
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        
+        model = xgb.XGBRegressor(objective ='reg:squarederror', n_estimators=100)
+        model.fit(X_train, y_train)
+        
+        y_pred = model.predict(X_test)
+        
+        mse = mean_squared_error(y_test, y_pred)
+        print("Mean Squared Error:", mse)
+        
+        return model
+
+    def plot_predicted_prices(self, model, df, dispatcher: CollectingDispatcher):
+        last_30_days = df[-30:]  # Selecting only the last 30 days of historical data
+        future_dates = pd.date_range(start=last_30_days.index[-1], periods=30, freq='B')  # Business days
+        future_dates = future_dates.tz_convert(df.index.tz)
+        future_features = np.repeat(last_30_days.iloc[-1][:-1].values.reshape(1, -1), 30, axis=0) 
+        future_prices = model.predict(future_features)
+        
+        plt.figure(figsize=(12, 6))
+        plt.plot(last_30_days.index, last_30_days['Close'], label='Last 30 Days Prices', color='blue')
+        plt.plot(future_dates, future_prices, label='Predicted Prices', color='red')  # Plot predicted prices
+        plt.xlabel('Date')
+        plt.ylabel('Close Price in USD')
+        plt.title('Predicted Stock Prices for the Next 30 Days')
+        plt.legend()
+        plt.xticks(rotation=45)
+        plt.grid(True)
+        predictions_plot_file = 'static/images/predicted_stock_graph.png'
+        plt.savefig(predictions_plot_file)
+        plt.close()
+        dispatcher.utter_message(image=predictions_plot_file)
+
+# Historical Stock Data: Historical price data is essential for training the prediction model. This includes open, high, low, close prices, and trading volume.
+
+# Macroeconomic Indicators: Factors such as interest rates, inflation rates, GDP growth, unemployment rates, and consumer confidence can impact stock prices.
+
+# Market Sentiment: Sentiment analysis of news articles, social media, and other sources can provide insights into investor sentiment, which affects stock prices.
+
+# Industry Trends: Understanding trends and developments within the industry the company operates in can help predict future performance.
+
+# Company Fundamentals: Financial metrics such as earnings per share (EPS), revenue, profit margins, debt levels, and cash flow are crucial indicators of a company's health and can influence its stock price.
+
+# Technical Indicators: Technical analysis indicators such as moving averages, relative strength index (RSI), and Bollinger Bands can provide insights into stock price patterns and trends.
+
+# Market Volatility: Measures of market volatility such as the VIX index can affect stock prices and should be considered in the prediction model.
+
+# External Events: External events such as geopolitical tensions, natural disasters, regulatory changes, and company-specific events like product launches or mergers can impact stock prices.
+
+# Seasonality: Some stocks exhibit seasonal patterns influenced by factors like holidays, weather, or industry-specific events.
+
+# Liquidity and Trading Volume: Liquidity and trading volume can impact stock price movements, as higher trading volume may indicate increased investor interest or speculation.
+
+# Currency Exchange Rates: For multinational companies, changes in exchange rates can affect revenues and profitability, influencing stock prices.
+
+# Risk Factors: Consideration of risks associated with the stock, including market risk, liquidity risk, credit risk, and operational risk, is essential for accurate prediction.
+
+# Machine Learning Models: Using advanced machine learning techniques like recurrent neural networks (RNNs), long short-term memory (LSTM) networks, or transformers can capture complex patterns in stock price data and improve prediction accuracy.
+
+# Ensemble Methods: Combining predictions from multiple models using ensemble methods like bagging or boosting can further enhance prediction performance. 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    yfinance, xgboost, sklearn, matplotlib
+yfinance, xgboost, sklearn, matplotlib, pandas, numpy
+yfinance, xgboost, sklearn, matplotlib
+yfinance, xgboost, sklearn, matplotlib
+yfinance, xgboost, sklearn, matplotlib, pandas, numpy
+yfinance, xgboost, sklearn, matplotlib
+yfinance, xgboost, sklearn, matplotlib, pandas, numpy
+yfinance, xgboost, sklearn, matplotlib, pandas, numpy
+yfinance, xgboost, sklearn, matplotlib
+yfinance, xgboost, sklearn, matplotlib, pandas, numpy
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+yfinance, xgboost, sklearn, matplotlib
+
+Purpose of external services:
+- yfinance: Used to fetch historical stock price data.
+- xgboost: Used to train a machine learning model for stock price prediction.
+- sklearn: Used for data preprocessing, model training, and evaluation.
+- matplotlib: Used to plot and visualize the predicted stock prices.

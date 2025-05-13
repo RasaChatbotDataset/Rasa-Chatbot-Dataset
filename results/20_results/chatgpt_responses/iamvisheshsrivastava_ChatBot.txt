@@ -1,0 +1,76 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: ChatBot
+                - the description: Created an English-language chatbot integrated with open source GPT-2.0 and OpenAI GPT 3.5, specifically trained on domain-specific data. This chatbot is event-driven, capable of taking various actions based on user input, and designed to answer general questions.
+                - the README: # Projects.ai Chatbot Local Setup Guide
+
+This guide will walk you through the steps to set up the projects.ai chatbot on your local machine using Rasa.
+
+## Prerequisites
+
+- Ensure you have Python version 3.8.0 installed. If not, you can download it from the [official Python website](https://www.python.org/downloads/release/python-380/).
+
+## Setup Instructions
+
+### 1. Setting Up the Environment
+
+1. Install Python version 3.8.0.
+```bash
+# Download and install from https://www.python.org/downloads/release/python-380/
+```
+
+2. Create a new virtual environment.
+```bash
+python -m venv venv_rasa
+```
+
+3. Activate the virtual environment.
+For Windows:
+```bash
+.\venv_rasa\Scripts\activate
+```
+For Linux/Mac:
+```bash
+source venv_rasa/bin/activate
+```
+
+4. Install Rasa.
+```bash
+pip install rasa
+```
+
+### 2. Training and Testing the Model
+
+5. Train the chatbot model.
+```bash
+rasa train
+```
+
+6. Test the trained model.
+```bash
+rasa shell
+```
+
+### 3. Running the Servers
+
+1. To run the website:
+```bash
+rasa run --enable-api --cors "*"
+```
+
+2. To run the actions:
+```bash
+rasa run actions
+```
+
+## Additional Resources
+
+For a deeper dive and more configurations, refer to the official Rasa documentation: [https://rasa.com/docs/rasa/](https://rasa.com/docs/rasa/).
+                - the list of intents: ['greet', 'goodbye', 'bot_challenge', 'nlu_fallback', 'add_checklist', 'get_user_lists', 'schedule_zoom_meeting', 'create_user', 'update_user', 'delete_user', 'upload_file', 'read_file']
+                - the list of entities: ['recipient_email']
+                - the list of actions: ['action_openai_response', 'action_projects_ai_request', 'action_generic_dispatcher', 'action_create_user', 'action_update_user', 'action_delete_user', 'action_upload_list_entry_files', 'action_read_list_entry_file']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Business

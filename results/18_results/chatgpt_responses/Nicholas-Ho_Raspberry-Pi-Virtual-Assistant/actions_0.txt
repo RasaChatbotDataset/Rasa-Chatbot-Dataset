@@ -1,0 +1,346 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
+
+from .modules.weather_module.weather import WeatherModule
+from .modules.news_module.news import NewsModule
+from .modules.spotify_module.python.spotify import SpotifyModule
+from .modules.wizlight_module.wizlight import WizLightModule
+
+import asyncio
+
+# from .modules.utils import convert_iso_2_to_country
+
+# Initialise the Spotify Module
+spotify_module = SpotifyModule()
+
+# Initialise the Wizlight Module
+wizlight_ips = ["10.247.63.188"]
+wizlight_module = WizLightModule(wizlight_ips)
+
+# Check connection of Wizlights
+try:
+    loop = asyncio.get_running_loop()
+except RuntimeError:
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(wizlight_module.check_connection())
+
+
+# Weather Module
+
+class ActionUtterResidence(Action):
+
+    def name(self) -> Text:
+        return "action_utter_residence"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        residence = tracker.get_slot("residence_city")
+
+        if not residence:
+            dispatcher.utter_message(text="I don't know where you live. Maybe you could tell me?")
+            return []
+        else:
+            msg = "You live in " + residence + "!"
+            dispatcher.utter_message(text=msg)
+            return []
+
+
+class ActionRememberResidence(Action):
+
+    def name(self) -> Text:
+        return "action_remember_residence"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        residence = next(tracker.get_latest_entity_values(
+            entity_type="GPE"
+        ), None)
+        
+        if not residence:
+            msg = "I didn't get where you lived. Are you sure it's spelled correctly?"
+            dispatcher.utter_message(text=msg)
+            return []
+        
+        mod = WeatherModule()
+        if not mod.check_city(residence):
+            msg = f"I didn't recognise {residence}. Are you sure it's a city?"
+            dispatcher.utter_message(text=msg)
+            return []
+        
+        residence = residence.title()
+        msg = f"Sure thing! I'll remember that you live in {residence}."
+        dispatcher.utter_message(text=msg)
+
+        country = mod.get_country_iso_2_from_city(residence)
+        # country = convert_iso_2_to_country(country) # Seems like there isn't a need to convert from ISO Alpha-2
+        
+        return [SlotSet("residence_city", residence), SlotSet("residence_country", country)]
+
+class ActionGetWeather(Action):
+
+    def name(self) -> Text:
+        return "action_get_weather"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        # Check if the user gave a city to check the weather. If not, default to 'residence' slot.
+        city = next(tracker.get_latest_entity_values("city"), None)
+        if not city: city = tracker.get_slot("residence_city")
+        
+        if not city:
+            msg = "I'm not sure where you want to check the weather for. Maybe you could give me a place?"
+            dispatcher.utter_message(text=msg)
+            return []
+        
+        # Checking
+        mod = WeatherModule()
+        if not mod.check_city(city):
+            msg = f"I didn't recognise {city}. Are you sure it's spelled correctly?"
+            dispatcher.utter_message(text=msg)
+            return []
+        
+        forecast = mod.get_simple_forecast(city=city)
+        
+        msg = f"The weather in {city} is {forecast['weather'].lower()} today, with a temperature high of {forecast['temp_high']} and a low of {forecast['temp_low']} degrees Celsius."
+        dispatcher.utter_message(text=msg)
+        
+        return []
+
+
+# News Module
+
+class ActionGetNews(Action):
+
+    def name(self) -> Text:
+        return "action_get_news"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        # Check if the user gave a news category. If not, default to 'general'.
+        category = next(tracker.get_latest_entity_values("news_category"), None)
+        
+        # Checking
+        mod = NewsModule()
+        if category:
+            if not category in mod.CATEGORIES:
+                msg = f"I didn't recognise {category}. Are you sure it's spelled correctly?"
+                dispatcher.utter_message(text=msg)
+                return []
+            else:
+                headlines = mod.get_headline_titles(category=category)
+        else:
+            headlines = mod.get_headline_titles_by_source(source='bbc-news')
+        
+        msg = "Here are the headlines for today!"
+        dispatcher.utter_message(text=msg)
+        for headline in headlines:
+            dispatcher.utter_message(headline)
+        msg = "That's it with the news for now!"
+        dispatcher.utter_message(text=msg)
+        
+        return []
+
+
+# Spotify Module
+
+class ActionPlayMusic(Action):
+
+    def name(self) -> Text:
+        return "action_play_music"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Playing music!"
+        dispatcher.utter_message(text=msg)
+
+        spotify_module.play()
+        
+        return []
+
+class ActionPauseMusic(Action):
+
+    def name(self) -> Text:
+        return "action_pause_music"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Pausing music!"
+        dispatcher.utter_message(text=msg)
+
+        spotify_module.pause()
+        
+        return []
+
+class ActionPlaySong(Action):
+
+    def name(self) -> Text:
+        return "action_play_song"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        # Get song (and artist if available)
+        song = next(tracker.get_latest_entity_values("song"), None)
+        artist = next(tracker.get_latest_entity_values("music_artist"), None)
+
+        if song:
+            msg = f"Playing {song}"
+            if artist: msg += f" by {artist}"
+
+            spotify_module.play_song(song, artist)
+        else:
+            msg = "No song provided!"
+        dispatcher.utter_message(text=msg)
+        
+        return []
+
+
+# Wizlight Module
+
+class ActionTurnLightOn(Action):
+
+    def name(self) -> Text:
+        return "action_turn_light_on"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Turning light on."
+        dispatcher.utter_message(text=msg)
+
+        await wizlight_module.turn_on()
+        
+        return []
+
+class ActionTurnLightOff(Action):
+
+    def name(self) -> Text:
+        return "action_turn_light_off"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Turning light off."
+        dispatcher.utter_message(text=msg)
+
+        await wizlight_module.turn_off()
+        
+        return []
+
+class ActionSetWarmLight(Action):
+
+    def name(self) -> Text:
+        return "action_set_warm_light"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Setting light to warm."
+        dispatcher.utter_message(text=msg)
+
+        await wizlight_module.set_warm_light()
+        
+        return []
+
+class ActionSetCoolLight(Action):
+
+    def name(self) -> Text:
+        return "action_set_cool_light"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Setting light to cool."
+        dispatcher.utter_message(text=msg)
+
+        await wizlight_module.set_cool_light()
+        
+        return []
+
+class ActionSetCozyLight(Action):
+
+    def name(self) -> Text:
+        return "action_set_cozy_light"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Setting light scene to cozy."
+        dispatcher.utter_message(text=msg)
+
+        await wizlight_module.set_scene("Cozy")
+        
+        return []
+
+class ActionSetDaylight(Action):
+
+    def name(self) -> Text:
+        return "action_set_daylight"
+
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        msg = "Setting light scene to daylight."
+        dispatcher.utter_message(text=msg)
+
+        await wizlight_module.set_scene("Daylight")
+        
+        return [] 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+WeatherModule, NewsModule, SpotifyModule, WizLightModule
+
+Purpose of external services:
+- WeatherModule: Used to fetch weather information for a given city.
+- NewsModule: Used to fetch news headlines based on a specified category or source.
+- SpotifyModule: Used to control music playback, including playing, pausing, and selecting specific songs.
+- WizLightModule: Used to control smart lighting, including turning lights on/off and setting specific lighting scenes.

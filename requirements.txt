@@ -1,0 +1,6 @@
+requests
+python-dotenv
+PyYAML
+deepdiff
+pandas
+detectlanguage

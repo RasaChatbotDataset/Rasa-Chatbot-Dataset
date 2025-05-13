@@ -1,0 +1,172 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from re import A
+from typing import Any, Dict, List, Text
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.events import UserUtteranceReverted
+from rasa_sdk.executor import CollectingDispatcher
+
+from actions.ActionQueryKnowledgeBase import ActionQueryKnowledgeBase
+from actions.EventHandler import EventHandler
+from actions.Attention import Attention
+
+eh = EventHandler()
+
+class findFeautre(ActionQueryKnowledgeBase):
+    def name(self):
+        return "action_find_feature"
+
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        filter = super().getCurrentAppSize() != 0
+        print(tracker.latest_message["entities"])
+        for obj in tracker.latest_message["entities"]:
+            if obj["entity"] == "mention":
+                ret = super().treatMention(obj["value"])
+                if ret != "":
+                    dispatcher.utter_message(ret)
+                break
+
+            if not (super().inHeaders(obj["entity"])):
+                continue
+            if filter:
+                super().filterCurrentApps(obj["entity"], obj["value"])
+            else:
+                filter = True
+                super().searchInApps(obj["entity"], obj["value"])
+
+        dispatcher.utter_message(text=super().dispatchAppInfo())
+
+
+# si tenim low confidence en algun cas, pero encara podem aplicar filtering, ho fem
+class ActionDefaultFallback(ActionQueryKnowledgeBase):
+    """Executes the fallback action and goes back to the previous state
+    of the dialogue"""
+
+    def name(self) -> Text:
+        return "action_default_fallback"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message(template="my_custom_fallback_template")
+        found = False
+
+        for obj in tracker.latest_message["entities"]:
+            if obj["entity"] == "mention":
+                err = super().treatMention(obj["value"])
+                if err != "":
+                    dispatcher.utter_message(text=err)
+                    return None
+                found = True
+            else:
+                if super().inHeaders(obj["entity"]):
+                    super().searchInApps(obj["entity"], obj["value"])
+                found = True
+
+        # Revert user message which led to fallback.
+        if (found and super().getCurrentAppSize() == 0) or (not found):
+            return [UserUtteranceReverted()]
+
+
+class CreateEvent(Action):
+    def name(self):
+        return "action_create_event"
+    
+    async def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        print(tracker.latest_message)
+        eh.reset()
+        msg = eh.get_initial_message() + f"""Please provide the '{eh.get_next_slot()}': """
+        
+        dispatcher.utter_message(text=msg)
+        return []
+
+class RequestInformationEvent(Action):
+    def name(self):
+        return "action_request_information"
+
+    async def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        attention = Attention(tracker.latest_message["text"])
+        if eh.get_current_key_value() > -1:
+            #at.process_message(tracker.latest_message["text"])
+            for obj in tracker.latest_message["entities"]:
+                count = eh.count_properties(obj["entity"].replace("information_", ""))
+                if count > 0:
+                    #TODO: contextualize the information
+                    if obj["entity"] == "information_email":
+                        eh.set_information(obj["value"])
+                    elif obj["entity"] == "information_text":
+                        eh.set_information(obj["value"])
+                    elif obj["entity"] == "information_calendar":
+                        eh.set_information(obj["value"], attention.get_attention_at([obj["value"]]))
+
+        if eh.hasNextSlot():
+            msg = (
+                f"""Please provide the '{eh.get_next_slot()}': """
+            )
+            dispatcher.utter_message(text=msg)
+        elif eh.atEnd():
+            dispatcher.utter_message(
+                text="Thank you for your information!\n"
+                + "Please confirm the following is correct:\n"
+                + eh.dispatchEventInfo()
+            )
+            eh.reset()
+
+        return []
+
+
+class ValidateEvent(Action):
+    def name(self):
+        return "action_validate_event"
+
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        eh.write_to_file()
+
+
+class CorrectWrongInput(Action):
+    def name(self):
+        return "action_correct_event"
+
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        pass
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    - ActionQueryKnowledgeBase,- EventHandler,- Attention
+Databases and services: ActionQueryKnowledgeBase, EventHandler, Attention
+Databases: None,External services: None
+Rasa, EventHandler
+Local Database
+ActionQueryKnowledgeBase
+ActionQueryKnowledgeBase
+- ActionQueryKnowledgeBase,- EventHandler,- Attention
+ActionQueryKnowledgeBase
+- ActionQueryKnowledgeBase,- EventHandler,- Attention
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+ActionQueryKnowledgeBase, EventHandler, Attention
+
+Purpose of external services:
+- ActionQueryKnowledgeBase: This service is used to query and retrieve information from a knowledge base.
+- EventHandler: This service handles events, such as creating and validating events based on user input.
+- Attention: This service processes and contextualizes user input to extract relevant information.

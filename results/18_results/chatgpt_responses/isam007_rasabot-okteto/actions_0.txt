@@ -1,0 +1,84 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+
+# This is a simple example for a custom action which utters "Hello World!"
+
+# from typing import Any, Text, Dict, List
+#
+# from rasa_sdk import Action, Tracker
+# from rasa_sdk.executor import CollectingDispatcher
+#
+#
+# class ActionHelloWorld(Action):
+#
+#     def name(self) -> Text:
+#         return "action_hello_world"
+#
+#     def run(self, dispatcher: CollectingDispatcher,
+#             tracker: Tracker,
+#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+#
+#         dispatcher.utter_message(text="Hello World!")
+#
+#         return []
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from typing import Any, Text, Dict, List
+
+class ActionProvideImmigrationInfo(Action):
+    def name(self) -> Text:
+        return "action_provide_immigration_info"
+
+    async def run(self, dispatcher, tracker, domain):
+        intent = tracker.get_intent_of_latest_message()
+        if intent == "general_immigration_query":
+            dispatcher.utter_message(text="To immigrate to Canada, you usually need to go through a multi-step process. For more information, visit [Canada Immigration](https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada.html).")
+        elif intent == "student_immigration_query":
+            dispatcher.utter_message(text="For students looking to immigrate to Canada, there are special programs and permits available. For more information, visit [Canada Student Visa](https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html).")
+
+        return []
+    
+class ActionExpressEntry(Action):
+    def name(self):
+        return "action_express_entry"
+
+    def run(self, dispatcher, tracker, domain):
+        dispatcher.utter_message(text="Express Entry is a system for skilled workers to immigrate to Canada. It provides a faster way for eligible candidates to settle in the country.")
+        return []
+
+class ActionStudentPath(Action):
+    def name(self):
+        return "action_student_path"
+
+    def run(self, dispatcher, tracker, domain):
+        dispatcher.utter_message(text="To study in Canada, you'll generally need a study permit or a student visa. Requirements may include proof of funds, a letter of acceptance from a Canadian institution, and other documentation.")
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

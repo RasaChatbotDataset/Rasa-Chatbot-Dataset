@@ -1,0 +1,104 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from datetime import UTC, datetime
+from typing import Any
+
+from rasa_sdk import Action, FormValidationAction, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.types import DomainDict
+
+
+class ActionShowTime(Action):
+    def name(self) -> str:
+        return "action_get_current_time"
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        _tracker: Tracker,
+        _domain: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+        now = datetime.now(tz=UTC)
+        dispatcher.utter_message(text=f"{now}")
+        return []
+
+
+class ActionGetShirtSize(Action):
+    def name(self) -> str:
+        return "action_get_my_favorite_color"
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        _domain: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+        my_favorite_color = tracker.get_slot("my_favorite_color")
+        if not my_favorite_color:
+            dispatcher.utter_message(text="I don't know your favorite color.")
+        else:
+            dispatcher.utter_message(
+                text=f"Your favorite color is {my_favorite_color}!",
+            )
+        return []
+
+
+ALLOWED_PIZZA_SIZES = ["small", "medium", "large"]
+ALLOWED_PIZZA_TYPES = ["cheese", "hawaiian", "pepperoni"]
+
+
+class ValidateSimplePizzaForm(FormValidationAction):
+    def name(self) -> str:
+        return "validate_pizza_form"
+
+    def validate_pizza_size(
+        self,
+        slot_value: str,
+        dispatcher: CollectingDispatcher,
+        _tracker: Tracker,
+        _domain: DomainDict,
+    ) -> dict[str, str | None]:
+        if slot_value.lower() not in ALLOWED_PIZZA_SIZES:
+            dispatcher.utter_message(
+                text=f"We only accept pizza sizes: {'/'.join(ALLOWED_PIZZA_SIZES)}.",
+            )
+            return {"pizza_size": None}
+        dispatcher.utter_message(text=f"OK! You want to have a {slot_value} pizza.")
+        return {"pizza_size": slot_value}
+
+    def validate_pizza_type(
+        self,
+        slot_value: str,
+        dispatcher: CollectingDispatcher,
+        _tracker: Tracker,
+        _domain: DomainDict,
+    ) -> dict[str, str | None]:
+        if slot_value not in ALLOWED_PIZZA_TYPES:
+            dispatcher.utter_message(
+                text=f"We only serve {'/'.join(ALLOWED_PIZZA_TYPES)}.",
+            )
+            return {"pizza_type": None}
+        dispatcher.utter_message(text=f"OK! You want to have a {slot_value} pizza.")
+        return {"pizza_type": slot_value}
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

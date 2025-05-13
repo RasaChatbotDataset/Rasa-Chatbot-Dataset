@@ -57,11 +57,8 @@ def extract_response_language_from_file(chatbot, file, repository):
 
             if 'responses' in domain and domain['responses']: 
                 responses = domain['responses']
-            # Rasa version <3.0
             elif 'templates' in domain and len(domain['templates']) > 0:
                 responses = domain['templates']
-                if not chatbot['version']:
-                    chatbot['version'] = '<3.0'
             else:
                 return languages
             
@@ -147,7 +144,7 @@ def main():
     chatbots = list(reader)
 
     result_file = open(CHATBOT_FILE, 'w', newline='')
-    header = reader.fieldnames + ['response-languages', 'wide-has-english', 'has-english', 'pure-english']
+    header = reader.fieldnames + ['response-languages']
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
     
@@ -168,35 +165,6 @@ def main():
         response_language = extract_response_language(chatbot)
         if len(response_language) > 0:
             chatbot['response-languages'] = response_language
-        else:
-            response_language = []
-
-        # English evaluation
-        config_language = []
-        training_language = []
-
-        if chatbot['training-language']:
-            training_language = ast.literal_eval(chatbot['training-language'])
-        if chatbot['config-languages']:
-            config_language = ast.literal_eval(chatbot['config-languages'])
-
-        chatbot['wide-has-english'] = False
-        chatbot['has-english'] = False
-        chatbot['pure-english'] = False
-
-        # At least one has english
-        if 'en' in training_language or 'en' in response_language or 'en' in config_language:
-            chatbot['wide-has-english'] = True
-
-            if 'en' in training_language and 'en' in response_language:
-
-                # No configuration language or english in configuration language
-                if not config_language or 'en' in config_language:
-                    chatbot['has-english'] = True
-
-                    # English is the only language
-                    if len(training_language) <= 1 and len(response_language) <= 1 and len(config_language) <= 1:
-                        chatbot['pure-english'] = True
 
 
         # Write chatbot        

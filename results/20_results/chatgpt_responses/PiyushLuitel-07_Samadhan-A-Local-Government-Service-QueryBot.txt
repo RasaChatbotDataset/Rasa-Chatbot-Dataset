@@ -1,0 +1,71 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Samadhan-A-Local-Government-Service-QueryBot
+                - the description: Samadhan: Your Governmental Chatbot Solution! 🌐 Seamlessly navigate through official queries with efficiency and accuracy. Empowering citizens through swift and reliable information access. Your trusted companion for hassle-free interactions with government services. 🤖💼
+                - the README: # Samadhan – A Local Government Service QueryBot
+ Samadhan aims to act as a virtual facilitator, using technology to provide the public with accurate and accessible information about government processes. Activities include a communication network that can provide guidance on steps required, documentation required and estimated timelines for tasks. The scope of the solution extends to a central location for feedback, providing and owning linked relationships as more knowledge has emerged in government agencies and citizens. It is built to accommodate scalability and ensure adaptability to evolving government policies. 🌐🔍💻📄📅📢🔄🏛️🤝📊🌱    
+
+## Authors
+
+- [Aarogya Bhandari](https://www.github.com/amewzzz)
+- [Aayush Pokharel](https://github.com/aayushpkrl)
+- [Piyush Luitel](https://www.github.com/PiyushLuitel-07)
+- [Prashant Bhusal](https://www.github.com/prashant72-git)
+
+## Demo video
+[Click here for demo in youtube](https://www.youtube.com/watch?v=6Sh4Np_nWME)
+
+## This is how our chatbot looks like
+![Hello Samadhan](https://github.com/PiyushLuitel-07/Samadhan-A-Local-Government-Service-QueryBot/blob/main/Chatbot-Widget-main/58dbdc32-8422-4af7-86cb-2bc46d12bab9.gif)
+
+## Features
+
+- Information accessibility
+- Guidance and assistance
+- User-Friendly Interface
+- Transparency and Accountability
+
+
+## Installation
+
+Install this project (open git bash terminal and type this code)
+
+```bash
+ git clone https://github.com/PiyushLuitel-07/Samadhan-A-Local-Government-Service-QueryBot
+```
+
+## Using the application
+- Activate your environment.
+
+- Install the required dependencies from requirements.txt
+```bash
+pip install -r requirements.txt
+```
+
+- train the model
+```bash
+rasa train
+```
+
+- After model is trained, run the following code in two different terminals simultaneously
+```bash
+rasa run actions
+```
+```bash
+rasa run -m models --enable-api --cors "*" --debug
+```
+
+- Open the file Chatbot-Widget-main/index.html to see the actual working of our project.
+
+
+
+    
+
+                - the list of intents: ['citizenship_by_naturalization_query_romanized', 'citizenship_query', 'citizenship_query_romanized', 'citizenship_by_naturalization_query', 'citizenship_by_birth_query', 'citizenship_by_birth_query_romanized', 'citizenship_by_descent_query', 'citizenship_by_descent_query_romanized', 'citizenship_by_birth_eligibility_query', 'citizenship_by_birth_eligibility_query_romanized', 'citizenship_by_descent_eligibility_query', 'citizenship_by_descent_eligibility_query_romanized', 'citizenship_by_birth_documents_query', 'citizenship_by_birth_documents_query_romanized', 'citizenship_by_descent_documents_query', 'citizenship_by_descent_documents_query_romanized', 'citizenship_by_birth_steps_query', 'citizenship_by_birth_steps_query_romanized', 'citizenship_by_descent_steps_query', 'citizenship_by_descent_steps_query_romanized', 'birth_certificate_query', 'birth_certificate_query_romanized', 'birth_documents_certificate_query', 'birth_documents_certificate_query_romanized', 'birth_steps_certificate_query', 'birth_steps_certificate_query_romanized', 'death_certificate_query', 'death_certificate_query_romanized', 'death_documents_certificate_query', 'death_documents_certificate_query_romanized', 'death_steps_certificate_query', 'death_steps_certificate_query_romanized', 'marriage_certificate_query', 'marriage_certificate_query_romanized', 'marriage_documents_certificate_query', 'marriage_documents_certificate_query_romanized', 'marriage_steps_certificate_query', 'marriage_steps_certificate_query_romanized', 'divorce_certificate_query', 'divorce_certificate_query_romanized', 'divorce_documents_certificate_query', 'divorce_documents_certificate_query_romanized', 'divorce_steps_certificate_query', 'divorce_steps_certificate_query_romanized', 'migration_certificate_query', 'migration_certificate_query_romanized', 'migration_documents_certificate_query', 'migration_documents_certificate_query_romanized', 'migration_steps_certificate_query', 'migration_steps_certificate_query_romanized', 'deny', 'goodbye', 'greet', 'greet_romanized', 'halkhabar', 'provide_type', 'affirm', 'bot_challenge', 'random_queries', 'option1_naturalization', 'option2_naturalization', 'option1_naturalization_romanized', 'option2_naturalization_romanized', 'birthcertificate_and_marriagecertificate_query', 'birthcertificate_and_marriagecertificate_query_romanized', 'birthcertificate_and_migrationcertificate_query', 'birthcertificate_and_migrationcertificate_query_romanized', 'birthcertificate_and_divorcecertificate_query', 'birthcertificate_and_divorcecertificate_query_romanized', 'birthcertificate_and_deathcertificate_query', 'birthcertificate_and_deathcertificate_query_romanized', 'marriagecertificate_and_migrationcertificate_query', 'marriagecertificate_and_migrationcertificate_query_romanized', 'marriagecertificate_and_divorcecertificate_query', 'marriagecertificate_and_divorcecertificate_query_romanized', 'marriagecertificate_and_deathcertificate_query', 'marriagecertificate_and_deathcertificate_query_romanized', 'migrationcertificate_and_divorcecertificate_query', 'migrationcertificate_and_divorcecertificate_query_romanized', 'migrationcertificate_and_deathcertificate_query', 'migrationcertificate_and_deathcertificate_query_romanized', 'deathcertificate_and_divorcecertificate_query', 'deathcertificate_and_divorcecertificate_query_romanized', 'citizenship_and_birthcertificate_query', 'citizenship_and_birthcertificate_query_romanized', 'citizenship_and_marriagecertificate_query', 'citizenship_and_marriagecertificate_query_romanized', 'citizenship_and_migrationcertificate_query', 'citizenship_and_migrationcertificate_query_romanized', 'citizenship_and_deathcertificate_query', 'citizenship_and_deathcertificate_query_romanized', 'citizenship_and_divorcecertificate_query', 'citizenship_and_divorcecertificate_query_romanized', 'divorcecertificate_query']
+                - the list of entities: ['type', 'specification']
+                - the list of actions: ['action_default_fallback', 'utter_certificate_query_romanized', 'utter_divorce_certificate_documents', 'utter_migration_certificate_documents_romanized', 'action_handle_citizenship_query_romanized', 'utter_greet3', 'utter_halkhabar', 'utter_greet1', 'action_handle_citizenship_query', 'utter_greet2', 'utter_citizenship', 'utter_citizenship_romanized', 'utter_citizenship_by_birth_eligibility', 'utter_citizenship_by_birth_eligibility_romanized', 'utter_citizenship_by_birth_steps', 'utter_citizenship_by_birth_steps_romanized', 'utter_citizenship_by_birth_documents', 'utter_citizenship_by_birth_documents_romanized', 'utter_greet1_romanized', 'utter_greet2_romanized', 'utter_greet3_romanized', 'utter_citizenship_by_descent_eligibility', 'utter_citizenship_by_descent_eligibility_romanized', 'utter_citizenship_by_descent_documents', 'utter_citizenship_by_descent_documents_romanized', 'utter_citizenship_by_descent_steps', 'utter_citizenship_by_descent_steps_romanized', 'utter_birth_certificate_documents', 'utter_birth_certificate_documents_romanized', 'utter_birth_certificate_steps', 'utter_birth_certificate_steps_romanized', 'utter_death_certificate_documents', 'utter_death_certificate_documents_romanized', 'utter_death_certificate_steps', 'utter_death_certificate_steps_romanized', 'utter_marriage_certificate_documents', 'utter_marriage_certificate_documents_romanized', 'utter_marriage_certificate_steps', 'utter_marriage_certificate_steps_romanized', 'utter_divorce_certificate_documents_romanized', 'utter_divorce_certificate_steps', 'utter_divorce_certificate_steps_romanized', 'utter_migration_certificate_documents', 'utter_migration_certificate_steps', 'utter_migration_certificate_steps_romanized', 'utter_certificate_query', 'utter_citizenship_by_naturalization', 'utter_citizenship_by_naturalization_option1', 'utter_citizenship_by_naturalization_option2', 'utter_citizenship_by_naturalization_romanized', 'utter_citizenship_by_naturalization_option1_romanized', 'utter_citizenship_by_naturalization_option2_romanized', 'utter_random_query']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

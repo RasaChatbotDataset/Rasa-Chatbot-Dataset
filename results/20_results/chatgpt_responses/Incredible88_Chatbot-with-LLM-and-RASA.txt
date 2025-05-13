@@ -1,0 +1,33 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Chatbot-with-LLM-and-RASA
+                - the description: Banking chatbot intergrate with LLMs and Rasa
+                - the README: # Get start
+```bash
+rasa run actions
+rasa run
+```
+
+## Sent the first message
+```bash
+$headers = @{
+    'Content-type' = 'application/json'
+}
+
+$body = @{
+    text = 'Hello, World!'
+} | ConvertTo-Json
+
+Invoke-WebRequest -Uri 'https://hooks.slack.com/services/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' -Method Post -Headers $headers -Body $body
+```
+## Screenshot of the APP
+![image](https://github.com/Incredible88/Chatbot-with-LLM-and-RASA/assets/60803217/dafbdd6b-83ce-45dc-b7c0-a19c022c48ba)
+
+                - the list of intents: ['other', 'general_info', 'bank_transfer', 'confirm_yes', 'confirm_no', 'goodbye', 'greet']
+                - the list of entities: ['recipient', 'amount', 'predicted_intent']
+                - the list of actions: ['action_respond_general_info', 'action_handle_bank_transfer', 'action_classify_intent', 'action_confirm_transfer']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

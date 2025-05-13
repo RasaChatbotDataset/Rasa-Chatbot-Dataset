@@ -1,0 +1,95 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from rasa_sdk import Tracker
+from typing import Any, Text, Dict, List
+import requests
+import re
+import logging
+
+class AskLlm():
+
+    def __init__(self , tracker: Tracker):
+        self.tracker = tracker
+        self.llm_url = 'http://62cd-34-135-195-215.ngrok-free.app/'
+
+    def ask_llm_for_entity_extraction(self):
+        logging.info("Asking LLM for entity extraction")
+
+        coversation_history = self.get_conversation_history()
+        # call an API to get the response from LLM
+        response = self.call_llm_api({'conv': coversation_history} , "extract_entities")
+        logging.info("LLM response: " + str(response))
+        return response
+
+    def ask_llm_for_device_state(self , state_prompts):
+        logging.info("Asking LLM for device state")
+
+        coversation_history = self.get_conversation_history()
+        params = {
+            "conv": coversation_history,
+            "state_prompts": state_prompts
+        }
+        # call an API to get the response from LLM
+        response = self.call_llm_api(params , "get_device_state")
+        logging.info("LLM response: " + str(response))
+        return response
+
+    def ask_llm_general_conversation(self , state_prompts):
+        logging.info("Asking LLM for general conversation")
+
+        coversation_history = self.get_conversation_history()
+        params = {
+            "conv": coversation_history,
+            "state_prompts": state_prompts
+        }
+        # call an API to get the response from LLM
+        response = self.call_llm_api(params , "general_conversation")
+        logging.info("LLM response: " + str(response))
+        return response
+
+    
+    def get_conversation_history(self) -> Text:
+        logging.info("Getting conversation history")
+        coversation_history = []
+        for event in self.tracker.events:
+            # get the latest messages between user and bot
+            if event.get('event') == 'user':
+                coversation_history.append({ "user": event.get('text') }) 
+            elif event.get('event') == 'bot':
+                coversation_history.append({ "bot": event.get('text') })
+
+        logging.info("Conversation history: " + str(coversation_history))
+        return coversation_history
+
+    def call_llm_api(self, params , endpoint : Text):
+        # call LLM API and return the response
+        # do a post request to LLM API
+        response = requests.post(self.llm_url + endpoint, json=params)
+        # parse the response json
+        response_json = response.json()
+        return response_json['output'] 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    ngrok
+ngrok
+requests, LLM API
+External services: LLM API, ngrok
+External services: LLM API
+requests, LLM API
+ngrok-free.app
+External services: LLM API, ngrok
+requests, LLM API
+External services: LLM API
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+LLM API, ngrok
+
+Purpose of external services:
+LLM API: Used to get responses for entity extraction, device state, and general conversation based on the conversation history.
+ngrok: Used to expose the local server to the internet for API calls.

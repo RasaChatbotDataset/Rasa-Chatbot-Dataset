@@ -1,0 +1,73 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Financial-chatbot
+                - the description: This project is a chatbot built with the RASA framework that can converse with users and provide them with specific financial data as needed.
+                - the README: # Financial-chatbot
+In today's world, artificial intelligence (AI) is revolutionizing every domain it touches, including natural language processing (NLP) and finance. This project aims to leverage the power of AI to provide users with an agent capable of fluently conversing with them and providing them with real-time financial data whenever needed.
+
+## Training the Model
+
+To train the chatbot model, run the following command:
+
+`rasa train`
+
+
+This will train the model using the configuration specified in the `config.yml` file and the training data specified in the `data` directory.
+
+## Running the Chatbot with Custom Actions
+
+The Financial Chatbot has custom actions that enable it to scrape the web and provide users with real-time financial data such as currency exchange rates and stock prices.
+
+To use these custom actions, start the action server by running the following command:
+
+`rasa run actions`
+
+
+This will start the action server on port 5055.
+
+To start the chatbot server, run the following command:
+
+`rasa run`
+
+
+This will start the chatbot server on port 5005.
+
+## Interacting with the Chatbot
+
+### Using the Rasa Shell
+
+To interact with the chatbot using the Rasa shell, run the following command:
+
+`rasa shell`
+
+
+This will open up a command-line interface where you can chat with the bot. Try asking it for financial data, such as:
+
+
+
+### Using the Web Interface
+
+To interact with the chatbot using the web interface, deploy the chatbot using the following command:
+
+`rasa run --model models --enable-api --cors "*" `
+
+
+This will start the chatbot server on port 5005 and enable the API.
+
+Next, open the `index.html` file in your web browser. This will load the web interface for the chatbot. Type your message in the text box and press the "Send" button to chat with the bot. Try asking it for financial data, such as:
+
+<div>
+  <img src="images/1.PNG" alt="Image 1" width="250">
+  <img src="images/2.PNG" alt="Image 2" width="250">
+  <img src="images/3.PNG" alt="Image 3" width="250">
+</div>
+
+
+                - the list of intents: ['smalltalk_agent_acquaintance', 'smalltalk_agent_age', 'smalltalk_agent_annoying', 'smalltalk_agent_answer_my_question', 'smalltalk_agent_bad', 'smalltalk_agent_be_clever', 'smalltalk_agent_beautiful', 'smalltalk_agent_birth_date', 'smalltalk_agent_boring', 'smalltalk_agent_boss', 'smalltalk_agent_busy', 'smalltalk_agent_chatbot', 'smalltalk_agent_clever', 'smalltalk_agent_crazy', 'smalltalk_agent_fired', 'smalltalk_agent_funny', 'smalltalk_agent_good', 'smalltalk_agent_happy', 'smalltalk_agent_hungry', 'smalltalk_agent_marry_user', 'smalltalk_agent_my_friend', 'smalltalk_agent_occupation', 'smalltalk_agent_origin', 'smalltalk_agent_ready', 'smalltalk_agent_real', 'smalltalk_agent_residence', 'smalltalk_agent_right', 'smalltalk_confirmation_yes', 'smalltalk_agent_sure', 'smalltalk_agent_talk_to_me', 'smalltalk_agent_there', 'smalltalk_appraisal_bad', 'smalltalk_appraisal_good', 'smalltalk_appraisal_no_problem', 'smalltalk_appraisal_thank_you', 'smalltalk_appraisal_welcome', 'smalltalk_appraisal_well_done', 'smalltalk_confirmation_cancel', 'smalltalk_confirmation_no', 'smalltalk_dialog_hold_on', 'smalltalk_dialog_hug', 'smalltalk_dialog_i_do_not_care', 'smalltalk_dialog_sorry', 'smalltalk_dialog_what_do_you_mean', 'smalltalk_dialog_wrong', 'smalltalk_emotions_ha_ha', 'smalltalk_emotions_wow', 'smalltalk_greetings_bye', 'smalltalk_greetings_goodevening', 'smalltalk_greetings_goodmorning', 'smalltalk_greetings_goodnight', 'smalltalk_greetings_hello', 'smalltalk_greetings_how_are_you', 'smalltalk_greetings_nice_to_meet_you', 'smalltalk_greetings_nice_to_see_you', 'smalltalk_greetings_nice_to_talk_to_you', 'smalltalk_greetings_whatsup', 'smalltalk_user_angry', 'smalltalk_user_back', 'smalltalk_user_bored', 'smalltalk_user_busy', 'smalltalk_user_can_not_sleep', 'smalltalk_user_does_not_want_to_talk', 'smalltalk_user_excited', 'smalltalk_user_going_to_bed', 'smalltalk_user_good', 'smalltalk_user_happy', 'smalltalk_user_has_birthday', 'smalltalk_user_here', 'smalltalk_user_joking', 'smalltalk_user_likes_agent', 'smalltalk_user_lonely', 'smalltalk_user_looks_like', 'smalltalk_user_loves_agent', 'smalltalk_user_misses_agent', 'smalltalk_user_needs_advice', 'smalltalk_user_sad', 'smalltalk_user_sleepy', 'smalltalk_user_testing_agent', 'smalltalk_user_tired', 'smalltalk_user_waits', 'smalltalk_user_wants_to_see_agent_again', 'smalltalk_user_wants_to_talk', 'smalltalk_user_will_be_back', 'inquire_coin_price', 'inquire_stock_price']
+                - the list of entities: ['coin', 'stock']
+                - the list of actions: ['action_give_coin_price', 'action_give_stock_price']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

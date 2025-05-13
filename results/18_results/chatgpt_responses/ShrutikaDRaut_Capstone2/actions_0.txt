@@ -1,0 +1,84 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import json
+from pathlib import Path
+from typing import Any, Text, Dict, List
+from unittest.util import strclass
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.knowledge_base.storage import InMemoryKnowledgeBase
+from rasa_sdk.knowledge_base.actions import ActionQueryKnowledgeBase
+
+from bargain_logic import bargainAmt
+
+
+class ActionNegotiate(Action):
+    def name(self) -> str:
+        return "action_counter_offer"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        min_price, max_price = float(tracker.get_slot("min_price")), float(
+            tracker.get_slot("max_price"))
+        for each in tracker.latest_message["entities"]:
+            if each["entity"] == "user_offer":
+                user_offer = float(each["value"])
+                counter_offer = bargainAmt(min_price, max_price, user_offer)
+                dispatcher.utter_message(
+                    text=
+                    f"Here is our counter-offer: ${counter_offer}.\n\n Does our offer work for you? (Y/N)"
+                )
+                # return []
+        #     else:
+        #         dispatcher.utter_message(text=f"Please enter a valid value")
+        return []
+
+
+# class ActionDealAcceptReject(Action):
+#     def name(self) -> str:
+#         return "action_reject_accept_offer"
+
+#     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker,
+#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+#         # Do magic stuff after user accepts offer
+#         for each in tracker.latest_message["entities"]:
+#             if each["entity"] == "accept_offer":
+#                 accept_offer = each["value"]
+#                 if accept_offer == "Y":
+#                     dispatcher.utter_message(
+#                         text=
+#                         "Thank you for your business, we will now update the basket"
+#                     )
+#                 else:
+#                     dispatcher.utter_message(
+#                         text=
+#                         "Ok, please provide a counter_offer to our offer above."
+#                     )
+
+#         return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+InMemoryKnowledgeBase
+None
+None
+None
+InMemoryKnowledgeBase
+InMemoryKnowledgeBase
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+InMemoryKnowledgeBase
+
+Purpose of external services:
+InMemoryKnowledgeBase: This service is used to store and manage knowledge base data in memory, allowing the chatbot to query and retrieve information during interactions.

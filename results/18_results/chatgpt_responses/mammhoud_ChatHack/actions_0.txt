@@ -1,0 +1,70 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import sqlite3
+from faker import Faker
+import secrets
+
+conn = sqlite3.connect('../db.sqlite3')
+c = conn.cursor()
+
+fake = Faker()
+
+orders_data = []
+inventory_data = []
+
+for _ in range(15):
+    order_data = {
+        'order_date': fake.date_between(start_date='-1y', end_date='today'),
+        'order_number': fake.random_int(min=100000, max=999999),
+        'order_email': fake.email(),
+        'color': fake.color_name(),
+        'size': secrets.SystemRandom().randint(10, 30),
+        'status': fake.random_element(elements=('shipped', 'order pending', 'delivered'))
+    }
+    orders_data.append(order_data)
+    for _ in range(secrets.SystemRandom().randint(1, 30)):
+        inventory_data.append({
+            'size': order_data['size'],
+            'color': fake.color_name(),
+            'quantity': secrets.SystemRandom().randint(10, 30),
+            'description': fake.word(),
+            'is_active': fake.boolean(),
+            'is_featured': fake.boolean(),
+            'type': fake.random_element(elements=('T-Shirt', 'Shirt', 'Pants', 'Shoes'))
+        })
+
+for order_data in orders_data:
+    c.execute("INSERT INTO consumers_order (order_date, order_number, order_email, color, size, status, created, modified, order_code) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'), ?)",
+              (order_data['order_date'], order_data['order_number'], order_data['order_email'], order_data['color'], order_data['size'], order_data['status'],"ORD"+order_data['order_number'].__str__()))
+
+for inventory_data in inventory_data:
+    c.execute("INSERT INTO products_inventory (size, color, quantity, created, modified, type) VALUES (?, ?, ?, datetime('now'), datetime('now'), ?)",
+              (inventory_data['size'], inventory_data['color'], inventory_data['quantity'], inventory_data['type']))
+
+conn.commit()
+conn.close()
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+sqlite3, Faker
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+sqlite3
+
+Purpose of external services:
+sqlite3: This is a database used to store and manage data locally within the chatbot.

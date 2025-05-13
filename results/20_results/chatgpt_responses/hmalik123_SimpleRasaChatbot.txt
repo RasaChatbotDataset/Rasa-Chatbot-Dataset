@@ -1,0 +1,46 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: SimpleRasaChatbot
+                - the description: None
+                - the README: Simple Rasabot that provides cybersecurity mitigation advice
+
+To run you must have: 
+
+Rasa version – 3.0.0 to 3.2.2 
+Rasa SDK version -  3.2.0 
+Python Version – 3.8.13 
+
+// Pre-requirements //
+
+- difflib : run the following command to use difflib(python library) in your anaconda virtual environment : 
+
+pip install cdifflib 
+
+- pandas: run the following command to use pandas(python library) in your anaconda virtual environment :
+
+pip install pandas
+
+|Train Chatbot|
+
+Before the chatbot can be launched the data much be trained using the command below: 
+
+rasa train
+
+|Launch Chatbot| 
+
+In an anaconda terminal window launch the following command : 
+
+rasa run actions 
+
+In other anaconda terminal window launch the following command : 
+
+rasa shell 
+
+                - the list of intents: ['stop', 'attack_notification', 'affirm', 'greet+attack_notification', 'yet_more_information', 'request_further_attack_classification', 'problem_desc', 'deny', 'request_attack_information', 'out_of_scope', 'chitchat', 'target', 'request_attack_comparison', 'greet', 'explain', 'goodbye', 'nlu_fallback', 'attack_details', 'budget', 'attack_notif_name', 'solution_config', 'solution_support', 'rosi_calc', 'critical_data', 'greet+problem_desc', 'request_attack_challenges', 'request_attack_impacts', 'request_attack_symptoms', 'request_countermeasures']
+                - the list of entities: ['requested_slot', 'CARDINAL', 'compared_attacks', 'cryptocurrency', 'object', 'action', 'more_info', 'attack_symptoms', 'further_attack_classification', 'attack_type', 'attack_challenges', 'target', 'attack_information', 'problem', 'solution', 'symptoms_1', 'new_target', 'industry', 'symptoms_2', 'attack_name', 'budget', 'symptoms_target', 'proactive', 'currency', 'attack_impacts', 'attack_countermeasures', 'identified_attack']
+                - the list of actions: ['action_ROSI', 'action_idattack', 'action_pardon', 'action_provide_attack_challenges', 'action_provide_attack_comparison', 'action_provide_attack_countermeasures', 'action_provide_attack_impacts', 'action_provide_attack_symptoms', 'action_provide_requested_attack_information', 'action_reset_slots_after_form_interruption', 'action_solution', 'action_submit_more_info_form', 'action_submit_symptom_form', 'action_support', 'action_symptoms', 'utter_add_symptom', 'utter_affirm', 'utter_amount_data', 'utter_ask_continue', 'utter_ask_protection', 'utter_attack_details', 'utter_attack_notif_name', 'utter_attack_notification', 'utter_attack_pattern', 'utter_budget_available', 'utter_chitchat', 'utter_explain_symptoms_1', 'utter_explain_symptoms_2', 'utter_explain_symptoms_target', 'utter_general_confirmation', 'utter_goodbye', 'utter_greet', 'utter_more_symptom', 'utter_out_of_scope', 'utter_please_rephrase', 'utter_price', 'utter_problem_desc', 'utter_problem_desc_required', 'utter_successfully_stopped_form', 'utter_target_info', 'validate_more_info_form', 'validate_symptom_form']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Business

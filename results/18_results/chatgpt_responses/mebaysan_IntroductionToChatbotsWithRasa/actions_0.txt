@@ -1,0 +1,74 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot # This files contains your custom actions which can be used to run
+# custom Python code.
+#
+# See this guide on how to implement these action:
+# https://rasa.com/docs/rasa/custom-actions
+
+
+# This is a simple example for a custom action which utters "Hello World!"
+
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+import requests
+BASE_URL = "http://worldtimeapi.org/api/timezone/"
+
+class ActionShowTimeZone(Action):
+    """
+    every class has just 2 methods: name & run
+    """
+    def name(self) -> Text:
+        """Returns the name of action
+
+        Returns:
+            Text: the text we will register in `domain.py`
+        """
+        return "action_find_timezone"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        # we can get values from slots by `tracker` object
+        target_timezone = tracker.get_slot('target_timezone')
+        try:
+            res = requests.get(BASE_URL+target_timezone)
+            res = res.json()
+        
+            if res['utc_offset']:
+                output = f"Time zone is {res['utc_offset']}"
+            else:
+                output = "Please type in this structure: Area/Region"
+        except:
+            output = 'Ops! There are too many requests on the time zone API. Please try a few moments later...'
+        dispatcher.utter_message(text=output)       
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    worldtimeapi.org,,###
+worldtimeapi.org
+worldtimeapi.org
+worldtimeapi.org
+worldtimeapi.org
+worldtimeapi.org
+worldtimeapi.org
+worldtimeapi.org
+worldtimeapi.org
+External service: worldtimeapi.org
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+worldtimeapi.org
+
+Purpose of external services:
+worldtimeapi.org: This service is used to fetch the current time zone information based on the provided target timezone.

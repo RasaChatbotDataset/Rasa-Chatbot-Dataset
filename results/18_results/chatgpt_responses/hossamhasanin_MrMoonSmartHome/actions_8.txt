@@ -1,0 +1,112 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from actions.firebase_controller.results import Results
+from actions.firebase_controller.firebase_controller import FirebaseController
+
+
+class ActionTurnOnDevice(Action):
+
+    def name(self) -> Text:
+        return "action_turn_on_device"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        controller = FirebaseController.instance()
+        
+        device_type = tracker.get_slot("device_type")
+        room_name = tracker.get_slot("room_name")
+        
+        result = controller.updateSwitchingState(
+            state= True ,
+            device_type= device_type ,
+            room_name= room_name
+        )
+
+        if result == Results.DEVICE_NOT_FOUND:
+            dispatcher.utter_message(response="utter_no_devices_found_with_given_specs")
+        
+        if result == Results.NOT_ALLOWED_OPERATION_ON_DEVICE:
+            dispatcher.utter_message(response="utter_cannot_turn_on_or_off_device")
+
+        if tracker.get_slot("all_devices_selected") is not None:
+            if room_name != None:
+                dispatcher.utter_message(response="utter_turned_on_all_devices_with_room_name")
+            else:
+                dispatcher.utter_message(response="utter_turned_on_all_devices")
+        else:
+            if room_name != None:
+                dispatcher.utter_message(response="utter_turned_on_device_with_room_name" , device_type=device_type , room_name=room_name)
+            else:
+                dispatcher.utter_message(response="utter_turned_on_device" , device_type=device_type)
+
+        return []
+    
+
+class ActionTurnOffDevice(Action):
+    
+        def name(self) -> Text:
+            return "action_turn_off_device"
+    
+        def run(self, dispatcher: CollectingDispatcher,
+                tracker: Tracker,
+                domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+    
+            controller = FirebaseController.instance()
+
+            device_type = tracker.get_slot("device_type")
+            room_name = tracker.get_slot("room_name")
+
+            result = controller.updateSwitchingState(
+                state= False ,
+                device_type= device_type ,
+                room_name= room_name
+            )
+
+            if result == Results.DEVICE_NOT_FOUND:
+                dispatcher.utter_message(response="utter_no_devices_found_with_given_specs")
+            
+            if result == Results.NOT_ALLOWED_OPERATION_ON_DEVICE:
+                dispatcher.utter_message(response="utter_cannot_turn_on_or_off_device")
+
+            if tracker.get_slot("all_devices_selected") is not None:
+                if room_name != None:
+                    dispatcher.utter_message(response="utter_turned_off_all_devices_with_room_name" , room_name=room_name , device_type=device_type)
+                else:
+                    dispatcher.utter_message(response="utter_turned_off_all_devices" , device_type=device_type)
+            else:
+                if room_name != None:
+                    dispatcher.utter_message(response="utter_turned_off_device_with_room_name" , device_type=device_type , room_name=room_name)
+                else:
+                    dispatcher.utter_message(response="utter_turned_off_device" , device_type=device_type)
+
+            return [] 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Firebase
+Firebase
+Firebase
+Firebase
+Firebase
+Firebase
+Firebase
+Firebase
+Firebase
+Firebase
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Firebase
+
+Purpose of external services:
+Firebase: Firebase is used to manage the state of devices, such as turning them on or off, by updating the switching state in the database.

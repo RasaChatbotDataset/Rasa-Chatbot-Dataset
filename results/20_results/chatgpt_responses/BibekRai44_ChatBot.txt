@@ -1,0 +1,51 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: ChatBot
+                - the description: ChatBot made with RASA
+                - the README: 
+# ChatBot
+
+A chatbot built with Rasa. The chatbot is designed to handle conversations and provide responses based on predefined intents and actions.
+
+
+## Deployment
+
+To run this project 
+
+```bash
+  git clone https://github.com/BibekRai44/ChatBot
+```
+```
+  pip install -r requirements.txt
+```
+```
+  cd ChatBot
+```
+let actions running  in first terminal 
+```
+  rasa run actions
+```
+run below line in second terminal
+```
+  rasa train && rasa shell --debug
+```
+# Customization
+
+You can customize the chatbot's behavior by modifying the following files:
+
+1) data/nlu.yml: Define the training data for the chatbot's NLU (Natural Language Understanding) model.
+
+2) data/stories.yml: Define the conversation flow and dialogue management of the chatbot.
+3) actions/actions.py: Implement custom actions for the chatbot, such as calling external APIs or performing specific tasks.
+4) domain.yml: Define the chatbot's domain, including intents, entities, actions, and responses.
+
+Make sure to retrain the chatbot (rasa train) after making any changes to these files.
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'tell_name', 'play_video', 'out_of_scope', 'chitchat', 'my_name', 'mobile_number']
+                - the list of entities: ['number', 'name']
+                - the list of actions: ['action_submit', 'action_video']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Communication

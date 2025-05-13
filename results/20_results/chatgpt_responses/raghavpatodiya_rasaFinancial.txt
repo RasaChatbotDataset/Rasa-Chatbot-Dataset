@@ -1,0 +1,60 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: rasaFinancial
+                - the description: Financial Chatbot on RASA
+                - the README: # rasaFinancial
+
+## How to test ?
+
+- `pip install -r requirements.txt`: Install requirements.
+- `rasa train`: Train your Rasa model using your configured pipeline and data.
+- `rasa shell`: Test your trained model in the command-line shell as well as interact with your model via Flask.
+- `rasa run actions`: Run custom actions defined in actions.py alongside your Rasa server.
+- run `python app.py` with Flask's built-in server.
+- run `python automation_script.py` to run all other scripts that interact with the running Flask server.
+- Set up PostgreSQL & PgAdmin4, then from the query tool run these queries:
+- `CREATE USER username WITH PASSWORD 'password';`
+- `CREATE DATABASE db_name;`
+- `GRANT ALL PRIVILEGES ON DATABASE db_name TO username;`
+- `GRANT ALL PRIVILEGES ON SCHEMA public TO username;`
+- To connect to Database from Flask app:
+- `flask db init`
+- `flask db migrate -m "Initial migration"`
+- `flask db upgrade`
+- To check if Database is connected:
+- `SELECT * FROM "user";`
+- `SELECT * FROM "reported_conversations";`
+
+## .env file format
+
+- `ALPHA_VANTAGE_API_KEY=your_alpha_vantage_api_key`
+- `DB_USERNAME=username`
+- `DB_PASSWORD=password`
+- `DB_NAME=db_name`
+- `SECRET_KEY=your_secret_key` get your secret key using this command `print(os.urandom(24))`
+- `MAIL_USERNAME=your_project_email_id`
+- `MAIL_PASSWORD=your_google_app_password` to get this, create a google app.
+- `ROOT_DIRECTORY=path_to_your_root_directory` for LOC Counter.
+- `EXCHANGE_RATE_API_KEY=your_exchange_rate_api_key` for currency conversion.
+
+## General Commands
+
+- `rasa init`: Initialize a new Rasa project.
+- `rasa run`: Run the Rasa server to interact with your model via REST API.
+- `rasa run --enable-api`: Run the Rasa server with HTTP API enabled.
+- `docker ps`: List all active Docker containers.
+- `docker kill [container_name]`: Kill a specific Docker container.
+- `rasa train nlu`: Train the NLU (Natural Language Understanding) model only, focusing on intents.
+- `rasa shell nlu`: Test the NLU model by checking intent confidence scores for a given query.
+- `rasa shell -m models\older-model-name`: To run an older model.
+- `rasa data validate`: Validate your domain, NLU, and story data for any conflicts or inconsistencies.
+- `rasa test`: Run tests on your Rasa model and evaluate the results.
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'whats_up', 'abusive_user', 'mood_great', 'mood_unhappy', 'bot_challenge', 'ask_latest_stock_price', 'ask_older_stock_price', 'ask_specific_info', 'what_can_you_do', 'ask_date_time', 'ask_thanks', 'ask_stock', 'ask_stock_predictions', 'ask_buy_sell_hold', 'ask_stock_trend', 'ask_volatility', 'ask_top_stock', 'ask_worst_stock', 'ask_how_to_evaluate', 'ask_penny_stock_risk', 'ask_dividend_investing', 'ask_key_indicators', 'ask_market_sentiment_affect', 'ask_identify_undervalued_stock', 'ask_growth_value_stock', 'ask_inflation_stock_market', 'ask_benefits_index_funds', 'ask_determine_risk_tolerance', 'ask_diversification_stock_portfolio', 'ask_interest_rate_impact', 'ask_market_status', 'ask_market_sentiment', 'ask_common_investing_mistakes', 'ask_geological_unstability_affect', 'ask_stock_market_guide', 'ask_market_volatility_factors', 'ask_use_technical_analysis', 'ask_mutual_funds_individual_stocks', 'ask_market_capitalization', 'ask_intepret_stock_market_indices', 'ask_advantage_disadvantage_day_trading', 'ask_spot_market_bubbles', 'ask_corporate_earnings_reports_affect', 'ask_significance_insider_trading', 'ask_bear_bull_market', 'ask_esg_criteria', 'ask_fair_value', 'ask_stock_options_features', 'ask_competitive_positioning', 'ask_high_frequency_trading', 'ask_quantitative_easing_role', 'ask_portfolio_dividend_stock', 'ask_risk_investing_ipo', 'ask_management_influence', 'ask_emotional_management', 'ask_significance_stock_buybacks', 'ask_interpret_analyst_recommendation', 'ask_strategies_against_downturns', 'ask_impact_global_trends', 'ask_identify_value_traps', 'ask_implications_regulatory_changes', 'ask_analyze_debt_equity_ratio', 'ask_key_metrics_growth_potential', 'ask_sector_performance', 'ask_discounted_cash_flow', 'ask_tax_implications', 'ask_resources_stock_investing', 'ask_list_functionalities', 'fallback', 'ask_comparison', 'ask_graph', 'ask_roe_meaning', 'ask_audit_risk_meaning', 'ask_board_risk_meaning', 'ask_compensation_risk_meaning', 'ask_overall_risk_meaning', 'ask_pe_ratio_meaning', 'ask_volume_meaning', 'ask_bid_ask_size_meaning', 'ask_price_book_ratio_meaning', 'ask_eps_meaning', 'ask_peg_ratio_meaning', 'ask_revenue_meaning', 'ask_ebitda_meaning', 'ask_debt_equity_meaning', 'ask_roa_meaning', 'ask_etr_meaning', 'ask_ete_meaning', 'ask_profitability_margins', 'ask_start_over', 'ask_predictions_graph', 'ask_general_info']
+                - the list of entities: ['time', 'DATE', 'time_period', 'stock_name2', 'EVENT', 'stock_name', 'TIME', 'ORDINAL', 'GPE', 'PERSON', 'info', 'region', 'NORP', 'ORG']
+                - the list of actions: ['get_latest_stock_price', 'get_older_stock_price', 'get_specific_info', 'get_stock_predictions', 'get_buy_sell_hold', 'get_stock_trend', 'get_volatility', 'get_top_stock', 'get_worst_stock', 'get_market_status', 'get_market_sentiment', 'get_comparison', 'get_graph', 'get_predictions_graph', 'get_date_time', 'get_general_info']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Finance

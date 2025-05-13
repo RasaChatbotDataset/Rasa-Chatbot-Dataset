@@ -1,0 +1,145 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Espritchatbot-RASA-RWKV
+                - the description: This is a chatbot designed to answer questions about Esprit University. It was created by a group of Esprit's Students called INNOVISION using the Rasa framework.  The unindexed intents are generated using the RWKV-4-Raven
+                - the README: <img  width='805' src="https://miro.medium.com/v2/resize:fit:1400/1*iGdFJTHMIG79N2HChWaooQ.gif" alt="kimou6055" /></a> 
+<img   width='400' src="./assets/esprit.png" alt="kimou6055" /></a> 
+<img   width='400' src="./assets/INNOVISION.png" alt="kimou6055" /></a> 
+
+## Espritchatbot V1.2
+This is a chatbot designed to answer questions about Esprit University. It was created by a group of Esprit's Students called INNOVISION using the [Rasa](https://rasa.com/) framework.
+
+The unindexed intents are generated using the [RWKV-4-Raven](https://github.com/BlinkDL/RWKV-LM) Model
+
+## Prerequirments
+Python 3.4+
+Virtualenv
+pip
+
+## Installation
+To open the chatbot, clone the repository to your local machine:
+
+```
+git clone https://github.com/kimou6055/Espritchatbot.git
+```
+All of the following will be built into a virtualenv
+
+open the cmd in the root folder
+do : 
+```
+cd ../
+
+```
+
+Then do the follow:
+
+```
+python -m venv myenv
+```
+
+Then activate the environnement
+
+windows : 
+```
+myenv\Scripts\activate
+```
+
+
+linux : 
+```
+source myenv/bin/activate
+```
+Make sure you have Python 3.x installed on your machine. You can install the required Python libraries by running:
+
+```
+pip install rasa
+pip install langdetect
+pip install translate
+pip install pynvml
+pip install rwkv
+pip install ninja 
+```
+You need to install torch with CUDA 
+```
+pip3 install torch(version)+cu(CUDA version) torchvision(version)+cu(CUDA version) torchaudio --index-url https://download.pytorch.org/whl/cu117
+```
+Updgrade the RWKV-4 package : 
+```
+pip install rwkv --upgrade
+
+```
+
+open the RWKV folder and drop the [RWKV-4-Raven-7B-V10 model](https://cdn-lfs.huggingface.co/repos/41/55/4155c7aaff64e0f4b926df1a8fff201f8ee3653c39ba67b31e4973ae97828633/5c50ad861a16267ec45853bad106b6f6975c49f66e27fe2b01d555834be88492?response-content-disposition=attachment%3B+filename*%3DUTF-8%27%27RWKV-4-Raven-7B-v10-Eng99%2525-Other1%2525-20230418-ctx8192.pth%3B+filename%3D%22RWKV-4-Raven-7B-v10-Eng99%25-Other1%25-20230418-ctx8192.pth%22%3B&Expires=1682535932&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZG4tbGZzLmh1Z2dpbmdmYWNlLmNvL3JlcG9zLzQxLzU1LzQxNTVjN2FhZmY2NGUwZjRiOTI2ZGYxYThmZmYyMDFmOGVlMzY1M2MzOWJhNjdiMzFlNDk3M2FlOTc4Mjg2MzMvNWM1MGFkODYxYTE2MjY3ZWM0NTg1M2JhZDEwNmI2ZjY5NzVjNDlmNjZlMjdmZTJiMDFkNTU1ODM0YmU4ODQ5Mj9yZXNwb25zZS1jb250ZW50LWRpc3Bvc2l0aW9uPSoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2ODI1MzU5MzJ9fX1dfQ__&Signature=BD4PrRn6wRLcbqCG4gOpsygpna~nDeCTxn8WjDGHn30sidsC6T59AkmX6U3hPlQgBQchOoPLn5WThOp-6-t2yk1SlFnlf6Q1YXIn5BDH6-vcgvAQJ-DU2nxjJO3E92WxwGsE1LjRZ39Pn~ma-VXjLwdij0WsdNAyNEcOvjVumhfVAJgZOsRvTM4Q0IqCfVLHgK1dSOYr9AG5YtbuPZWJrMWRf3Xr5MFWj4BNn8-1G-B~PlaO99I1YFPvL0RtrYnsdrFEvL~jViisgMLRnNYNudphOaI4d22xb~dKlNfTpRMIdT0ljpHjEPz74MJMFw77qWMkaVF1YppckkTxf0N7Lg__&Key-Pair-Id=KVTP0A1DKRTAX)
+
+click on it to download
+
+Here we used the V11X 99% English 1% other 8192 ctx (V11+LaMini instructions)
+
+you can download and use any other version found [HERE](https://huggingface.co/BlinkDL/rwkv-4-raven/tree/main)
+
+Make sure to install CUDA : 
+ [Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
+ [Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/)
+
+
+## Usage
+To use the chatbot, navigate to the Espritchatbot directory and run these following commands:
+
+1- if you are using the chatbot for the first time you will need to train it :
+
+```
+rasa train
+```
+
+2- Run the chatbot :
+
+```
+rasa shell
+```
+3- You will need to  run the actions
+
+Open another cmd access the root then run :
+```
+rasa run actions --port 5055
+```
+PS : choose the proper strategy for your own hardware configuration while loading the RWKV model in the actions.py file
+
+Here we tested it with a custom cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32 
+
+you can see other options [HERE](https://github.com/BlinkDL/ChatRWKV/blob/main/ChatRWKV-strategy.png)
+
+RWKV python implementation can be found [HERE](https://pypi.org/project/rwkv/)
+
+Hyperparameters of RWKV can be found in the actions.py file
+
+4- Run the chatbot with nlu accuracy:
+
+```
+rasa shell nlu
+```
+
+
+
+## Credits
+
+ Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)
+
+ Credits for Rasa project structure and implementation goes to INNOVISION
+ 
+ INNOVISION Team Members: 
+ - Med Karim Akkari
+ - Nadia Bedhiafi
+ - Sarra Gharsallah
+ - Karim Aloulou
+ - Yosr Abbassi
+ - Med Hedi Souissi
+ - Aziz Jebabli
+
+                - the list of intents: ['refus', 'accepter', 'greet', 'thanks', 'bye', 'contact_fr', 'date_preinscription_ang', 'difference_3A_3B_ang', 'reclamation_confirmation_admission_ang', 'reporter_entretien_ang', 'modalites_paiement_ang', 'cout_formation_ang', 'B2_fr', 'B2_ang', 'classe_fr', 'rentree_ang', 'modalite_ang', 'place_ang', 'inscri_ing_info_ang', 'licence_info_ang', 'alternance_ang', 'admission_ang', 'inscri_bac_ang', 'note_ang', 'club_ang', 'concours_admission_ang', 'courssoir_ang', 'cout_hebergement_ang', 'cout_restauration_ang', 'classe_ang', 'date_res_ang', 'valider_module_ang', 'admis_ang', 'carte_amen_ang', 'double_correction_ang', 'confirmation_option_ang', 'conseil_classe_ang', 'credit_ang', 'exemples_rapport_stage_ang', 'procedure_stage_ang', 'avantage_alternance_ang', 'obtention_diplome_ang', 'absence_examen_ang', 'redoublement_ang', 'ratt_ang', 'annulation_inscription_ang', 'regime_etude_ang', 'mobilite_internationale_ang', 'filiere_ang', 'salutation', 'remerciement', 'remerciement_neg', 'byefr', 'contact', 'courssoir_fr', 'date_preinscription_fr', 'mobilite_internationale_fr', 'avantage_alternance_fr', 'difference_3A_3B_fr', 'concours_admission_fr', 'reclamation_confirmation_admission_fr', 'reporter_entretien_fr', 'modalites_paiement_fr', 'cout_formation_fr', 'modalite_fr', 'place_fr', 'inscri_ing_info_fr', 'licence_info_fr', 'alternance_fr', 'admission_fr', 'inscri_bac_fr', 'note_fr', 'double_diplome_fr', 'certificat_fr', 'stage_fr', 'paiement_par_tranche_fr', 'info_generale_esprit_fr', 'avantage_esprit_fr', 'club_fr', 'cout_hebergement_fr', 'cout_restauration_fr', 'date_res_fr', 'valider_module_fr', 'admis_fr', 'carte_amen_fr', 'double_correction_fr', 'confirmation_option_fr', 'conseil_classe_fr', 'credit_fr', 'exemples_rapport_stage_fr', 'procedure_stage_fr', 'obtention_diplome_fr', 'absence_examen_fr', 'redoublement_fr', 'ratt_fr', 'annulation_inscription_fr', 'regime_etude_fr', 'filiere_fr', 'applicabilite_formation_fr', 'reduction_premier_fr', 'administration_fr', 'partenaires_fr', 'salutation_ar', 'remerciement_ar', 'bye_ar', 'contact_ar', 'courssoir_ar', 'date_preinscription_ar', 'mobilite_internationale_ar', 'avantage_alternance_ar', 'difference_3A_3B_ar', 'concours_admission_ar', 'reclamation_confirmation_admission_ar', 'reporter_entretien_ar', 'modalites_paiement_ar', 'cout_formation_ar', 'B2_ar', 'rentree_ar', 'modalite_ar', 'place_ar', 'inscri_ing_info_ar', 'licence_info_ar', 'alternance_ar', 'admission_ar', 'inscri_bac_ar', 'note_ar', 'double_diplome_ar', 'certificat_ar', 'stage_ar', 'info_generale_esprit_ar', 'avantage_esprit_ar', 'club_ar', 'cout_restauration_ar', 'cout_hebergement_ar', 'classe_ar', 'date_res_ar', 'valider_module_ar', 'admis_ar', 'carte_amen_ar', 'double_correction_ar', 'confirmation_option_ar', 'conseil_classe_ar', 'credit_ar', 'exemples_rapport_stage_ar', 'procedure_stage_ar', 'obtention_diplome_ar', 'absence_examen_ar', 'redoublement_ar', 'ratt_ar', 'annulation_inscription_ar', 'regime_etude_ar', 'filiere_ar', 'applicabilite_formation_ar', 'reconnaissance_diplome_ar', 'reduction_premier_ar', 'administration_ar', 'partenaires_ar', 'affirm', 'deny', 'rentree_fr', 'contact_ang', 'double_diplome_ang', 'certificat_ang', 'stage_ang', 'paiement_par_tranche_ang', 'info_generale_esprit_ang', 'avantage_esprit_ang', 'procedure_inscription_ang', 'applicabilite_formation_ang', 'reconnaissance_diplome_ang', 'reduction_premier_ang', 'administration_ang', 'partenaires_ang', 'procedure_inscription_fr', 'nature_cours_fr', 'nature_cours_ang', 'procedure_inscription_ar', 'types_des_couts_fr', 'types_des_couts_ang', 'rentree_niveau_fr', 'rentree_niveau_ang', 'reconnaissance_diplome_fr', 'soft_skills_fr', 'soft_skills_ang', 'massai_fr', 'massai_ang', 'massai_plusinfo_fr', 'massai_plusinfo_ang', 'chatbot_esprit_fr', 'chatbot_esprit_ang', 'localisation_fr', 'localisation_ang', "cellule_d'ecoute_fr", "cellule_d'ecoute_ang", 'sentiment_fr', 'sentiment_ang', 'sentiment_ar', 'activite_fr', 'activite_ang', 'creation_club_fr', 'creation_club_ang']
+                - the list of entities: ['topic', 'cours_ang', 'cours_fr', 'type_cout_fr', 'rentree_niveau_fr', 'type_cout_ang', 'rentree_niveau_ang']
+                - the list of actions: ['action_cours_fr', 'action_cours_ang', 'action_cout_fr', 'action_cout_ang', 'action_rentree_ang', 'action_rentree_fr', 'action_random_topic', 'action_topic_info', 'action_raven_generate_text']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Education

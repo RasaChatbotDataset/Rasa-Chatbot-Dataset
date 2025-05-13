@@ -1,0 +1,130 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: technocean-chat-bot
+                - the description: None
+                - the README: <h1 align="center">Welcome to technocean-chat-bot 👋</h1>
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000" />
+  <a href="LICENCE" target="_blank">
+    <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
+  </a>
+  <a href="https://twitter.com/gdsclpu" target="_blank">
+    <img alt="Twitter: gdsclpu" src="https://img.shields.io/twitter/follow/gdsclpu.svg?style=social" />
+  </a>
+</p>
+
+> ChatBot Repo for TechNOcean Website
+
+## Install Rasa Open Source
+
+Ubuntu · macOS · Windows
+
+- First make sure your pip version is up to date:
+```sh
+pip3 install -U pip
+```
+
+- Then install Rasa Open Source using pip:
+```sh
+pip3 install rasa
+```
+
+## Congratulations! You have successfully installed Rasa Open Source!
+
+- You can now create a new project with:
+
+```sh
+rasa init
+```
+
+## Build for Production
+
+- To build development version of the Rasa, run:
+
+```sh
+curl -sSL https://install.python-poetry.org | python3 -
+git clone https://github.com/RasaHQ/rasa.git
+cd rasa
+poetry install
+```
+
+## Additional dependencies
+
+- For some ML components, you will need to install additional dependencies. Which are not installed by default.
+- To install them, run:
+
+```sh
+pip3 install rasa[full]
+```
+
+## Dependencies for spaCy
+
+- spaCy is the recommended library for doing most NLU-related tasks in Rasa. To install it, run:
+
+```sh
+pip3 install rasa[spacy]
+python3 -m spacy download en_core_web_md
+```
+
+## Run Project
+
+- To train the project
+
+```sh
+rasa train
+```
+
+- To start the project in terminal
+
+```sh
+rasa shell
+```
+
+- To start the project
+
+```sh
+rasa run
+```
+
+- To start the project and avoid cors policy error
+
+```sh
+rasa run --cors "*"
+```
+
+- To run the actions, run this command in another terminal
+
+```sh
+rasa run actions
+```
+
+## Author
+
+👤 **GDSC LPU**
+
+* Website: https://gdsclpu.live/
+* Twitter: [@gdsclpu](https://twitter.com/gdsclpu)
+* Github: [@gdsclpu](https://github.com/gdsclpu)
+* LinkedIn: [@gdsclpu](https://www.linkedin.com/company/gdsclpu/)
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/gdsclpu/technocean-chat-bot/issues). 
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## 📝 License
+
+Copyright © 2023 [GDSC LPU](https://github.com/gdsclpu).<br />
+This project is [ISC](LICENCE) licensed.
+
+                - the list of intents: ['greet', 'event_venue', 'goodbye', 'event_details', 'event_schedule', 'check_human', 'affirm', 'deny', 'thankyou', 'iamabot', 'speakers_list', 'sessions_list', 'speaker_details', 'session_details', 'out_of_scope', 'session_start', 'restart', 'trigger_handoff', 'handoff', 'human_handoff', 'help', 'nlu_fallback', 'ask_whatelse', 'give_options']
+                - the list of entities: ['session_id', 'speaker_id']
+                - the list of actions: ['action_event_venue', 'action_event_schedule', 'action_speakers_list', 'action_sessions_list', 'action_speaker_details', 'action_session_details']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Events

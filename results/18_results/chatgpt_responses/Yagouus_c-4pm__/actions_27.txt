@@ -1,0 +1,93 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from __future__ import annotations
+from typing import List, Union, Optional
+from src.Declare4Py.Utils.Declare.Checkers import CheckerResult
+import pandas as pd
+
+"""
+Initializes class ConformanceCheckingResults
+
+Attributes
+-------
+    dict_results : dict
+        dictionary of conformance checking results
+"""
+
+
+class MPDeclareResultsBrowser:
+
+    def __init__(self, matrix_results: List[List[CheckerResult]], serialized_constraints: List[str]):
+        self.serialized_constraints = serialized_constraints
+        self.model_check_res: List[List[CheckerResult]] = matrix_results
+
+    def get_metric(self, metric: str, trace_id: int = None, constr_id: int = None) -> Union[pd.DataFrame, List, int]:
+        if type(metric) is not str:
+            raise RuntimeError("You must specify a metric among num_activations, num_violations, num_fulfillments, "
+                               "num_pendings, state.")
+        if metric not in ["num_activations", "num_violations", "num_fulfillments", "num_pendings", "state"]:
+            raise RuntimeError("You must specify a metric among num_activations, num_violations, num_fulfillments, "
+                               "num_pendings, state.")
+        results = []
+        if trace_id is None and constr_id is None:
+            for trace_res in self.model_check_res:
+                tmp_list = []
+                for result_checker in trace_res:
+                    tmp_list.append(self.retrieve_metric(result_checker, metric))
+                results.append(tmp_list)
+            results = pd.DataFrame(results, columns=self.serialized_constraints)
+        elif trace_id is not None and constr_id is None:
+            for result_checker in self.model_check_res[trace_id]:
+                results.append(self.retrieve_metric(result_checker, metric))
+        elif trace_id is None and constr_id is not None:
+            for trace_res in self.model_check_res:
+                result_checker = trace_res[constr_id]
+                results.append(self.retrieve_metric(result_checker, metric))
+        else:
+            try:
+                if metric == "state":
+                    results = 0 if getattr(self.model_check_res[trace_id][constr_id], metric).value == 'Violated' else 1
+                else:
+                    results = getattr(self.model_check_res[trace_id][constr_id], metric)
+            except IndexError:
+                print("The index of the trace must be lower than the log size. The index of the constraint must be "
+                      "lower than the total number of constraints in the Declare model.")
+            except TypeError as e:
+                print(f"The index of the trace/constraint must be integers or slices, not {e}.")
+            except AttributeError:
+                print("You must specify a metric among num_activations, num_violations, num_fulfillments, "
+                      "num_pendings, state.")
+        return results
+
+    @staticmethod
+    def retrieve_metric(result_checker: CheckerResult, metric: str) -> Optional[int]:
+        try:
+            if metric == "state":
+                return 0 if getattr(result_checker, metric).value == 'Violated' else 1
+            else:
+                return getattr(result_checker, metric)
+        except AttributeError:
+            print("You must specify a metric among num_activations, num_violations, num_fulfillments, "
+                  "num_pendings, state.")
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    None
+None
+None
+None
+None
+None
+None
+None
+None
+None
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+NO

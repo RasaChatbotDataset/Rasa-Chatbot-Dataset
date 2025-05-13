@@ -1,0 +1,189 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from rasa_sdk import Action, Tracker
+from rasa_sdk.events import SlotSet
+from rasa_sdk.executor import CollectingDispatcher
+
+from typing import Any, Text, Dict, List
+
+import arrow
+
+from py2neo import Node,Relationship,Graph,Path,Subgraph
+from py2neo import NodeMatcher, RelationshipMatcher
+
+city_db = {
+    'brussels': 'Europe/Brussels', 
+    'zagreb': 'Europe/Zagreb',
+    'london': 'Europe/Dublin',
+    'lisbon': 'Europe/Lisbon',
+    'amsterdam': 'Europe/Amsterdam',
+    'seattle': 'US/Pacific'
+}
+
+attribute_db = {
+    'birth year': 'birth_year',
+    'eye color': 'eye_color',
+    'height': 'height',
+    'homeworld': 'homeworld',
+    'planet': 'homeworld',
+    'weight': 'mass',
+    'name': 'name',
+    'skin color': 'skin_color',
+    'species': 'species'
+}
+
+neo4j_url = 'http://localhost:7474/'
+user = 'neo4j'
+pwd = 'test'
+
+class ActionTellTime(Action):
+    
+    def name(self) -> Text:
+        return "action_tell_time"
+
+    def run(
+        self, 
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        current_place = next(tracker.get_latest_entity_values("place"), None)
+        utc = arrow.utcnow()
+       
+        if not current_place:
+            msg = f"It's {utc.format('HH:mm')} utc now."
+            dispatcher.utter_message(text=msg)
+            return []
+
+        place_string = city_db.get(current_place, None)
+        if not place_string:
+            msg = f"I didn't recognise {current_place}. Is it spelled correctly?"
+            dispatcher.utter_message(text=msg)
+            return []
+
+        msg = f"It's {utc.to(city_db[current_place]).format('HH:mm')} in {current_place} now."
+        dispatcher.utter_message(text=msg)
+
+        return []
+
+class ActionQueryCharacter(Action):
+    
+    def name(self) -> Text:
+        return "action_query_character"
+
+    def run(
+        self, 
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        current_character = next(tracker.get_latest_entity_values("character"), None)
+
+        graph = Graph(neo4j_url,  auth=(user, pwd))
+
+        node_matcher = NodeMatcher(graph)
+        node = node_matcher.match("Characters").where(f"toLower(_.name) = toLower('{current_character}')").first()
+
+        if not node:
+            msg = f"We didn't find {current_character}. \nMaybe you spelled it wrong. \nCan you try again?"
+            dispatcher.utter_message(text=msg)
+            return []
+
+        if node:
+            msg = f"{node['name']}: \nBirth year: {node['birth_year']} \nEye color: {node['eye_color']} \nGender: {node['gender']} \nHair color: {node['hair_color']} \nHeight: {node['height']} \nHomeworld: {node['homeworld']} \nWeigth: {node['mass']} \nSkin color {node['skin_color']} \nSpecies: {node['species']}"
+            dispatcher.utter_message(text=msg)
+            return []
+        
+        return []
+
+class ActionQueryPlanet(Action):
+    
+    def name(self) -> Text:
+        return "action_query_planet"
+
+    def run(
+        self, 
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        current_planet = next(tracker.get_latest_entity_values("planet"), None)
+
+        graph = Graph(neo4j_url,  auth=(user, pwd))
+
+        node_matcher = NodeMatcher(graph)
+        node = node_matcher.match("Planets").where(f"toLower(_.name) = toLower('{current_planet}')").first()
+
+        if not node:
+            msg = f"We didn't find {current_planet}. \nMaybe you spelled it wrong. \nCan you try again?"
+            dispatcher.utter_message(text=msg)
+            return []
+
+        if node:
+            msg = f"{node['name']}: \nClimate: {node['climate']} \nDiameter: {node['diameter']} \nGravity type: {node['gravity']} \nYear length: {node['orbital_period']} \nPopulation: {node['population']} \nDay length: {node['rotation_period']} \nSurface water: {node['surface_water']} \nTerrain {node['terrain']}"
+            dispatcher.utter_message(text=msg)
+            return []
+        
+        return []
+
+class ActionQueryCharacterAttribute(Action):
+    
+    def name(self) -> Text:
+        return "action_query_character_attribute"
+
+    def run(
+        self, 
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        current_character = next(tracker.get_latest_entity_values("character"), None)
+        current_attribute = next(tracker.get_latest_entity_values("attribute"), None)
+
+        attribute_string = attribute_db.get(current_attribute, None)
+
+        if not attribute_string:
+            msg = f"I didn't recognise the attribute {current_attribute}. Maybe you spelled it wrong. We will be able to match it better in the future."
+            dispatcher.utter_message(text=msg)
+            return []
+
+        graph = Graph(neo4j_url,  auth=(user, pwd))
+        node_matcher = NodeMatcher(graph)
+        node = node_matcher.match("Characters").where(f"toLower(_.name) = toLower('{current_character}')").first()
+
+        if not node:
+            msg = f"I didn't recognise the character {current_character}. Maybe you spelled it wrong. We will be able to match it better in the future."
+            dispatcher.utter_message(text=msg)
+            return []
+
+        if node:
+            msg = f"The {current_attribute} of {current_character} is {node[attribute_string]}."
+            dispatcher.utter_message(text=msg)
+            return []
+
+        return [] 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Neo4j, Arrow
+Neo4j, Arrow
+Neo4j, Arrow
+Neo4j, arrow
+Neo4j, Arrow
+Neo4j, Arrow
+Neo4j, Arrow
+Neo4j, Arrow
+Neo4j, Arrow
+Neo4j, Arrow
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Neo4j, Arrow
+
+Purpose of external services:
+Neo4j: Neo4j is a graph database management system used to store and query data about characters and planets.
+Arrow: Arrow is a date and time library used to handle and format time-related data.

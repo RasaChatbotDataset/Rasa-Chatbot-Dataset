@@ -1,0 +1,38 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Entity-Extraction-from-Flipkart-page
+                - the description: None
+                - the README: # Entity Extraction from Flipkart's page and building a Chatbot #
+This project is focused on extracting relevant entities such as product name, price, ratings, etc from Flipkart for differnt products.The scraped data is used for making a chatbot that can provide users with information about the product, making it easier for users to get information about products they are interested in.
+## Requirements
+* Python
+* Pycharm
+* Pandas
+* Numpy
+* Requests
+* Beautiful Soup
+## Installation
+* Python: https://www.python.org/downloads/
+* PyCharm: https://www.jetbrains.com/pycharm/download/
+* Rasa: pip install rasa
+* Requests: pip install requests
+* BeautifulSoup: pip install beautifulsoup4
+* Pandas: pip install pandas
+* Numpy: pip install numpy
+## Project Workflow
+1. Scrape required data from the webpage of Flipkart using Requests and BeautifulSoup.
+2. Process the scraped data to extract relevant entities such as product name, price, ratings, etc.
+3. Convert the extracted data into a structured format such as CSV file.
+4. Use Rasa to build a chatbot that can respond to user queries related to Flipkart products and related queries.
+5. Train the chatbot using the extracted product data to improve its accuracy and responsiveness.
+## Output
+The output of this project is a chatbot that can assist users in obtaining information about Flipkart products. By using the extracted entities such as product name, price, ratings, etc., the chatbot can provide users with accurate and relevant information about products they are interested in. This can help users make informed purchasing decisions and to improve their overall shopping experience.
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'product_price', 'product_rating', 'product_specification']
+                - the list of entities: ['name']
+                - the list of actions: ['action_get_price_details', 'action_get_ratings_details', 'action_get_specifications_details']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Shopping

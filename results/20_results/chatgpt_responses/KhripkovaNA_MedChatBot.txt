@@ -1,0 +1,18 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: MedChatBot
+                - the description: Healthcare chatbot using Rasa and Flask
+                - the README: # MedChatBot
+Healthcare chatbot using Rasa and Flask
+
+![screenshot1](./screenshots/screenshot1.png)
+![screenshot2](./screenshots/screenshot2.png)
+
+                - the list of intents: ['bot_challenge', 'chitchat', 'covid_about_mask', 'covid_about_sanitizer', 'covid_about_vaccine', 'covid_age_risk', 'covid_community', 'covid_immunity_booster', 'covid_immunity_booster_foods', 'covid_infected_person', 'covid_precautions', 'covid_spread_air', 'covid_spreading', 'covid_testing', 'covid_time', 'covid_vitamins', 'describe_symptoms', 'dont_need_assistance', 'feel_sick', 'goodbye', 'greet', 'how_to_get_started', 'inquire_about_disease', 'inquire_about_disease_symptoms', 'inquire_about_disease_treatment', 'specify_disease', 'thanks']
+                - the list of entities: ['symptoms_info', 'treatment_info', 'disease']
+                - the list of actions: ['action_provide_disease_info', 'utter_greet', 'utter_thanks', 'utter_goodbye', 'utter_ask_disease', 'utter_iamabot', 'utter_dont_need_assistance', 'utter_feel_sick', 'utter_how_to_get_started', 'utter_medical_focus', 'utter_covid_precautions', 'utter_covid_spreading', 'utter_covid_age_risk', 'utter_covid_time', 'utter_covid_vitamins', 'utter_covid_sanitizer', 'utter_covid_about_vaccine', 'utter_covid_about_mask', 'utter_covid_testing', 'utter_covid_immunity_booster', 'utter_covid_immunity_booster_foods']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical

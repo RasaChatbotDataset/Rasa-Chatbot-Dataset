@@ -1,0 +1,66 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: healthcare_chatbot
+                - the description: openAI gpt4 and rasa chatbot
+                - the README: <p align="center"><img src="./assets/bot.png" width="10%"></p>
+<h1 align="center">Customer Care Bot</h1>
+<p align="center">Customer care bot for ecomm company which can solve faq and chitchat with users, can contact directly to team.</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/pipenv/locked/python-version/horizon733/customer-care-chatbot">
+  <img src="https://img.shields.io/github/pipenv/locked/dependency-version/horizon733/customer-care-chatbot/rasa?color=blueviolet&label=Rasa">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/repo-size/horizon733/customer-care-chatbot">
+</p>
+
+## 🛠 Features
+- [x] Basic E-commerce FAQ
+- [x] Basic chitchats
+- [x] Out of Scope
+- [x] Contact us form
+- [x] Send Emails
+
+## ⚡ Quick Setup
+- Initialize a virtual environment via:
+- Conda:
+```bash
+conda create --name rasaenv python=3.7
+```
+- virtualenv
+```bash
+virtualenv -p python3.7 rasaenv
+```
+- use pipenv
+```
+cd /customer-care-chatbot
+pipenv install
+```
+
+## 🧪 Testing
+- Train bot
+```
+rasa train
+```
+- Test bot on shell
+```
+rasa shell
+```
+- start `rasa` server
+```bash
+rasa run --enable-api --cors "*" --debug[Optional] -p {PORT}[optional]
+```
+- start `actions` server
+```
+rasa run actions -p {PORT}[Optional]
+```
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'faq', 'chitchat', 'contact_us', 'login', 'outofscope', 'openAI']
+                - the list of entities: ['number', 'confirm_details', 'name', 'message', 'email', 'phone_number']
+                - the list of actions: ['validate_contact_us_form', 'action_submit_contact_us_form', 'openai_action']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Shopping

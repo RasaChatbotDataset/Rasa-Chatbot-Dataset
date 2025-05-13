@@ -1,0 +1,116 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from .StockCalculator import StockCalculator
+
+class ExtractStockPrice(Action):
+
+    def name(self) -> Text:
+        return "action_extract_stock_price"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        stock_entity = next(tracker.get_latest_entity_values('stock'),None)
+        
+        if stock_entity:
+            
+            sc = StockCalculator(stock_entity)
+
+            dispatcher.utter_message(text=f"The current stock price for {stock_entity} is {sc.get_stock_price()}")
+        else:
+            dispatcher.utter_message(text="I didn't get the stock name. What do you wanna do?")
+        return []
+
+class ExtractSockRSI(Action):
+
+    def name(self) -> Text:
+        return "action_extract_stock_rsi"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        stock_entity = next(tracker.get_latest_entity_values('stock'),None)
+        
+        if stock_entity:
+            
+            sc = StockCalculator(stock_entity)
+
+            dispatcher.utter_message(text=f"The current RSI for {stock_entity} is {sc.calculate_RSI()}")
+        else:
+            dispatcher.utter_message(text="I didn't get the stock name. What do you wanna do?")
+        return []
+    
+class ExtractSockMACD(Action):
+
+    def name(self) -> Text:
+        return "action_extract_stock_macd"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        stock_entity = next(tracker.get_latest_entity_values('stock'),None)
+        
+        if stock_entity:
+            
+            sc = StockCalculator(stock_entity)
+
+            dispatcher.utter_message(text=f"The current MACD for {stock_entity} is {sc.calculate_MACD()}")
+        else:
+            dispatcher.utter_message(text="I didn't get the stock name. What do you wanna do?")
+        return []
+
+
+class ExtractSockNews(Action):
+
+    def name(self) -> Text:
+        return "action_extract_stock_news"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        stock_entity = next(tracker.get_latest_entity_values('stock'),None)
+        
+        if stock_entity:
+            
+            sc = StockCalculator(stock_entity)
+            news = sc.get_stock_news()
+            
+            dispatcher.utter_message(text=f"A current news for {stock_entity} is:")
+            dispatcher.utter_message(text=f"Title: {news['title']}\nPublisher: {news['publisher']}\nLink: {news['link']}")
+        else:
+            dispatcher.utter_message(text="I didn't get the stock name. What do you wanna do?")
+        return []
+
+
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    StockCalculator
+StockCalculator
+StockCalculator
+StockCalculator
+StockCalculator
+StockCalculator
+StockCalculator
+StockCalculator
+StockCalculator
+StockCalculator
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+StockCalculator
+
+Purpose of external services:
+StockCalculator: This service is used to fetch stock prices, calculate RSI and MACD indicators, and retrieve news related to a specific stock.

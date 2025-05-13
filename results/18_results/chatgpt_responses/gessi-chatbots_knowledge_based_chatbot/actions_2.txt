@@ -1,0 +1,123 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import random
+from typing import Text
+from xmlrpc.client import boolean
+
+from rasa_sdk import Action
+
+from KnowledgeBase import KnowledgeBase
+
+
+# reimplementation of ActionQueryKnowledgeBase
+class ActionQueryKnowledgeBase(Action):
+    # initiates data from knowledge base json file
+    def __init__(self):
+        self.ordinal_mention_mapping = {
+            "ANY": lambda l: random.choice(l),
+            "LAST": lambda l: l[-1],
+        }
+
+        ActionQueryKnowledgeBase.currentApps = []
+        ActionQueryKnowledgeBase.kb = KnowledgeBase()
+
+    # default name for action
+    def name(self):
+        return "action_query_data_base"
+
+    def getCurrentApps(self) -> int:
+        return ActionQueryKnowledgeBase.currentApps
+
+    def setCurrentApps(self, currentApps) -> None:
+        self.currentApps = currentApps
+        
+    # amount of apps after filtering
+    def getCurrentAppSize(self) -> int:
+        return len(ActionQueryKnowledgeBase.currentApps)
+
+    # search without filter --> override apps in action
+    def searchInApps(self, header, value) -> None:
+        ActionQueryKnowledgeBase.currentApps = []
+        ActionQueryKnowledgeBase.kb.updateFilterFeatures(header, value)
+
+        data = ActionQueryKnowledgeBase.kb.getData()
+        for x in data:
+            if value in x[header]:
+                ActionQueryKnowledgeBase.currentApps.append(x)
+
+    # filter apps when already initialized
+    def filterCurrentApps(self, header, value) -> None:
+        filteredApps = []
+        ActionQueryKnowledgeBase.kb.updateFilterFeatures(header, value)
+
+        for x in self.currentApps:
+            if value in x[header]:
+                filteredApps.append(x)
+        ActionQueryKnowledgeBase.currentApps = filteredApps
+
+    # structure message to utter
+    def dispatchAppInfo(self) -> Text:
+        size = len(ActionQueryKnowledgeBase.currentApps)
+        text = ""
+        if size == 0:
+            text = "Sorry, I couldn't find any apps with those features!"
+        elif size == 1:
+            text = (
+                "Great! Then let's launch "
+                + ActionQueryKnowledgeBase.currentApps[0]["name"]
+                + "!\n"
+            )
+        else:
+            text = "Sure! I see you have multiple apps with this feature:\n"
+            i = 1
+            for x in ActionQueryKnowledgeBase.currentApps:
+                text += str(i) + ". " + x["name"] + " \n"
+                i += 1
+            text += "Do you wish to use any app in particular?\n"
+        return text
+
+    # check if an item is in the headers i.e. can be filtered by
+    def inHeaders(self, header) -> boolean:
+        return header in ActionQueryKnowledgeBase.kb.getData()[0].keys()
+
+    # if the mention isn't valid, invalidate search otherwise return correct app
+    def treatMention(self, value) -> Text:
+        if value.isnumeric():
+            x = int(value) - 1
+            if x < 0 or x >= len(ActionQueryKnowledgeBase.currentApps):
+                aux = []
+                return "Incorrect value for given choices."
+            aux = [ActionQueryKnowledgeBase.currentApps[x]]
+        elif value in self.ordinal_mention_mapping:
+            aux = [self.ordinal_mention_mapping[value](ActionQueryKnowledgeBase.currentApps)]
+        else:
+            aux = []
+            return "Incorrect value for given choices."
+
+        ActionQueryKnowledgeBase.currentApps = aux
+        return ""
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+KnowledgeBase
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+KnowledgeBase
+
+Purpose of external services:
+KnowledgeBase: This service is used to manage and query data from a knowledge base, which is likely a local or external database containing information about various apps. The chatbot uses this service to filter and retrieve app information based on user queries.

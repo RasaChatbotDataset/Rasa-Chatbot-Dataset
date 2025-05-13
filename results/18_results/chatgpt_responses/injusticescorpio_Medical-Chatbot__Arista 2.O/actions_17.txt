@@ -1,0 +1,73 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from .bloodbank_db import Blood_Bank
+from .call_sms import call_sms
+import requests
+import os
+#creating server
+#Gmail
+
+def distance_btw_two_places(place1,place2):
+    url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+    distanceapi = os.environ['distanceapi']
+    response = requests.get(url + 'origins=' + place1 + '&destinations=' + place2 + '&key=' + distanceapi).json()
+    res=''
+    try:
+        res = response['rows'][0]['elements'][0]['distance']['text']
+    except Exception as e:
+        print(f"res=={res}")
+        print(f"error occured {e} and place not available is {place2}")
+        return float('inf')
+    if 'km' in res:
+        return float(''.join([i for i in res if i.isdigit() or i=='.']))
+    return float(''.join([i for i in res if i.isdigit() or i=='.']))/1000
+
+def Blood_Bank_details(blood_group,name,no_of_units,case,required_date,admitted_hopsital,bleeding_place,bleeding_time,district,contact_number,bystander_name):
+    db=Blood_Bank()
+    blood_bank_user_details=db.fetch()
+    print(blood_bank_user_details)
+    representative_to_be_contacted=[]
+    for representative in blood_bank_user_details:
+        if name.title()!=representative[1]:#checking whether the representative
+            if distance_btw_two_places(bleeding_place.title(),representative[-1])<=30.0:
+                representative_to_be_contacted.append([representative,distance_btw_two_places(bleeding_place,representative[-1])])
+    representative_to_be_contacted=sorted(representative_to_be_contacted,key=lambda x:x[1])
+    representative_to_be_contacted_phone=[i[0][2] for i in representative_to_be_contacted]
+    booking_successful=0
+    for i in representative_to_be_contacted_phone[:5]:
+        booking_successful+=call_sms(blood_group,name,no_of_units,case,required_date,admitted_hopsital,bleeding_place,bleeding_time,district,contact_number,bystander_name,i)
+    return f"your blood requirement has been sent to {booking_successful} user successfully"
+
+
+
+
+    
+# print(Blood_Bank_details('O+ve','tony stark','2','heart','24-04-2022','mammen memorial hospital','chengannur','8:00AM',"Alappuzha","9074774118","Arjun"))
+
+# print(distance_btw_two_places('Chengannur','kallissery,kerala')) 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Blood_Bank, call_sms, Google Distance Matrix API
+Blood_Bank, call_sms, Google Distance Matrix API,,###
+Blood_Bank, call_sms, Google Distance Matrix API
+Blood_Bank, call_sms, Google Distance Matrix API
+Blood_Bank, call_sms, Google Distance Matrix API
+Blood_Bank, call_sms, Google Distance Matrix API,,###
+Blood_Bank, call_sms, Google Distance Matrix API
+Blood_Bank, call_sms, Google Distance Matrix API
+Blood_Bank, call_sms, Google Distance Matrix API,,###
+Blood_Bank, call_sms, Google Distance Matrix API,,###
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Blood_Bank, call_sms, Google Distance Matrix API
+
+Purpose of external services:
+- Blood_Bank: This service is used to fetch details of blood bank representatives.
+- call_sms: This service is used to send calls and SMS notifications to blood bank representatives.
+- Google Distance Matrix API: This service is used to calculate the distance between two places.

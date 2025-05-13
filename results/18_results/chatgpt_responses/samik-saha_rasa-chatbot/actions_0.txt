@@ -1,0 +1,66 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Dict, Text
+import requests
+import json
+from rasa_sdk import Action
+import os
+
+
+class ActionJoke(Action):
+  def name(self) -> Text:
+    return "action_joke"
+
+  async def run(self, dispatcher, tracker, domain: Dict[Text, Any]):
+    url = 'https://api.jokes.one/jod?category=knock-knock'
+    headers = {'content-type': 'application/json'}
+    joke=requests.get(url, headers=headers).json()['contents']['jokes'][0]['joke']['text']
+
+    #request = requests.get('http://api.icndb.com/jokes/random').json() #make an api call
+    #joke = request['value']['joke'] #extract a joke from returned json response
+    dispatcher.utter_message('Here is a joke to cheer you up!')
+    dispatcher.utter_message(joke) #send the message back to the user
+    return []
+
+class ActionGetWeather(Action):
+  def name(self):
+    return "action_get_weather"
+  
+  def run(self, dispatcher, tracker, domain):
+    city=tracker.get_slot('location')
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={os.getenv("OPENWEATHERMAP_API_KEY")}'
+    weather=requests.get(url).json()
+    #response_loc=weather['name']
+    main=weather['weather'][0]['main']
+    description=weather['weather'][0]['description']
+    temp=weather["main"]["temp"]
+    humidity=weather["main"]["humidity"]
+    feels_like=weather["main"]["feels_like"]
+    dispatcher.utter_message(f'Weather in {city}: {main}, {description}, Temp:{temp}, Humidity:{humidity}, Feels like {feels_like}')
+    return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Jokes One API, OpenWeatherMap API
+Jokes One API, OpenWeatherMap API
+Jokes One API, OpenWeatherMap API
+Jokes One API, OpenWeatherMap API
+External services: jokes.one, openweathermap.org
+External services: api.jokes.one, api.openweathermap.org
+Jokes One API, OpenWeatherMap API
+Jokes One API, OpenWeatherMap API
+External services: jokes.one, openweathermap.org
+External services: api.jokes.one, openweathermap.org
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+Jokes One API, OpenWeatherMap API
+
+Purpose of external services:
+- Jokes One API: This service is used to fetch a joke of the day from the "knock-knock" category to provide humor to the user.
+- OpenWeatherMap API: This service is used to fetch current weather information for a specified city, including details like temperature, humidity, and weather description.

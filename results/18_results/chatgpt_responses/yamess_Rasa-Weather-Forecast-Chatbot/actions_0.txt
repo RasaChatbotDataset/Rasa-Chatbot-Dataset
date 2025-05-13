@@ -1,0 +1,72 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot 
+from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+from services.normalization import text_to_date, text_to_coordinate
+from services.weather import get_text_weather_date
+
+
+class ActionWeatherFormSubmit(Action):
+    def name(self) -> Text:
+        return "action_weather_form_submit"
+
+    def run(
+        self,
+        dispatcher: "CollectingDispatcher",
+        tracker: Tracker,
+        domain: "DomainDict",
+    ) -> List[Dict[Text, Any]]:
+
+        city = tracker.get_slot("address")
+        date_text = tracker.get_slot("date-time")
+        date_object = text_to_date(date_text)
+
+        if not date_object:
+            msg = f"Not support for weather query for {city}, {date_text}"
+            dispatcher.utter_message(msg)
+        else:
+            dispatcher.utter_message(template="utter_working_on_it")
+
+            try:
+                lat, lon = text_to_coordinate(city)
+                weather_data = get_text_weather_date(lat, lon, date_object, date_text, city)
+
+            except Exception as e:
+                exec_msg = str(e)
+                dispatcher.utter_message(exec_msg)
+
+            else:
+                dispatcher.utter_message(weather_data)
+
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+text_to_date, text_to_coordinate, get_text_weather_date
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+text_to_date, text_to_coordinate, get_text_weather_date
+
+Purpose of external services:
+- text_to_date: Converts a text representation of a date into a date object.
+- text_to_coordinate: Converts a city name into geographical coordinates (latitude and longitude).
+- get_text_weather_date: Retrieves weather data for a specific date and location.

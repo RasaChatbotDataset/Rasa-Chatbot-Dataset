@@ -1,0 +1,77 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: pde-data-science
+                - the description: Open-source chatbot with Rasa and the NLP
+                - the README: 
+
+![ScreenShot](static/img/banner.png)
+
+
+  ***An Open Source ChatBot widget easy to connect to RASA bot through [Rest](https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/#rest-channels) Channel.***
+
+
+![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
+[![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/uses-html.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/uses-css.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](https://forthebadge.com)
+
+[![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
+
+## Features
+
+- Text 
+- Markdown
+- Buttons
+- Images
+- Video 
+- PDF Attachment
+- Dropdown
+- Quick replies
+- Cards carousel
+- Charts
+- Collapsible
+- Bot typing indicator
+- Location access
+
+
+
+## Instructions
+- You can read the instructions here in [instructions.md](docs/instructions.md)
+
+## Documentation
+- Check out the documentation on how to send bot response from Rasa in [response.md](docs/responses.md)
+- If you want to modify the UI elements, you can read on how to do here: [modifications.md](docs/modifications.md)
+
+## Gallery:
+- Check out the sample pics here [gallyery.md](docs/gallery.md)
+
+## Sample Bots:
+Below are the sample bot projects that were developed using Rasa and made to work with this widget
+- [Restaurant Search Bot](https://github.com/JiteshGaikwad/Restaurant-Search-Bot.git)
+- [HR Bot](https://github.com/JiteshGaikwad/HR_Bot)
+
+## Library used:
+- [Materialize CSS](https://materializecss.com) for CSS
+- [Showdownjs](https://github.com/showdownjs/showdown) for Markdown suppport
+- [Chart.js](https://www.chartjs.org/) for Charts
+
+## Demo:
+
+Check out the widget in action here [demo](https://www.youtube.com/watch?v=mnolLtOWykk)
+
+
+
+
+                - the list of intents: ['deny', 'affirm', 'goodbye', 'greet', 'mood_great', 'mood_unhappy', 'bot_challenge', 'smalltalk_appraisal_thank_you', 'movie_id', 'movie_information', 'movie_recommendation_description', 'movie_recommendation_director_based', 'movie_recommendation_genre_based', 'movie_watched_recently', 'ask_for_cinema_nearby', 'movie_plot', 'ask_movie_no_title']
+                - the list of entities: ['address', 'film', 'country', 'city', 'movie_recommendation', 'id', 'genre', 'confirm_address', 'movie_description', 'plot', 'movie_recommendation_genre_based', 'director']
+                - the list of actions: ['action_movie_search', 'action_get_movie_recommendation', 'action_get_movie_description', 'action_get_movie_recommendation_genre_based', 'action_get_movie_recommendation_title_based', 'action_get_movie_recommendation_director_based', 'action_get_movie_information', 'action_get_cinema_near']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Entertainment

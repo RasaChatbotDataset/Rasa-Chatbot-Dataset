@@ -1,0 +1,15 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Getting-Started-with-RASA
+                - the description: This repository will include starter pack for RASA development.Rasa is a framework for developing AI powered, industrial grade chatbots. It's incredibly powerful, and is used by developers worldwide to create chatbots and contextual assistants
+                - the README: # Getting-Started-with-RASA
+Rasa is a framework for developing AI powered, industrial grade chatbots. It's incredibly powerful, and is used by developers worldwide to create chatbots and contextual assistants
+
+                - the list of intents: ['greet', 'inform', 'goodbye', 'affirm', 'deny', 'bot_challenge']
+                - the list of entities: ['choice']
+                - the list of actions: ['action_play_rps']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Games

@@ -1,0 +1,23 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Rasa-Chatbot
+                - the description: A diagnosis bot with Rasa Framework in which extracts user symptoms from text, compares them to a list of known illness, and suggests a diagnosis would be an ideal starting point.
+                - the README: ### Rasa Chatbot
+# Medi Assist AI💬
+
+
+Here is a simple medical diagnose chatbot with NLP using Rasa Conversational AI Framework, this bot simply extracts user symptoms from text, compares them to a list of known illness, and suggests a diagnosis,
+Rasa was capable of intent classification and entity extraction within conversational texts
+
+
+https://github.com/ihsan292292/Rasa-Chatbot/assets/97184876/56a6d505-73a6-4e94-9b07-2ade59d9b1b4
+
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'gratitude', 'describe_symptoms']
+                - the list of entities: ['symptom']
+                - the list of actions: ['utter_greet', 'utter_goodbye', 'utter_iamabot', 'utter_no_problem', 'action_diagnose_symptoms', 'utter_happy']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Medical

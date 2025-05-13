@@ -1,0 +1,18 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: MrMoonSmartHome
+                - the description: It is a rasa model that implements chatbot feature for smart home system
+                - the README: ## Strories rules and notes:
+- after firing reset all slots action to keep track of any neccessary informations in the previous context we fire ask llm for entities action
+
+
+## TODOs:
+- write a base class its job is to get the devices_ids based on the detected room_name and device_type 
+                - the list of intents: ['change_light_color', 'check_temprature_value', 'decrease_temperature_by', 'electricity_usage', 'increase_temperature_by', 'number_of_people_in_home', 'out_of_scope_electricity_usage_queries', 'set_temperature_to', 'show_home_state', 'turn_off_device', 'turn_on_device', 'turn_on_device_false', 'unlock_door_lock', 'thanks_done_task']
+                - the list of entities: ['device_number', 'all_devices_selected', 'temperature', 'room_number', 'room_name', 'light_color', 'device_type']
+                - the list of actions: ['action_change_light_color', 'action_turn_off_device', 'action_turn_on_device', 'utter_goodbye', 'utter_turned_on_light', 'utter_which_device', 'utter_fallback_to_llm', 'action_fallback_to_llm', 'action_number_of_people_in_home', 'action_electricity_usage', 'action_show_home_state', 'utter_out_of_scope_electricity_usage_queries', 'utter_which_room_to_change_light_color', 'utter_please_mention_room_name_and_light_color', 'action_set_temperature_value', 'action_increase_temperature_value', 'action_decrease_temperature_value', 'utter_we_do_not_allow_these', 'utter_turned_on_device_with_room_name', 'utter_turned_off_device_with_room_name', 'utter_device_not_found', 'utter_cannot_turn_on_or_off_device', 'utter_no_devices_found_with_given_specs', 'utter_turned_on_all_devices_with_room_name', 'utter_turned_off_all_devices_with_room_name', 'utter_turned_off_all_devices', 'utter_turned_on_all_devices', 'utter_changed_color_all_lights', 'utter_not_allowed_color', 'utter_changed_color_all_lights_with_room_name', 'utter_can_not_change_color_of_device', 'utter_changed_color_device_with_room_name', 'utter_changed_color_device', 'utter_no_color_detected', 'utter_you_are_welcome', 'action_ask_llm_for_entities', 'action_reset_filled_slots', 'utter_cannot_change_temperature', 'utter_temperature_increased', 'utter_temperature_decreased', 'utter_temperature_set']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+House & Home

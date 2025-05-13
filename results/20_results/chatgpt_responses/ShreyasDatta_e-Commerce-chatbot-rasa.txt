@@ -1,0 +1,13 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: e-Commerce-chatbot-rasa
+                - the description: An e-Commerce ChatBot based on contextual-NLP processes, developed with Rasa Open Source, written in python
+                - the README: 
+                - the list of intents: ['affirm', 'bot_challenge', 'confirm_order', 'deny', 'discuss_product_search_types', 'discuss_products', 'discuss_purpose', 'figuring_out_user_product_choice', 'finish_and_pay_retail', 'goodbye', 'greet', 'mood_great', 'mood_unhappy', 'need_more_time_retail', 'query_product_category', 'request_product_info', 'show_my_order_status', 'stop']
+                - the list of entities: ['products', 'productCategory', 'Bath and Body', 'product', 'Home Utilities', 'Hygiene and Grooming', 'Breakfast and Spreads', 'Beverages', 'Fruits and Vegetables', 'Cleaning Essentials']
+                - the list of actions: ['action_check_existence', 'check_confirmed_order_details', 'collect_product_info', 'place_confirmed_order', 'query_product_info', 'utter_ask_continue', 'utter_ask_products_tag_form_productCategory', 'utter_ask_products_tag_form_products', 'utter_ask_to_place_order', 'utter_bot_purpose', 'utter_check_product_category', 'utter_cheer_up', 'utter_confirm_slot', 'utter_continue_with_current_slots', 'utter_default', 'utter_did_that_help', 'utter_discuss_products', 'utter_goodbye', 'utter_greet', 'utter_happy', 'utter_iamabot', 'utter_idle_response', 'utter_moving_on', 'utter_repeat_user_intent', 'utter_slot_values', 'utter_submit', 'utter_try_different_search_criteria', 'utter_welcome', 'validate_products', 'validate_products_tags_form']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Shopping

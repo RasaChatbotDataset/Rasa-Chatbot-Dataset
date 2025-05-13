@@ -1,0 +1,195 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: 2022_IBM_Code_Challenge_FormBee
+                - the description: None
+                - the README: # 2022_IBM_Code_Challenge_FormBee
+
+<h1> Problem Statement</h1>
+<p>
+    Digitization of government services directly leads to a significant increase in quantity of digital data and data entry tasks, especially considering current situations. the average layman finds it difficult to manage and fill the various forms and surveys of the government. even tech-savvy people may find it difficult to fill a form instantaneously and may resort to googling for jargons which wastes time.
+</p>
+
+<h1>Personas of the system</h1>
+
+<p>
+    Consider a normal citizen , they can interact with this chatbot to fill government forms they don't have to go anywhere else.
+</p>
+
+<h5> Usecases</h5>
+<ol>   
+    <li> Form filling </li>
+    <li> printing and exporting filled forms</li>
+    <li>viewing and managing forms</li>  
+   </ol>
+  
+
+<h1>Architecture</h1>
+<img src="architecture.png"></img>
+
+<h1>Technical stack</h1>
+<h5>Frontend</h5>
+<ol>
+    <li>Bootstrap : Landing page creation</li>
+    <li>React Webapp : Chatroom creation</li>
+    </ol>
+    
+<h5>Middlewarre</h5>
+<ol>
+    <li>Rasa : For chatbot creation </li>
+</ol>
+
+<h5>Backend </h5>
+<ol>
+    <li> Nodejs with Firebase as storage</li>
+    </ol>
+  
+
+<h1>Working Demo Video</h1>
+
+[![Working Demo Video](https://img.youtube.com/vi/1GOBrDdNPEQ/0.jpg)](https://www.youtube.com/watch?v=1GOBrDdNPEQ)
+
+## ![Presentation Slide](https://github.com/ibm-gtsp-team-15/2022_IBM_Code_Challenge_FormBee/blob/ace8bf42d13fdb036ad27935f07e45f20278fbb7/FormBee%20Slides.pptx)
+
+<h2>Explanation videos</h2>
+> Frontend and ActionSelectTemplate
+
+[![Frontend and ActionSelectTemplate](https://img.youtube.com/vi/-jTI6Py_hKo/0.jpg)](https://www.youtube.com/watch?v=-jTI6Py_hKo)
+
+> ActionFillFormSlot and Search function
+
+[![ActionFillFormSlot and Search function](https://img.youtube.com/vi/cwBFQc8Qz78/0.jpg)](https://www.youtube.com/watch?v=cwBFQc8Qz78)
+
+> Backend
+
+[![Backend](https://img.youtube.com/vi/XjhjORGLTfQ/0.jpg)](https://www.youtube.com/watch?v=XjhjORGLTfQ)
+
+<h1>List of Contributors</h1>
+<ol>
+  <li>Adharsh S</li>
+  <li>Allen B Abraham</li>
+  <li>Dennis Thomas</li>
+  <li>Jeril Monzi Jacob</li>
+</ol>
+
+<h1>License &amp acknowledgement</h1>
+
+<P>
+    <b>GNU General Public License v3.0</b>
+    </P>
+<p>
+    We would like to thank our mentors <b>Manoj Jain</b> and <b>Ayush Utkarsh</b> for helping us throughout this hackathon.They have helped us to clear our doubts reagrding the stacks in which we worked.Once again thanking their guidance in this hackathon.
+    </p>
+    
+# React-based Chatroom Component for Rasa Stack
+
+[![CircleCI](https://circleci.com/gh/scalableminds/chatroom.svg?style=svg)](https://circleci.com/gh/scalableminds/chatroom)
+
+<a href="https://npm-scalableminds.s3.eu-central-1.amazonaws.com/@scalableminds/chatroom@master/demo.html"><img src="https://npm-scalableminds.s3.amazonaws.com/%40scalableminds/chatroom/demo.gif" alt="Demo" width="409" height="645" /></a>
+
+**Note: This project is not maintained anymore. If you like to become a community maintainer get in touch with @hotzenklotz. It may still work for your project or serve as a point of reference for others.**
+
+[Watch a demo of our Chatroom in action](https://npm-scalableminds.s3.eu-central-1.amazonaws.com/@scalableminds/chatroom@master/demo.html)
+
+## Features
+
+* React-based component
+* Supports Text with Markdown formatting, Images, and Buttons
+* Customizable with SASS variables
+* Generates a unique session id and keeps it in `sessionStorage`
+* Queues consecutive bot messages for better readability
+* Speech input (only in Chrome for now)
+* Text to Speech (only in Chrome for now)
+* Demo mode included (ideal for scripted screencasts)
+* Hosted on S3 for easy use
+* Simple setup. Works with Rasa's [REST channel](https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/#rest-channels)
+
+## Usage
+1. Embed the `chatroom.js` in the HTML of your website and configure it to connect to your Rasa bot. Either use the S3 hosted version or build it yourself. (see below)
+
+```html
+<head>
+  <link rel="stylesheet" href="https://npm-scalableminds.s3.eu-central-1.amazonaws.com/@scalableminds/chatroom@master/dist/Chatroom.css" />
+</head>
+<body>
+  <div class="chat-container"></div>
+
+  <script src="https://npm-scalableminds.s3.eu-central-1.amazonaws.com/@scalableminds/chatroom@master/dist/Chatroom.js"/></script>
+  <script type="text/javascript">
+    var chatroom = new window.Chatroom({
+      host: "http://localhost:5005",
+      title: "Chat with Mike",
+      container: document.querySelector(".chat-container"),
+      welcomeMessage: "Hi, I am Mike. How may I help you?",
+      speechRecognition: "en-US",
+      voiceLang: "en-US"
+    });
+    chatroom.openChat();
+  </script>
+</body>
+```
+
+
+2. In your Rasa bot setup, make sure to include the Rasa [REST channel](https://rasa.com/docs/rasa/user-guide/connectors/your-own-website/#rest-channels) in your `credentials.yml` file:
+```
+rest:
+  # pass
+```
+
+Restart your Rasa server. Depending on your setup you might need to add CORS headers, e.g. `--cors "*"`.
+
+```
+rasa run --credentials ./credentials.yml  --enable-api --auth-token XYZ123 --model ./models --endpoints ./endpoints.yml --cors "*"
+```
+
+Note, the version of the Chatroom's Javascript file is encoded in the URL. `chatroom@master` is always the latest version from the GitHub master branch. Use e.g. `chatroom@0.10.0` to load a specific release. [All Releases can be found here.](https://github.com/scalableminds/chatroom/releases)
+
+
+| Chatroom Version  | Compatible Rasa Core Version |
+|-------------------|------------------------------|
+| 0.10.x            | 1.0 - 2.x                    |
+| 0.9.x (Deprecated)| 0.11.4+, 0.13.7              |
+| 0.8.x (Deprecated)| 0.11.4+                      |
+| 0.7.8 (Deprecated)| 0.10.4+                      |
+
+Note, versions prior to `0.10.x` used a custom Python channel to connect the chatroom frontend with a Rasa bot backend. Upgrading, from version `0.9.x` or below will require you to modify the `credentials.yml` and include the Rasa REST channel. (see installation instructions above)
+
+
+## Development
+
+### Install dependencies
+
+```
+yarn install
+```
+
+### Continuously build the Chatroom component
+
+```
+yarn watch
+yarn serve
+```
+
+Open `http://localhost:8080/demo.html` in your browser.
+
+## Build
+
+```
+yarn build
+```
+
+Distributable files will be created in folder `dist`.
+
+## License
+
+AGPL v3
+
+Made by [scalable minds](https://scalableminds.com)
+
+                - the list of intents: ['greet', 'goodbye', 'affirm', 'deny', 'avail_service', 'bot_challenge', 'select_template', 'answer_form', 'mention_email', 'form_query']
+                - the list of entities: ['form_answer', 'selected_template', 'form_templates', 'firestore_doc_id', 'user_email', 'currently_filling_form', 'email']
+                - the list of actions: ['action_fetch_inventory', 'action_select_template', 'action_fill_form_slot', 'action_search_field']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Business

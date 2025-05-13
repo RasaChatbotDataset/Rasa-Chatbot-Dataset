@@ -1,0 +1,92 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot import sqlite3
+
+conn=sqlite3.connect('blood_bank.db')
+
+
+
+class Blood_Bank:
+    def create_table(self):
+        curr = conn.cursor()
+        curr.execute("""
+        CREATE TABLE IF NOT EXISTS blood_bank (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name text not null,
+                mobile text not null,
+                place text not null
+                )
+        """)
+    def insert_details(self,name,mobile,place):
+        with conn:
+            curr = conn.cursor()
+            # curr.execute("INSERT INTO ambulance_service VALUES (:name,:mobile,:place)",{'name': name, 'mobile': mobile,'place':place})
+            curr.execute('INSERT INTO blood_bank(name, mobile,place) VALUES (?,?,?)',(name,mobile,place))
+            curr.close()
+            return f"user created sucessfully with id number {self.fetch()[-1][0]} note this detail for further updation and deletion"
+    def remove_all_details(self):
+        with conn:
+            curr = conn.cursor()
+            curr.execute('''
+            DELETE FROM blood_bank
+            ''')
+            curr.close()
+
+    def update_details(emp,name,mobile,place,id):
+        try:
+            with conn:
+                curr = conn.cursor()
+                curr.execute("""UPDATE blood_bank SET name = :name,mobile = :mobile,place = :place
+                            WHERE id = :id""",
+                          {'name': name, 'mobile': mobile, 'place': place,'id':id})
+                curr.close()
+                return "Updated Successfully"
+        except:
+            return "No such id available in database"
+    def fetch(self):
+        with conn:
+            curr = conn.cursor()
+            curr.execute("SELECT * FROM blood_bank")
+            items=curr.fetchall()
+            curr.close()
+            return items
+    def remove_user(self,id):
+        with conn:
+            curr = conn.cursor()
+            curr.execute('''
+            DELETE FROM blood_bank WHERE id = :id
+            ''',{'id':id})
+# user=Blood_Bank()
+# user.create_table()
+# print(user.insert_details('arjun','+919074774118','Kollam'))
+# print(user.insert_details('arj','+919074774118','cgnr'))
+# print(user.insert_details('arj','+919074774118','cgnr'))
+# print(user.fetch())
+# user.update_details('arjun','+919074774118','nepal',3)
+# user.remove_user(2)
+# print(user.insert_details('arj','+919074774118','cgnr'))
+# print(user.fetch()) 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    sqlite3
+sqlite3
+sqlite3
+sqlite3
+sqlite3
+sqlite3
+sqlite3
+sqlite3
+sqlite3
+sqlite3
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+sqlite3
+
+Purpose of external services:
+sqlite3: SQLite is a C-language library that provides a lightweight, disk-based database. It doesn't require a separate server process and allows access to the database using a nonstandard variant of the SQL query language. In this action file, it is used to store, update, and retrieve blood bank details.

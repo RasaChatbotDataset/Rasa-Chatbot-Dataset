@@ -1,0 +1,45 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: AI-Asistant-Backend-with-Rasa-GPT
+                - the description: This arhitecture provide a endpoints between backend server and Rasa chatbot asistant. Rasa is supported and trained model with nlp procedure also you can use spcay and other utilities for conversation dialog flow. Additionally we add ChatGPT api if you were desire to communicate AI
+                - the README: ### SHOPYVERSE - RASA AI-based chatbot - GPT bot 
+
+This Program include Backend, Rasa chatbot and Gpt bot for both Telegram user group and Meatverse integration.
+For the first step and runnig locally documentation
+
+## Steps for local run
+
+you can define openai api key in .env file
+
+cd  .../{project-folder}
+
+python3 -m venv venv
+
+source venv/bin/activate   =>for linux and wsl2
+
+./venv/bin/activate.ps     =>for windows
+
+pip install -r requirements.txt    =>for first run
+
+python3 -m spacy download en_core_web_md   =>for first run
+
+cd .../backend-shopyverse 
+
+python app.py
+
+cd .../rasa_chatbot 
+
+rasa run actions
+
+rasa run --enable-api
+
+
+
+                - the list of intents: ['buy_tshirt', 'greet', 'inform', 'goodbye', 'affirm', 'stop', 'deny', 'mood_great', 'mood_unhappy', 'bot_challenge', 'request_tshirt_form', 'address_search', 'info_shopyverse', 'gpt_info']
+                - the list of entities: ['address', 'tshirt_size', 'tshirt_color', 'address_loc']
+                - the list of actions: ['utter_ask_continue', 'utter_goodbye', 'utter_greet', 'utter_tshirt_slots', 'utter_submit', 'validate_simple_tshirt_form', 'choose_address']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Shopping

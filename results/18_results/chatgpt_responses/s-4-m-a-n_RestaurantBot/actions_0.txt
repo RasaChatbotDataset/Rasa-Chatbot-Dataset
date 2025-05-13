@@ -1,0 +1,130 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List
+
+from rasa_sdk import Action, Tracker, FormValidationAction
+from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
+from rasa_sdk.types import DomainDict
+import requests
+import json
+import os
+import logging
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level="DEBUG")
+
+
+base_URL = os.getenv("base_URL")
+
+class ActionShowOrderStatus(Action):
+    def name(self) -> Text:
+        return "action_show_order_status"
+    
+    @staticmethod
+    def fetch_order_status(token):
+        endpoint_API = f'{base_URL}/get_order_status'
+        response = requests.get(endpoint_API, params={'token': token})
+        logger.debug("token: {}".format(token))
+        logger.debug(f" response: {response}")
+        return response
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        response = self.fetch_order_status(tracker.slots['token'])
+        logger.info(response)
+
+        buttons = [{"title": "order food", "payload":"/browse_menu"},
+                   {"title":"check status", "payload":"/ask_order_status"}]
+    
+        if response.status_code == 404:
+            message = "sorry, no data found. It seems you have entered invalid token: {}".format(tracker.slots['token'])
+        elif response.status_code == 200:
+            message = f"Order status: {response.text}"
+        else:
+            message = "server error 💀"
+        
+        dispatcher.utter_message(text=message, buttons=buttons)
+
+        prev_token = tracker.get_slot("token")
+
+        return [SlotSet("token", None), SlotSet("prev_token", prev_token)]
+        
+
+class ActionAskToken(Action):
+    def name(self) -> Text:
+        return "action_ask_token"
+    
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        prev_token = tracker.get_slot("prev_token")
+        buttons = None
+        if prev_token:
+            buttons = [{"title": "Prev token " + prev_token, "payload": prev_token}]
+            
+        dispatcher.utter_message(text="enter the token",
+                                 buttons= buttons)
+   
+        return []
+
+class ActionCancelOrder(Action):
+    def name(self) -> Text:
+        return "action_cancel_order"
+    
+    @staticmethod
+    def cancel_order(url, token):
+        response = requests.post(url, data={"order_token": token, "new_status": "cancelled"})
+        return response
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        endpoint_API = f"{base_URL}/update_order_status"
+        token = tracker.get_slot("token")
+        response = self.cancel_order(endpoint_API, token)
+
+        if response.status_code == 200:
+            dispatcher.utter_message(text="successfully cancelled the order")
+
+        elif response.status_code == 404:
+            dispatcher.utter_message(text="Invalid token")
+        
+        elif response.status_code == 405:
+            dispatcher.utter_message(text="cannot cancel non-pending order")
+        
+        else:
+            dispatcher.utter_message(text="sorry! unable to cancel the order, server error")
+        
+        
+        return [SlotSet("token", None), SlotSet("prev_token", None)]
+         
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    External services: requests, logging
+External service: API service
+External services: requests, logging
+External services: requests, logging
+External services: requests, base_URL
+External service: API service
+External services: requests, logging
+External service: API service
+External service: API service
+External services: requests, logging
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+API service
+
+Purpose of external services:
+- API service: The chatbot interacts with an external API service to fetch and update order statuses. This service is used to get the current status of an order and to cancel an order by sending requests to specific endpoints.

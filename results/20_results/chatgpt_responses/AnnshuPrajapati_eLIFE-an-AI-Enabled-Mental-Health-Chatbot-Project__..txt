@@ -1,0 +1,15 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: eLIFE-an-AI-Enabled-Mental-Health-Chatbot-Project
+                - the description: Designed and developed the chatbot, an advanced mental health chatbot utilizing RASA Version 3.1 architecture integrating AI, ML, and NLP for personalized mental health support.
+                - the README: # -eLIFE-bot-The-AI-enabled-Chatbot-for-Mental-health
+We have designed eLIFE bot which is an innovative mental health chatbot that combine technology and customized features to provide individuals with personalized and efficient mental  health care. With unique capabilities such as gratitude logging, empathetic responses, sentiment  analysis, and a comprehensive database of qualified psychiatrists.
+
+                - the list of intents: ['abilities', 'affirm', 'afternoon', 'antisoc', 'anx_info', 'anxiety_treat', 'anxious', 'bot_challenge', 'dass21_info', 'default', 'deny', 'depr_info', 'depr_sym', 'depr_treat', 'depressed', 'developer', 'done', 'emotion', 'evening', 'family_history', 'faq-1', 'faq-11', 'faq-12', 'faq-13', 'faq-14', 'faq-15', 'faq-18', 'faq-19', 'faq-20', 'faq-21', 'faq-5', 'faq-6', 'faq-7', 'faq-9', 'goodbye', 'greet', 'hate-you', 'inform', 'log_gratitude', 'meditation', 'model_efficieny', 'mood_great', 'mood_unhappy', 'morning', 'name', 'night', 'no_friends', 'no_response', 'not_talking', 'play', 'privacy', 'psy data', 'repeat', 'scared', 'sleep', 'something-else', 'str_info', 'stressed', 'stupid', 'suicide', 'support', 'tell_joke', 'thanks', 'understanding', 'unique_qualities', 'user-advice', 'worried', 'worthless', 'wrong', 'dassform', 'sugg_treat', 'informal', 'out_of_scope', 'wellness']
+                - the list of entities: ['exercise', 'stress', 'sleep', 'goal', 'choice', 'confirm_exercise', 'goals']
+                - the list of actions: ['action_show_image', 'utter_sad', 'action_disclaimer', 'utter_depressed', 'utter_greet', 'action_log_gratitude', 'action_save_conversation_history', 'action_tell_joke', 'action_emotion', 'action_play_swg', 'action_suggest_psychiatrist', 'utter_ask_exercise', 'utter_ask_sleep', 'utter_slots_values', 'action_submit_results', 'validate_health_form', 'utter_wellness']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Health & Fitness

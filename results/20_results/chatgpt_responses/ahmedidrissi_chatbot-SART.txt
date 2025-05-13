@@ -1,0 +1,44 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: chatbot-SART
+                - the description: Implementation of a chatbot for a stock management application
+                - the README: # Chatbot SART
+As part of the end-of-year project (PFA) as engineering students at ENSIAS, we chose to work on the implementation of a chatbot for a stock management application for a clothing store . Our project was to develop a chatbot, named "Chatbot SART - Style Assistant and Retail Technology", which was integrated into the application. This chatbot uses artificial intelligence, speech recognition, speech synthesis and natural language processing techniques to intuitively interact with users.
+The main objective of this chatbot is to assist users with their stock management needs, by providing information on available products, stock levels, orders, etc.
+
+<img src="chatbot-sart.png">
+
+## Built with
+* RASA
+* Flask
+* Bootstrap
+
+## To run the bot
+
+* Create a new virtual environment by choosing a Python interpreter and making a .\\venv directory to hold it:
+
+    `C:\> python3 -m venv ./venv`
+* Activate the virtual environment:
+
+    `C:\> .\venv\Scripts\activate`
+
+* First make sure your pip version is up to date:
+
+    `pip3 install -U pip`
+
+* To install Requirements:
+
+    `pip3 install -r requirements.txt`
+
+* Finally run the bot using bash terminal:
+
+    `$ ./run_bot.sh`
+
+                - the list of intents: ['affirm', 'bot_age', 'bot_challenge', 'buy_product', 'cancel_order', 'deny', 'goodbye', 'greet', 'greet_with_name', 'help', 'inform_product_brand', 'inform_product_category', 'inform_product_color', 'inform_product_name', 'inform_product_quantity', 'inform_product_size', 'show_report', 'stop', 'thanks']
+                - the list of entities: ['product_quantity', 'user_name', 'product_color', 'product_material', 'product_size', 'product_brand', 'product_name', 'product_category']
+                - the list of actions: ['utter_bot_challenge', 'utter_ask_continue', 'utter_goodbye', 'utter_greet_with_name', 'action_reset_product_form', 'action_submit_product_form', 'utter_help', 'utter_greet', 'validate_product_form']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Business

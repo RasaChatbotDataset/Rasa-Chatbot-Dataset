@@ -1,0 +1,75 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from typing import Any, Text, Dict, List, Optional
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from db.query import get_code_smell_by_id, get_code_smell_by_name
+import logging
+
+
+class ActionProvideCodeSmellDetails(Action):
+
+    def name(self) -> Text:
+        return "action_provide_code_smell_details"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        # Get entities values
+        code_smell_id = next(tracker.get_latest_entity_values("code_smell_id"), None)
+        code_smell_name = next(tracker.get_latest_entity_values("code_smell_name"), None)
+        result = None
+
+        try:
+            if code_smell_id:
+                # Query by ID
+                result = get_code_smell_by_id(code_smell_id, ["description", "problems", "solution"])
+            elif code_smell_name:
+                # Query by Name
+                result = get_code_smell_by_name(code_smell_name, ["description", "problems", "solution"])
+            else:
+                dispatcher.utter_message(text="I'm sorry, I didn't understand what code smell you are referring to...")
+                return []
+        except Exception as e:
+            logging.error(f"Failed to fetch code smell details: {e}")
+            dispatcher.utter_message(text="Sorry, something went wrong while fetching the code smell details...")
+            return []
+
+        if result:
+            message = (
+                f"{result['description']}\n\n"
+                f"{result['problems']}\n\n"
+                f"{result['solution']}"
+            )
+            dispatcher.utter_message(text=message)
+        else:
+            dispatcher.utter_message(text="Sorry, I couldn't find any details about this code smell.")
+
+        return []
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    Databases/Services: db.query
+Databases/Services: db.query
+Databases and services: get_code_smell_by_id, get_code_smell_by_name,,###
+Databases/Services: db.query
+Databases/Services: db.query
+get_code_smell_by_id, get_code_smell_by_name
+get_code_smell_by_id, get_code_smell_by_name
+Databases and services: get_code_smell_by_id, get_code_smell_by_name,,###
+Databases/Services: db.query
+get_code_smell_by_id, get_code_smell_by_name
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+get_code_smell_by_id, get_code_smell_by_name
+
+Purpose of external services:
+get_code_smell_by_id: This service is used to fetch details of a code smell by its unique identifier.
+get_code_smell_by_name: This service is used to fetch details of a code smell by its name.

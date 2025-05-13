@@ -1,0 +1,193 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: Trollbot
+                - the description: Ohtuprojekti kesä 2021
+                - the README: # Software development project 2021
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A project by the students of the Computer Science department of the University of Helsinki.
+
+### [DEMO](https://ohtup-staging.cs.helsinki.fi/trollbot)
+
+## Description
+
+An implementation of two chatbots for the purposes of a research that studies trolling on the internet.
+
+## Implementation
+
+React single page web application with a Node.js backend.
+
+## Installation
+
+For the application to run correctly you need to install on your machine:
+
+- nvm (https://github.com/nvm-sh/nvm)
+
+- Node.js libary
+
+- Rasa 
+
+- Python
+
+### 1. Install Node and dependencies
+
+Read the README at the backend folder.
+
+### 2. Train Rasa models
+
+After installing rasa locally, create folders named `models_nice` and `models_troll` inside `/backend/rasa/`, because these folders are currently gitignored. These will be used to store models for the two bots.
+
+Train rasa both models:
+
+- Nicebot: `rasa train --data data_nice --out models_nice`
+
+- Trollbot: `rasa train --data data_troll --out models_troll`
+
+(The data for Nicebot comes from directory `data_nice` and the model is saved into directory `models_nice`.)
+
+The nlu file is not shared between Nicebot and Trollbot. If you modify nice_nlu.yml, apply the same change to troll_nlu.yml as well.
+
+### 3. Run Rasa actions and models
+
+Start the local MongoDB database (instructions in backend README).
+
+In backend folder: run backend with `npm start` (required for genre search).
+
+In backend/rasa folder:
+
+- Run `rasa run actions` for Rasa action server (required for custom actions).
+
+- Run `rasa run -m models_nice --enable-api --cors "*"` for Nicebot model server.
+
+- Run `rasa run -m models_troll --enable-api --cors "*" -p 5006` for Trollbot model server (using different port with the `-p 5006` argument).
+
+(The `-m` argument chooses the latest model in the specified directory.)
+
+### 4. Run the application
+
+After installing Node and Rasa everything should be ready for running the application. Navigate `/backend/` folder where you can run the following commands:
+
+- Run `npm run build` to build a production build of the frontend React application for the backend.
+
+- Run `npm start` to start the application using the created build.
+
+You should now be able to visit the application at (http://localhost:3001).
+
+## Documentation
+
+[Opening sequence](https://github.com/sumuh/Trollbot/tree/main/documentation/trollbot-openingSequnce.png)
+## Node.js backend with react static frontend working as a Single-page-app
+
+To run this application locally you will need to have [Node.js](https://nodejs.org/en/) libary installed on your computer.
+
+### Install
+Run script `npm install` to install needed Node.js packages.
+
+### Build
+Run script `npm run build` to create a production build of the frontend.
+
+### Starting the application
+After Installing and Building the application can now be run locally with the command `npm start`.
+
+In rasa folder:
+
+Run Rasa server with `rasa run --enable-api --cors "*" --debug`.
+Run Rasa Action server with `rasa run actions`
+
+Visit [http://localhost:3001](http://localhost:3001) to view app in the browser.
+
+### Clean
+Run script `npm run clean` to remove the generated production build version of the frontend from the folder.
+
+### MongoDB
+Good instructions for installing and running mongo can be found [here](https://docs.mongodb.com/manual/administration/install-community/)
+
+After setting up the database, run Rasa with the following command: `rasa run --enable-api --endpoints endpoints.yml --cors "*"`
+
+Convert the conversation into a CSV log by running mongoService.js, e.g. `node services/eventLogger/logWriter.js`. The file is created in the logs directory, located in the project root.
+
+To get a pretty Excel file, follow the instructions provided [here](https://support.affinity.co/hc/en-us/articles/360044453711-How-to-open-CSV-files-with-the-correct-delimiter-separator)
+# Getting Started with Trollbot frontend
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm install`
+
+Will install the required Node packages for running the app.
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open in default [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+                - the list of intents: ['opening', 'closing', 'suggest_artist', 'likes_artist', 'dislikes_artist', 'tell_genre', 'task_introduction', 'praising_claim', 'dismissing_claim', 'request_for_suggestion_from_bot', 'suggestion_to_make_decision', 'suggestion_for_decision', 'agreement', 'disagreement', 'confusion', 'thanks', 'keysmash', 'insult_person', 'praise_person', 'offer_posting', 'post_decision', 'get_genre', 'restart_conversation', 'EXTERNAL_positive_evaluation_timer']
+                - the list of entities: ['decision_phase', 'artist', 'last_message_sender', 'genre', 'task_activated', 'final_decision', 'active_user', 'opinion', 'artists', 'same_artist_liked', 'users', 'bot_type', 'name', 'told_genre']
+                - the list of actions: ['action_deflect_opinion_question', 'action_end_conversation', 'action_greet_user_by_name', 'action_greet_users', 'action_handle_claim_nice', 'action_handle_claim_troll', 'action_post_decision', 'action_set_decision_phase', 'action_set_genre_slot', 'action_set_opinion_slot_as_bad', 'action_set_opinion_slot_as_good', 'action_set_task_slot', 'action_user_reacted', 'action_trigger_positive_evaluation', 'action_delayed_positive_evaluation', 'action_set_artist_for_user', 'action_check_users_active_user_slot', 'action_dismiss_artist', 'action_check_if_same_liked_artist']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Social

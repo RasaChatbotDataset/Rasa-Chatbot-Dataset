@@ -1,0 +1,98 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot 
+import pymongo
+import pandas as pd
+# retrieve all documents from the collection
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["rasa"]
+collection = db["chap2"]
+data = list(collection.find())
+
+# create a Pandas DataFrame from the list of dictionaries
+Xdf = pd.DataFrame(data)
+
+Xdf = Xdf.drop('_id', axis=1)
+paramlist = Xdf.values.tolist()
+solutionslist=[]
+next=[]
+for param in paramlist:
+  param[1]=param[1].replace(' ', '')
+  param[0]=param[0].replace(' ', '')
+  param[4]=param[4].replace(' ', '')
+  if param[4]=='notready' and param[2]=='none':
+    next=param[1].split(",")
+  if param[0] in next:
+    if param[2]== 'none' and param[4]!= 'notready':
+       solutionslist.append(param[4])
+    if param[4]=='notready' and param[2]!='none':
+       i=0
+       paramAtt=0
+       paramcritic=0
+       parambad=0
+       paramSucc=0
+       for p in param[2]:
+         if(p.find("Att"))!=-1:
+           print(param[0])
+           paramAtt+=param[3][i]
+         if(p.find("Critical"))!=-1:
+           print(param[0])
+           paramcritic+=param[3][i]
+         if(p.find("Bad"))!=-1:
+           print(param[0])
+           parambad+=param[3][i]
+         if(p.find("Succ"))!=-1:
+           print(param[0])
+           paramSucc+=param[3][i]
+         i+=1
+         
+       if paramAtt-paramSucc>paramSucc and paramAtt!=0 and paramSucc!=0:
+         next= param[1].split(",")
+       if parambad<paramcritic and parambad!=0 and paramcritic!=0:
+         if(param[1].find(","))!=-1:
+          next= param[1]
+         else:
+          next= param[1].split(",")
+    #    else:
+    #      print('none2')
+# print(next)
+print(solutionslist)
+# new_row1 = {'category': 'MCPC', 'next': 'MCPCparams', 'params': 'none', 'param_value': 0, 'solution': 'not ready'}
+# df = pd.DataFrame([new_row1])
+# Xdf.loc[len(Xdf)] = new_row1
+# new_row1 = {'category': 'MCPCparams', 'next': 'MCPCSolutions', 'params': ['pmCriticalBorderEvalReport','pmBadCovSearchEvalReport'], 'param_value': [], 'solution': 'not ready'}
+# df.loc[len(df)] = new_row1
+# Xdf.loc[len(Xdf)] = new_row1
+# new_row1 = {'category': 'MCPCSolutions', 'next': 'none', 'params': 'none', 'param_value': 0, 'solution': 'Tune parameters according to number of carriers in LTE'}
+# Xdf.loc[len(Xdf)] = new_row1
+# df.loc[len(df)] = new_row1
+# print(df)
+# # convert the DataFrame to a dictionary
+# data = df.to_dict(orient='records')
+# # insert the dictionary into the MongoDB collection
+# collection.insert_many(data)
+# Remove the 'B' column 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    MongoDB
+MongoDB
+MongoDB
+pymongo, MongoDB
+pymongo, MongoDB
+MongoDB
+MongoDB, Pandas
+MongoDB
+MongoDB
+MongoDB
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+MongoDB
+
+Purpose of external services:
+MongoDB: MongoDB is used as the database to store and retrieve documents for the chatbot.

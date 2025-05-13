@@ -1,0 +1,62 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: OpenWHO-chatbot
+                - the description: None
+                - the README: # openWHO Chatbot v2
+
+## Training of the Model 
+
+```sh
+    cd rasa/openWHO_{LANGUAGE}/
+    rasa train
+```
+
+## Usage
+
+### Start the Rasa Server
+
+```sh
+    rasa run --enable-api
+```
+
+### Start the Action Server
+
+```sh
+    cd actions/
+    rasa run actions
+```
+
+## Docker
+
+In the outer project structure run:
+
+```sh
+    docker-compose up --build
+```
+
+
+### Docker Compose (en)
+
+```sh
+    docker-compose -f docker-compose_en.yml -p openWHO_en up --build
+```
+
+### Docker Compose (es)
+
+```sh
+    docker-compose -f docker-compose_es.yml -p openWHO_es up --build
+```
+
+### Docker Compose (zh)
+
+```sh
+    docker-compose -f docker-compose_zh.yml -p openWHO_zh up --build
+```
+                - the list of intents: ['deny', 'affirm', 'faq', 'get_course', 'get_achievements', 'get_courses', 'help', 'out_of_scope', 'bot_challenge', 'human_handoff', 'insults', 'inform']
+                - the list of entities: ['current_achievements', 'current_course_title', 'Course', 'current_course_achieved', 'certificate_type', 'courses_available', 'country', 'current_course', 'course-set', 'all_courses']
+                - the list of actions: ['action_get_courses', 'action_get_courses_buttons', 'action_get_achievements', 'action_course_set', 'action_set_current_course', 'action_download_certificate']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Education

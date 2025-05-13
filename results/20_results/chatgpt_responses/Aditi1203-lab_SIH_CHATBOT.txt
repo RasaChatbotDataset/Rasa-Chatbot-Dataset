@@ -1,0 +1,73 @@
+REQUEST
+Your task is to extract the topic/category of a Rasa chatbot. Given:
+                - the repository name: SIH_CHATBOT
+                - the description: AI powered chatbot to answer FAQs by users of AICTE website (implemented in Smart India Hackathon)
+                - the README: # AICTE Chatbot
+
+ <ul style="list-style-type:square;">
+  <li>AI based Chatbot to generate answers to queries based on FAQs
+using the RASA 3.1 and BERT model.</li>
+  <li>BERT Model helps to classify the questions relevancy with an
+accuracy of 70% .</li>
+  <li>Relevance question dataset is automatically updated by the questions
+asked by the user, and is being stored in MYSQL database.</li>
+  <li>Voice chat-feature is also provided which enables users to continue their conversation verbally to avoid thier physicall efforts.</li>
+</ul> 
+
+## Installation
+
+Python and Rasa needs to be installed
+
+```bash
+sudo apt-get install python3.6
+```
+
+```bash
+python -m pip install --upgrade pip rasa
+```
+
+## Usage
+
+Go to the actions folder and run
+
+```bash
+rasa run actions.py
+```
+```bash
+rasa run --enable-api --cors="*"
+```
+
+Then go to the browser and enter the url **http://127.0.0.1:8000/**
+
+
+## Screenshots of portal
+
+![alt text](https://i.ibb.co/vLWwVWh/Screenshot-447.png)
+
+![alt text](https://i.ibb.co/jMTGBb0/Screenshot-448.png)
+
+![alt text](https://i.ibb.co/N2wTMVq/Screenshot-449.png)
+
+![alt text](https://i.ibb.co/n0rG2Mt/Screenshot-451.png)
+
+![alt text](https://i.ibb.co/zrRh1Jg/Screenshot-450.png)
+
+![alt text](https://i.ibb.co/Hp5HPWW/Screenshot-452.png)
+
+![alt text](https://i.ibb.co/gTm8pX1/Screenshot-453.png)
+
+![alt text](https://i.ibb.co/gmhPbjg/Screenshot-454.png)
+
+![alt text](https://i.ibb.co/DpkD8qZ/Screenshot-455.png)
+
+
+
+
+                - the list of intents: ['contact_us', 'affiliated_colleges', 'college_maharashtra', 'college_new_delhi', 'college_tamil_nadu', 'IIITN', 'inquire_general_scholarship_2', 'greet', 'goodbye', 'affirm', 'deny', 'general_ans_yes', 'questions_faculty_add', 'about_bot', 'pan_card', 'about_scholarship', 'inquire_general_scholarship', 'inquire_PG_scholarship', 'duration_pg_scholarship', 'eligibility_pg_scholarship', 'after_date_of_admission', 'sponsored_management_foreign_student', 'part_time_course', 'other_scholarship', 'procedure_for_PG_scholarship', 'documents_for_PG_scholarship', 'data_not_visible_on_PG_scholarship_portal', 'correct_wrong_entries_on_form', 'problem_in_accessing_portal', 'delay_in_PG_receipt', 'condition_for_payment_PG_Scholarship', 'second_time_PG_course', 'change_rate_of_Pg_scholarship', 'leaving_course_in_midway', 'mode_procedure_of_payment', 'method_of_payment_for_PG_scholarship', 'aadhar_for_PG_scholarship', 'requirement_for_payment_through_aadhar', 'check_aadhar_active_status', 'expected_date_of_payment', 'date_of_attendence', 'call_us', 'give_name', 'mobile_number', 'email_id', 'disturb']
+                - the list of entities: ['number', 'email', 'name']
+                - the list of actions: ['utter_yes_no', 'utter_starting_button', 'utter_ask_name', 'utter_ask_number', 'utter_ask_email', 'utter_remember', 'action_collect_details', 'utter_about_bot', 'action_carousels', 'utter_data_button', 'utter_part_time_button', 'utter_pan_card', 'utter_greet', 'utter_ans_yes', 'utter_faculty_add', 'utter_ans_bot', 'utter_did_that_help', 'utter_buttons', 'utter_ask_duration_button', 'utter_goodbye', 'utter_inquire_general_scholarship', 'utter_inquire_PG_scholarship', 'utter_duration_pg_scholarship', 'utter_eligibility_pg_scholarship', 'utter_after_date_of_admission', 'utter_sponsored_management_foreign_student', 'utter_part_time_course', 'utter_other_scholarship', 'utter_procedure_for_PG_scholarship', 'utter_documents_for_PG_scholarship', 'utter_data_not_visible_on_PG_scholarship_portal', 'utter_correct_wrong_entries_on_form', 'utter_problem_in_accessing_portal', 'utter_delay_in_PG_receipt', 'utter_condition_for_payment_PG_Scholarship', 'utter_second_time_PG_course', 'utter_change_rate_of_Pg_scholarship', 'utter_leaving_course_in_midway', 'utter_mode_procedure_of_payment', 'utter_method_of_payment_for_PG_scholarship', 'utter_aadhar_for_PG_scholarship', 'utter_requirement_for_payment_through_aadhar', 'utter_check_aadhar_active_status', 'utter_expected_date_of_payment', 'utter_date_of_attendence', 'utter_about_scholarship', 'utter_eli_buttons', 'utter_pro_buttons', 'utter_pro_buttons_ask', 'utter_please_rephrase', 'utter_out_of_scope', 'utter_select_state', 'action_resources_list_maha', 'action_list_delhi', 'action_list_tamil', 'utter_call_no', 'action_store_faq', 'action_live_chat']
+                Select the topic of the chatbot considering this list of topics: ['Art & Design', 'Auto & Vehicles', 'Android Wear', 'Beauty', 'Books & Reference', 'Business', 'Comics', 'Communication', 'Dating', 'Education', 'Entertainment', 'Events', 'Finance', 'Food & Drink', 'Health & Fitness', 'House & Home', 'Libraries & Demo', 'Lifestyle', 'Maps & Navigation', 'Medical', 'Music & Audio', 'News & Magazines', 'Parenting', 'Personalization', 'Photography', 'Productivity', 'Shopping', 'Social', 'Sports', 'Tools', 'Travel & Local', 'Video Players & Editors', 'Watch Face', 'Weather', 'Games']. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
+                Answer only with the topic, with no further words.
+
+RESPONSE
+Education

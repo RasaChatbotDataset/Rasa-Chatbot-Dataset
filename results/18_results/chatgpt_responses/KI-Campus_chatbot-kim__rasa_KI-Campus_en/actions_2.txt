@@ -1,0 +1,107 @@
+REQUEST
+Problem: This is a python actions.py file of Rasa chatbot from enum import Enum
+from typing import Dict, Type
+
+from actions.settings import load_config
+
+
+class ResponseEnum(Enum):
+	"""
+	HELPER Enum class for automatically setting the enum's field-names as its value
+	via the auto() initializer, see https://docs.python.org/3/library/enum.html#using-automatic-values
+	"""
+	def _generate_next_value_(name, start, count, last_values):
+		return name
+
+
+class ActionResponsesFiles(Enum):
+	"""
+	Enumeration for YAML files that contain response texts for actions
+
+	CONVENTION: for each action-implementation file (*.py)
+	<action>.py in actions/** , a (separate) response text file
+	<action>_responses.py is defined in action_responses/**
+	"""
+	actions = 'actions_responses.yml'
+	actions_recommender = 'actions_recommender_responses.yml'
+
+
+def load_response_texts(file_name: str) -> Dict[str, Dict[str, str]]:
+	"""
+	load a YAML file with response text from subdirectory action_responses/**
+
+	:param file_name: the name for the YAML file
+	:return: the data dictionary corresponding to loaded YAML file
+	"""
+	return load_config(file_name, 'action_responses')
+
+
+def get_response_texts(action: str, response_file: ActionResponsesFiles = ActionResponsesFiles.actions) -> Dict[str, str]:
+	"""
+	get the response texts for an Action-class loaded from an actions-implementation file
+
+	:param action: the action name (as returned by its `name()` method)
+	:param response_file: the actions-implementation file
+	:return: the dictionary containing the response texts for action
+	"""
+	response_texts: Dict[str, Dict[str, str]] = load_response_texts(response_file.value)
+	return response_texts[action]
+
+
+def get_response(responses: Dict[str, str], response_field: Enum):
+	"""
+	get response for (Enum) `response_field` from dictionary `responses`
+
+	:param responses: dictionary of response texts
+	:param response_field: the Enum, for which to get the response text
+	:return: the response text
+	"""
+	return responses[response_field.value]
+
+
+def assert_responses_exist(responses: Dict[str, str], response_fields: Type[Enum]):
+	"""
+	HELPER verif that a dictionary with response-texts (loaded from a YAML file) contains
+	all entries that are specified in the corresponding ResponseEnum
+
+	NOTE will throw an Exception, if
+	1) the Enum's field-names does not match its (string) value
+	2) if the enum-entry has no corresponding field in the dictionary
+
+	:param responses: the dictionary with the response texts
+	:param response_fields: the ResponseEnum that specifies the expected fields/response text entries
+
+	"""
+	for label in response_fields:
+		if label.name != label.value:
+			raise Exception('invalid response enumeration {}: enum field name and value must be the same, but are {} = {}'.format(response_fields, label.value, label.name))
+		if label.value not in responses:
+			raise Exception('missing response text for {}: the text is specified in enumeration {}, but is missing in the response definitions (YAML file)'.format(label.value, response_fields))
+
+		# print('  [{}] -> {}'.format(label, responses[label.value]))  # DEBUG
+ 
+        Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
+        
+    For this problem I received these answers, each with a list of services:
+    load_config
+load_config
+load_config
+load_config
+load_config
+load_config
+load_config
+Databases and services: YAML files
+load_config
+load_config
+    Basing on these answers and on the action file written in the problem, write one complete and correct list of the external services used in this action file. Keep in mind that some answers may have incorrect terms which are not external services or databases (like libraries that are not external services, or services that do not exist) and you have to remove them. 
+    Different answers may refer to the same service with different names, and there could be missing services that you have to add.
+    Write this list of service names on a single line, with no introduction, further explanation or numeration, so like this:
+    Service1, Service2, Service3 
+    In a new section titled "Purpose of external services" explain the purpose of each service.
+    If the file doesn't use any external service nor database, answer only with "NO" and nothing else
+
+RESPONSE
+load_config
+
+Purpose of external services:
+load_config: This service is used to load configuration data from YAML files.
