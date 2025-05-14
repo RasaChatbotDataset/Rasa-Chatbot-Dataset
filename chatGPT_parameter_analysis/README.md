@@ -1,16 +1,16 @@
 # Service extraction: ChatGPT parameters
 
-This folder contains the experimentation lead to study the best configuration of temperature and top_p parameters in a ChatGPT-4o model to identify external services used in a chatbot's backend. The experimentation considered all 24 combinations of the following values of temperature and top_p:
+This folder contains the experimentation conducted to identify the optimal configuration of the temperature and top_p parameters in the ChatGPT-4o model for extracting external services used in a chatbot's backend. The experimentation explored all 24 combinations of the following parameter values:
 
 - **temperature**: 0, 0.25, 0.5, 1, 1.5, 2
 - **top_p**: 0.01, 0.15, 0.5, 1
 
 
-The service extraction process is composed of two phases, corresponding to the prompts shown below:
-- **Extraction**: 10 repetitions of the same request to identify external services in a file.
-- **Merge**: 1 request to merge and verify all the previous answers.
+The service extraction process consists of two phases, based on the prompts shown in the figure below:
+- **Extraction**: 10 repetitions of the same request to identify external services in a given file.
+- **Merge**: a single request to merge and verify the result of the 10 previous answers.
 
-In the experimentation, for each configuration of parameters, we performed the extraction phase and then repeated the merge phase 5 times. 
+To perform a fair comparison, for each parameter configuration we executed the extraction phase followed by 5 repetitions of the merge phase. 
 
 ## Chatbots
 We studied the procedure over the following 11 chatbots:
@@ -30,7 +30,7 @@ We studied the procedure over the following 11 chatbots:
 | 11 | [THD Bot](https://github.com/THD-AI-2023/AIN-B-3-Assistant-Systems) | 1 | Local JSON |
 
 ## Evaluation metrics
-To evaluate the results and compare different parameter configurations we computed precision, recall and f-score of each configuration based on the following definitions:
+To evaluate the results and compare parameter configurations we computed precision, recall and f-score of each configuration using the following definitions:
 
 - **True Positive (TP)**: a service used in the file and identified by the procedure.
 - **False Positive (FP)** a service not used in the file but identified by the procedure.
@@ -52,15 +52,15 @@ $$
 F-score = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
 $$
 
-> Since with chatbots with zero services the procedure of 10 requests always identified zero services with each configuration, these chatbots were excluded from the merge phase and the final parameter comparison.
+> Chatbots with zero external services consistently resulted in zero detections across all configurations during the extraction phase. Therefore, they were excluded from the merge phase and the final evaluation.
 
 ## Folder Structure
 
-There is a folder for each chatbot with the following content:
+Each chatbot has a dedicated folder with the following contents:
 - **actions.py**: the action backend file used in the experimentation.
 - **10_extraction_requests.csv**: the responses of the 10 extraction requests.
-- **5_merge_requests.xlsx**: the responses of the 5 merge requests and evaluation metrics, computed for each repetition and as average.
+- **5_merge_requests.xlsx**: the responses of the 5 merge requests, along with evaluation metrics, computed for each repetition and as average.
 
-The overall comparison between the average precision, recall and f-score of each parameter configuration is presented in file **evaluation_metrics.xlsx**
+The overall comparison of average precision, recall and f-score for all parameter configurations is available in **evaluation_metrics.xlsx**
 
-> Note that {temperature: 1.5, top_p: 1} and {temperature: 2, top_p: 1} were excluded from the merge process and final evaluation since the responses received are random sequences of characters. 
+> Note that configurations with {temperature: 1.5, top_p: 1} and {temperature: 2, top_p: 1} were excluded from the merge phase and final evaluation due to responses consisting of random, meaningless character sequences. 
