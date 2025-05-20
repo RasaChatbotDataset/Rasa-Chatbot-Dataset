@@ -14,9 +14,10 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 MD_STATISTICS_FILE = RESULTS_FOLDER + 'md_statistics.txt'
 
 
-
+# Remove domain copies
 def clean_same_domain(domain_files):
 
+    # Open zip file
     zip_path = ZIP_FOLDER + '/' + domain_files[0]['full-name'].replace('/', '_') + '.zip'
     try:
         repository =  zipfile.ZipFile(zip_path, 'r')
@@ -24,14 +25,17 @@ def clean_same_domain(domain_files):
         print(domain_files[0]['full-name'])
         return
     
+    # Store different domain contents
     contents = {}
     n = 0
     
+    # For each domain file
     for d in domain_files:
 
         full_domain_path = d['full-name'].split('/')[-1]+'-'+d['last-commit']+ '/' + d['domain-file']
         with repository.open(full_domain_path) as d_file:
             try:
+                # Retrieve content
                 file_content = d_file.read().decode()
                 yml_content = yaml.safe_load(file_content)
                 contents[d['domain-file']] = yml_content
@@ -39,14 +43,17 @@ def clean_same_domain(domain_files):
                 print('Decode error')
                 continue
 
+    # Store different domain file names
     different_domain_files = []
 
     for d, c in contents.items():
-        # First yml domain 
+        # First domain file
         if not different_domain_files:
             different_domain_files.append(d)
+        # Not first domain file
         else:
             is_new = True
+            # If content already present in contents: not a new domain
             for diff_domain in different_domain_files:
 
                 # Copy found: domain not new
@@ -58,6 +65,7 @@ def clean_same_domain(domain_files):
             if is_new: 
                 different_domain_files.append(d) 
 
+    # Remove domain copies
     for d_file in domain_files[:]:
         if not d_file['domain-file'] in different_domain_files:
             domain_files.remove(d_file)
@@ -66,7 +74,7 @@ def clean_same_domain(domain_files):
     return domain_files, n
 
 
-
+# Check if chatbot domain files have intersection
 def check_intersection(domain_files):
 
     fields = ['intents', 'entities', 'actions', 'slots', 'forms']
@@ -75,14 +83,14 @@ def check_intersection(domain_files):
         for domain in domain_files:
             complete_list = complete_list + domain[field]
         
+        # Set shorter than union list: domain files have intersection 
         if len(set(complete_list)) != len(complete_list):
             return True
     
-
     return False
 
 
-
+# Unify domain parameters
 def unify_domains(domain_files):
 
     union_domain = domain_files[0]
@@ -93,11 +101,14 @@ def unify_domains(domain_files):
         domain_files_names.append(d['domain-file'])
 
         for field in list(union_domain.keys())[11:]:
+            # Keep the known version if defined
             if field == 'version':
                 if union_domain[field] == 'unknown' and d[field] != 'unknown':
                     union_domain[field] = d[field]
+            # Sum numeric parameters
             elif field.startswith('n-'):
                 union_domain[field] += d[field]
+            # Unify lists
             else:
                 union_domain[field] = union_domain[field] + d[field]
 
@@ -105,7 +116,7 @@ def unify_domains(domain_files):
 
     return union_domain
 
-
+# Check domain files of a chatbot
 def check_repository(chatbot_domain_files, result_writer, statistics):
     # Check for same domain files
     chatbot_domain_files, n = clean_same_domain(chatbot_domain_files)
@@ -136,7 +147,7 @@ def check_repository(chatbot_domain_files, result_writer, statistics):
         statistics['chatbots_all_same'] += 1
     
         
-
+# Save cleaning statistics
 def write_statistics(statistics):
     statistics_file = open(MD_STATISTICS_FILE, 'w', newline='')
     statistics_file.write(f"Domain file copies removed: {statistics['domains_deleted_by_same']}\n")
@@ -148,6 +159,8 @@ def write_statistics(statistics):
 
 
 def main(): 
+
+    # Statistics fields
     statistics = {
         'domains_deleted_by_same': 0,
         'domain_merged': 0,
@@ -156,11 +169,13 @@ def main():
         'discarded': 0
     }
 
+    # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
     for file in MD_FILES:
         
+        # Open files
         chatbot_file = open(INPUT_FOLDER + file, 'r', encoding="utf-8")
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         domains = list(reader)
@@ -169,8 +184,9 @@ def main():
         result_writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames + ['status'], extrasaction='ignore')
         result_writer.writeheader()
 
-
+        # Current chatbot id
         current_repo_id = None
+        # Domain list of current chatbot
         chatbot_domain_files = []
 
         for domain in domains:
@@ -180,20 +196,22 @@ def main():
                 if field != 'version':
                     domain[field] = ast.literal_eval(domain[field])
 
+            # Check new domain file's chatbot id
             if domain['id'] != current_repo_id:
 
-                # The previous repository is completed, ready to be checked
+                # The previous chatbot is completed, ready to be checked
                 if current_repo_id is not None:
                     
                     check_repository(chatbot_domain_files, result_writer, statistics)
-                    # Previous repository analysis completed, start with new repository
+                    # Previous chatbot analysis completed, start with new chatbot
                     current_repo_id = domain['id']
                     chatbot_domain_files = [domain]
 
-                # No previous repository
+                # No previous chatbot
                 else:
                     chatbot_domain_files.append(domain)
                     current_repo_id = domain['id']
+            # Same id as current chatbot: append domain file to list
             else:
                 chatbot_domain_files.append(domain)
         

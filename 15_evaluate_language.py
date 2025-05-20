@@ -34,7 +34,7 @@ def main():
     for chatbot in chatbots:
 
         #print(chatbot['id'])
-
+        # Sort languages list
         if chatbot['training-language']:
             chatbot['training-language'] = ast.literal_eval(chatbot['training-language'])
             chatbot['training-language'].sort()

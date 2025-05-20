@@ -106,9 +106,10 @@ def extract_domain_info(repository, file_path, chatbot_info):
                 slots = domain['slots']
                 chatbot_info['slots'] = list(slots.keys())
 
+                # Slots as a list
                 if type(slots) == list:
                     chatbot_info['slots'] = slots
-                    
+                # Slots as a dictionary  
                 else:
                     chatbot_info['slots'] = list(slots.keys())
 
@@ -183,15 +184,18 @@ ERROR_FILE = 'chatbot_repositories_errors.csv'
 
 def main(): 
 
+    # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    # Error file
     error_file = open(RESULTS_FOLDER + '/' +ERROR_FILE, 'w', newline='')
     error_writer = csv.DictWriter(error_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS[:10] + ['chatbot-type', 'exception'], extrasaction='ignore')
     error_writer.writeheader()
 
     for file in CHATBOT_FILES:
 
+        # Open files
         chatbot_file = open(INPUT_FOLDER + '/' +file+'.csv', 'r')
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
@@ -205,7 +209,7 @@ def main():
             chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files'])
             chatbot_info['actions-files'] = ast.literal_eval(chatbot_info['actions-files'])
 
- 
+            # Open zip archive
             zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
             repository =  zipfile.ZipFile(zip_path, 'r')
             file_list = repository.namelist()  
@@ -234,7 +238,7 @@ def main():
                 else:
                     quit()
 
-
+        # Close files
         analysis_file.close()
         chatbot_file.close()
     error_file.close()

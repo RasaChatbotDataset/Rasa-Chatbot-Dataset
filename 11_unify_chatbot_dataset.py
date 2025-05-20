@@ -14,20 +14,21 @@ CSV_SEPARATOR = ';'
 
 def main(): 
 
+    # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
     
     result_file = open(RESULTS_FOLDER + 'chatbots.csv', 'w', newline='', encoding="utf-8")
     
-
+    # For each chatbot file and type
     for file, type in zip(FILES, TYPES):
         
         chatbot_file = open(file, 'r', encoding="utf-8")
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
 
+        # Open result file
         if type == 'sfsd':
-
             header = reader.fieldnames + ['type']
             header[header.index('domain-file')] = 'domain-files'
             result_writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header, extrasaction='ignore')
@@ -35,6 +36,7 @@ def main():
         
         for chatbot in chatbots:
 
+            # Change domain name field for sd chatbots
             if type == 'sfsd' or type == 'mfsd':
 
                 # Change single domain file to list of files

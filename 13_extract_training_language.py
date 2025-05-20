@@ -23,9 +23,8 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 # Extract language from configuration file
 def extract_training_language(chatbot):
 
-
+    # Get all configuration file from repository
     zip_path = ZIP_FOLDER + '/' + chatbot['full-name'].replace('/', '_') + '.zip'
-
     repository =  zipfile.ZipFile(zip_path, 'r')
 
     file_list = ast.literal_eval(chatbot['nlu-files'])
@@ -33,6 +32,7 @@ def extract_training_language(chatbot):
     version = chatbot['version']
 
     for file in file_list:
+        # Extract version and training language
         nlu_version, file_languages = extract_training_language_from_file(chatbot, file, repository)
 
         if nlu_version == -1:
@@ -42,6 +42,7 @@ def extract_training_language(chatbot):
         if version == 'unknown' and nlu_version != 'unknown':
             version = nlu_version
 
+        # Update languages
         for l in file_languages:
             if l not in languages:
                 languages.append(l)
@@ -246,6 +247,7 @@ def main():
     chatbots = pd.read_csv(CHATBOT_FILE, sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
 
+    # Merge with nlu files
     for file in FILES:
         cb_with_files = pd.read_csv(file, sep=CSV_SEPARATOR)
         cb_with_files = cb_with_files[['id', 'nlu-files']]
@@ -275,8 +277,11 @@ def main():
         if chatbot['version'] == 'unknown':
             chatbot['version'] = None
 
+    # Remove columns
     chatbots = chatbots.drop('n-nlu-files', axis=1)
     chatbots = chatbots.drop('nlu-files', axis=1)
+
+    # Write dataset
     chatbots.to_csv(RESULTS_FOLDER + 'chatbots.csv', sep=CSV_SEPARATOR, index=False)
 
 

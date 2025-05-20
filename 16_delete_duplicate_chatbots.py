@@ -15,7 +15,8 @@ DATE_FILES = ['results/08_results/chatbot_repositories_sfsd.csv', 'results/08_re
 FIELDS = ['intents', 'entities', 'actions', 'slots','slots-type', 'forms', 'config-languages', 'training-language', 'response-languages', 'n-actions-files']
 
 ORDER_COLUMNS = ['id', 'full-name', 'html-url', 'stars', 'forks', 'owner-name', 'owner-type', 'created-at', 'last-commit', 'last-commit-date', 'domain-files', 'type', 'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 'slots-type', 'n-forms', 'forms', 'version', 'config-languages', 'training-language', 'response-languages', 'languages', 'has-english', 'pure-english', 'n-actions-files']
-           
+
+# Keep only the best copies
 def select_best_copies(copies):
 
     # The first copy is the best one based on our sorting
@@ -100,6 +101,7 @@ def select_best_copies(copies):
 
     return best_copies
 
+
 # Update version of chatbot not updated after Rasa 2
 def update_version(chatbot):
     if isinstance(chatbot['last-commit-date'], str) and chatbot['last-commit-date'][0:10] < '2020-10-07' and pd.isna(chatbot['version']):
@@ -108,7 +110,6 @@ def update_version(chatbot):
     if not isinstance(chatbot['last-commit-date'], str):
         print(chatbot['last-commit-date'])
     return chatbot
-
 
 
 def main():

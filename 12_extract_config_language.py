@@ -65,13 +65,15 @@ def extract_config_language(chatbot):
 
 def main():
 
+    # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    # Open dataset as pandas dataframe
     chatbots = pd.read_csv(CHATBOT_FILE, sep=CSV_SEPARATOR)
-
     cb_files = pd.DataFrame()
 
+    # Join chatbot dataset with config file info
     for file in FILES:
         cb_with_files = pd.read_csv(file, sep=CSV_SEPARATOR)
         cb_with_files = cb_with_files[['id', 'language-files']]
@@ -81,11 +83,14 @@ def main():
 
     chatbots.to_csv(RESULTS_FOLDER + 'chatbots_join_config_file.csv', sep=CSV_SEPARATOR, index=False)
 
+    # Extract configuration language
     chatbots['config-languages'] = chatbots.apply(extract_config_language, axis=1)
 
+    # Remove columns
     chatbots = chatbots.drop('n-language-files', axis=1)
     chatbots = chatbots.drop('language-files', axis=1)
 
+    # Write dataset
     chatbots.to_csv(RESULTS_FOLDER + 'chatbots.csv', sep=CSV_SEPARATOR, index=False)
 
 main()

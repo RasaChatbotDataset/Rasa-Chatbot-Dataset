@@ -30,6 +30,7 @@ def main():
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
 
+    # Select chatbots
     for chatbot in chatbots:
         chatbot['has-english'] = ast.literal_eval(chatbot['has-english'])
         recent = chatbot['version'] == '3.1' or chatbot['version'] == '3.6' or chatbot['version'] == '3.0'
@@ -38,7 +39,7 @@ def main():
             del chatbot['has-english']
             writer.writerow(chatbot)
     
-    
+    # Close files
     chatbot_file.close()
     result_file.close()
 
