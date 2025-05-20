@@ -81,6 +81,7 @@ def extract_topic(chatbot, topics):
     chatbot['slots'] = ast.literal_eval(chatbot['slots'])
     retrieval_components = list(set(chatbot['entities']+chatbot['slots']))
 
+    # Prompt definition
     prompt = f"""Your task is to extract the topic/category of a Rasa chatbot. Given:
                 - the repository name: {chatbot['full-name'].split('/')[-1]}
                 - the description: {description}

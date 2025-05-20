@@ -56,6 +56,7 @@ def check_domain_files(repository, chatbot_info):
         else:
             clean_domain_files.append(domain_file)
     
+    # Keep test files if they are the only ones
     if len(clean_domain_files) == 0 and len(tests_md) != 0:
             n_cleaned = len(chatbot_info['domain-files'])- len(tests_md)
             chatbot_info['domain-files'] = tests_md
@@ -67,7 +68,7 @@ def check_domain_files(repository, chatbot_info):
     return  chatbot_info, n_cleaned
 
 
-
+# Save statistics about domain cleaning
 def write_statistics(n_domain_removed, n_repository_cleaned, n_repository_removed):
     statistics_file = open(CHECK_DOMAIN_STATISTICS_FILE, 'w', newline='')
     statistics_file.write(f"Domain files removed: {n_domain_removed}\n")
@@ -78,9 +79,11 @@ def write_statistics(n_domain_removed, n_repository_cleaned, n_repository_remove
 
 def main():
 
+    # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    # Open files
     chatbot_file = open(CHATBOTS_BEFORE_CLEAN_NAME, 'r')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
@@ -99,6 +102,7 @@ def main():
 
     for chatbot_info in chatbots:
 
+        # Open zip file
         zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
         try:
             repository =  zipfile.ZipFile(zip_path, 'r')
@@ -106,8 +110,10 @@ def main():
             print(chatbot_info['full-name'])
             continue
 
+        # Clean domain files
         chatbot_info, n = check_domain_files(repository, chatbot_info)
 
+        # Update statistics
         if n>0:
             n_repository_cleaned += 1
             n_domain_removed += n
@@ -124,10 +130,13 @@ def main():
     
     # Sync folder with google drive folder
     #sync(ZIP_FOLDER)
+
+    # Close files
     cleaned_file.close()
     chatbot_file.close()
     discarded_file.close()
 
+    # Save statistics
     write_statistics(n_domain_removed, n_repository_cleaned, n_repository_removed)
 
 

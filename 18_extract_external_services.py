@@ -64,6 +64,7 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type):
         Does the chatbot use any database (local or external) or any external service? Answer with a list of these databases and services (only names on a single line, no further explanation, no numeration). 
         '''
     
+    # Complete prompt
     prompt += f'''
     For this problem I received these answers, each with a list of services:
     {s}
@@ -74,7 +75,7 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type):
     In a new section titled "Purpose of external services" explain the purpose of each service.
     If the file doesn't use any external service nor database, answer only with "NO" and nothing else'''
 
-    #Send query
+    # Send query
     response = query_chatgpt(prompt)
     n_retry = 0
     while response.status_code == 429 and n_retry < 5:

@@ -23,22 +23,23 @@ headers = {
 }
 
 
+# Retrieve last commit of a repository on a branch
 def find_last_commit_sha(repo_name, branch):
 
     url = f"https://api.github.com/repos/{repo_name}/branches/{branch}"
-    
 
     response = requests.get(url, headers=headers)
     return response 
 
 
-
-
+# Add last commit info to all repositories
 def add_last_commit():
 
+    # Result folder creation
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    # Open filess
     repo_file = open(REPOSITORIES_FILE, 'r')
     reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
     repos = list(reader)
@@ -53,13 +54,16 @@ def add_last_commit():
     empty_writer.writeheader()
     i = 0
 
+    # For each repository
     for repo in repos:
         i += 1
+        # Periodically update files
         if i%100 == 0:
             print(f"{i}/{len(repos)}")
             repo_complete_file.flush()
             empty_file.flush()
 
+        # Retrieve last commit sha and date
         response = find_last_commit_sha(repo['full-name'], repo['default-branch'])
         if response.status_code == 200:
             branch = response.json()
@@ -76,6 +80,7 @@ def add_last_commit():
             print(f"Error: {response} for repo {repo['full-name']}")
             quit()
     
+    # Close files
     repo_file.close()
     repo_complete_file.close()
     empty_file.close()

@@ -22,17 +22,18 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 # Extract language from domain file
 def extract_response_language(chatbot):
 
-
+    # Get all domain files
     zip_path = ZIP_FOLDER + '/' + chatbot['full-name'].replace('/', '_') + '.zip'
-
     repository =  zipfile.ZipFile(zip_path, 'r')
 
     file_list = ast.literal_eval(chatbot['domain-files'])
     languages = []
 
     for file in file_list:
+        # Extract response language
         file_languages = extract_response_language_from_file(chatbot, file, repository)
 
+        # Append new languages
         for l in file_languages:
             if l not in languages:
                 languages.append(l)
@@ -55,6 +56,7 @@ def extract_response_language_from_file(chatbot, file, repository):
             content = nlu_file.read().decode()
             domain = yaml.safe_load(content)
 
+            # Consider both responses and template
             if 'responses' in domain and domain['responses']: 
                 responses = domain['responses']
             elif 'templates' in domain and len(domain['templates']) > 0:

@@ -107,7 +107,8 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
                 else:
                     chatbot_info['nlu-files'].append(clean_file_name)
                     chatbot_info['n-nlu-md'] +=1
-        
+
+    # Keep test files only if they are the only ones 
     if len(chatbot_info['nlu-files']) == 0 and len(test_md) != 0:
             chatbot_info['nlu-files'] = test_md
     
@@ -174,6 +175,7 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
 
         clean_file_name = file.split(chatbot_info['last-commit']+'/')[-1]
 
+        # Discard test files
         if 'test' in clean_file_name and not domain_is_test:
             test_md.append(clean_file_name)
         elif 'models' in clean_file_name and not domain_is_model:
@@ -181,12 +183,13 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
         else:
             chatbot_info['actions-files'].append(clean_file_name)
         
-    
+    # Keep test files only if they are the only ones
     if len(chatbot_info['actions-files']) == 0 and len(test_md) != 0:
             chatbot_info['actions-files'] = test_md
     
     chatbot_info['n-actions-files'] = len(chatbot_info['actions-files'])
 
+    # Identify action folders
     for actions_name in chatbot_info['actions-files']:
         if str(Path(actions_name).parent) not in chatbot_info['actions-folders']:
             chatbot_info['actions-folders'].append(str(Path(actions_name).parent))
@@ -195,7 +198,7 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
 
     return chatbot_info
 
-
+# Find readme files
 def find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model):
     test_md = []
 
@@ -215,6 +218,7 @@ def find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model)
         if 'node_modules' in readme or 'site-packages' in readme or 'vendor/' in readme or 'assets/libs' in readme:
             continue
 
+        # Keep test files only if they are the only ones
         if 'test' in clean_file_name and not domain_is_test:
             test_md.append(clean_file_name)
         elif 'models' in clean_file_name and not domain_is_model:
@@ -228,6 +232,7 @@ def find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model)
 
     chatbot_info['n-readme-files'] = len(chatbot_info['readme-files'])
 
+    # Readme folders
     for readme_name in chatbot_info['readme-files']:
         if str(Path(readme_name).parent) not in chatbot_info['readme-folders']:
             chatbot_info['readme-folders'].append(str(Path(readme_name).parent))
@@ -238,7 +243,7 @@ def find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model)
     return chatbot_info
 
 
-
+# Find config language files
 def find_language_files(repository, chatbot_info, domain_is_test, domain_is_model): 
         
     test_md = []
@@ -299,6 +304,7 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
             print('Language file content error')
             continue
         
+        # Check "language"
         if 'language' in file_content:
             if 'test' in clean_file_name and not domain_is_test:
                 test_md.append(clean_file_name)
@@ -307,11 +313,13 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
             else:
                 chatbot_info['language-files'].append(clean_file_name)
     
+    # Keep test files only if they are the only ones
     if len(chatbot_info['language-files']) == 0 and len(test_md) != 0:
         chatbot_info['language-files'] = test_md
     
     chatbot_info['n-language-files'] = len(chatbot_info['language-files'])
 
+    # Language folders
     for lang_name in chatbot_info['language-files']:
         if str(Path(lang_name).parent) not in chatbot_info['language-folders']:
             chatbot_info['language-folders'].append(str(Path(lang_name).parent))
@@ -325,9 +333,11 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
 
 def main():
 
+    # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    # Open files
     chatbot_file = open(CHATBOTS_FILE_NAME, 'r')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
@@ -339,12 +349,14 @@ def main():
 
     for chatbot_info in chatbots:
 
+        # Open zip
         zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
 
         repository =  zipfile.ZipFile(zip_path, 'r')
 
         chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files'])
 
+        # Save if domain file is in test - model folder
         domain_is_model = False
         domain_is_test = False
 
@@ -360,13 +372,14 @@ def main():
         
         chatbot_info['n-domain-folders'] = len(chatbot_info['domain-folders'])
 
-
+        # Find files
         chatbot_info = find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model)
         chatbot_info = find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
         chatbot_info = find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model)
         chatbot_info = find_language_files(repository, chatbot_info, domain_is_test, domain_is_model)
         writer.writerow(chatbot_info)
     
+    # Close files
     chatbot_file.close()
     multi_file.close()
 

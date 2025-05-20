@@ -22,12 +22,18 @@ ZIP_DIRECTORY = 'chatbot_repositories_zip'
 def find_keyword_in_repo(keyword, repo_zip_path, commit):
     domain_files = []
     repo =  zipfile.ZipFile(repo_zip_path, 'r')
+
+    # Find all YML files
     r = re.compile(".*.yml")
     yml_list = list(filter(r.match, repo.namelist()))
+
+    # Check each file
     for file_path in yml_list:
         with repo.open(file_path) as yml_file:
             try:
+                # Decode file
                 yml_content = yml_file.read().decode()
+                # If "intent" in file: domain file
                 if keyword in yml_content:
                     domain_files.append(file_path.split(commit+'/')[-1])
             except UnicodeDecodeError as e:
@@ -38,14 +44,16 @@ def find_keyword_in_repo(keyword, repo_zip_path, commit):
 
 def main():
 
+    # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
-    # Open files
+    # Open file
     not_indexed_file = open(NOT_INDEXED_FILE_NAME, 'r')
     reader = csv.DictReader(not_indexed_file, delimiter=CSV_SEPARATOR)
     repositories = list(reader)
     
+    # Copy previous chatbot repository and not chatbot repository files
     shutil.copy(OLD_RESULTS_FOLDER+'/'+CHATBOTS_FILE, RESULTS_FOLDER+'/'+CHATBOTS_FILE)
     shutil.copy(OLD_RESULTS_FOLDER+'/'+NOT_CHATBOTS_FILE, RESULTS_FOLDER+'/'+NOT_CHATBOTS_FILE)
 
@@ -59,19 +67,22 @@ def main():
         not_found_csv.writeheader()
 
 
+    # Open files in append mode
     ncb_file = open(RESULTS_FOLDER+'/'+NOT_CHATBOTS_FILE, 'a', newline='')
     ncb_csv = csv.DictWriter(ncb_file, fieldnames= reader.fieldnames, delimiter=CSV_SEPARATOR)
-
 
     cb_file = open(RESULTS_FOLDER+'/'+CHATBOTS_FILE, 'a', newline='')
     cb_headers =  reader.fieldnames + ['domain-files']
     cb_csv = csv.DictWriter(cb_file, fieldnames=cb_headers, delimiter=CSV_SEPARATOR)
     
+    # Create zip folder if not already defined
     if not os.path.isdir(ZIP_DIRECTORY):
         os.makedirs(ZIP_DIRECTORY)
     i=0
+    # For each non indexed repository
     for repo in repositories: 
         i += 1
+        # Periodical sync
         if i%50==0:
           #sync(ZIP_DIRECTORY)
           print('sync')
@@ -86,7 +97,7 @@ def main():
                 if not domain_files:
                     print(f"{repo['full-name']}: not chatbot")
                     ncb_csv.writerow(repo)
-                    #Remove zip
+                    # Remove zip
                     os.remove(zip_path) 
                 else:
                     # Chatbot
