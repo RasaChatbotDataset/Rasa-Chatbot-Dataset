@@ -5,12 +5,12 @@ import pandas as pd
 from difflib import SequenceMatcher
 
 
-RESULTS_FOLDER = 'results/16_results/'
-INPUT_FOLDER = 'results/15_results/'
+RESULTS_FOLDER = 'results/14_results/'
+INPUT_FOLDER = 'results/13_results/'
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-DATE_FILES = ['results/08_results/chatbot_repositories_sfsd.csv', 'results/08_results/chatbot_repositories_mfsd.csv', 'results/08_results/chatbot_repositories_sfmd.csv', 'results/08_results/chatbot_repositories_mfmd.csv']
+DATE_FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
 
 FIELDS = ['intents', 'entities', 'actions', 'slots','slots-type', 'forms', 'config-languages', 'training-language', 'response-languages', 'n-actions-files']
 

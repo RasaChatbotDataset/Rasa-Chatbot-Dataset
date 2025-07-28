@@ -6,9 +6,9 @@ import os
 import re
 import csv
 
-RESULTS_FOLDER = 'results/15_results/'
+RESULTS_FOLDER = 'results/13_results/'
 INPUT_FILE = RESULTS_FOLDER + 'chatbots_language_check.csv'
-OUTPUT_FILE = RESULTS_FOLDER + 'chatbots2.csv'
+OUTPUT_FILE = RESULTS_FOLDER + 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 

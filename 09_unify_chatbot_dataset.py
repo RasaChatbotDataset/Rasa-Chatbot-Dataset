@@ -3,9 +3,9 @@ import os
 import ast
 
 csv.field_size_limit(100000000)
-INPUT_FOLDER_MD = 'results/10_results/'
-INPUT_FOLDER_SD = 'results/09_results/'
-RESULTS_FOLDER = 'results/11_results/'
+INPUT_FOLDER_MD = 'results/08_results/'
+INPUT_FOLDER_SD = 'results/07_results/'
+RESULTS_FOLDER = 'results/09_results/'
 FILES = [INPUT_FOLDER_SD + 'chatbot_repositories_sfsd_info.csv', INPUT_FOLDER_SD + 'chatbot_repositories_mfsd_info.csv', INPUT_FOLDER_MD + 'chatbot_repositories_sfmd_info.csv', INPUT_FOLDER_MD +'chatbot_repositories_mfmd_info.csv']
 TYPES = ['sfsd', 'mfsd', 'sfmd', 'mfmd']
 CSV_SEPARATOR = ';'

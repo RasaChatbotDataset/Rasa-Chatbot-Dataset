@@ -4,8 +4,8 @@ import copy
 import os
 
 CSV_SEPARATOR= ';'
-RESULTS_FOLDER = 'results/08_results'
-CHATBOTS_FILE_NAME = 'results/07_results/chatbot_repositories_files.csv'
+RESULTS_FOLDER = 'results/06_results'
+CHATBOTS_FILE_NAME = 'results/05_results/chatbot_repositories_files.csv'
 MFSD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_mfsd.csv'
 SFSD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_sfsd.csv'
 MFMD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_mfmd.csv'

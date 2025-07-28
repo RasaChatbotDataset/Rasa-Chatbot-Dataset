@@ -6,8 +6,8 @@ import os
 from utils import sync
 
 
-RESULTS_FOLDER = 'results/06_results'
-CHATBOTS_BEFORE_CLEAN_NAME=  'results/05_results/chatbot_repositories.csv'
+RESULTS_FOLDER = 'results/04_results'
+CHATBOTS_BEFORE_CLEAN_NAME=  'results/03_results/chatbot_repositories.csv'
 CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories.csv'
 NO_MORE_DOMAIN_FILE_NAME = RESULTS_FOLDER + '/' + 'discarded_repositories.csv'
 CSV_SEPARATOR= ';'

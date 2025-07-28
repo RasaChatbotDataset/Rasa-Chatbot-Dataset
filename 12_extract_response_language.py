@@ -12,8 +12,8 @@ import csv
 config = dotenv_values('config.env')
 detectlanguage.configuration.api_key = config['DETECT_LANGUAGE_KEY']
 
-INPUT_FILE = 'results/13_results/chatbots.csv'
-RESULTS_FOLDER = 'results/14_results/'
+INPUT_FILE = 'results/11_results/chatbots.csv'
+RESULTS_FOLDER = 'results/12_results/'
 CHATBOT_FILE = RESULTS_FOLDER + 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'

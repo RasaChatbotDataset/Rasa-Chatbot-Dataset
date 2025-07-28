@@ -13,15 +13,15 @@ TOP_P = 0.15
 
 config = dotenv_values('config.env')
 
-FILES = ['results/08_results/chatbot_repositories_sfsd.csv', 'results/08_results/chatbot_repositories_mfsd.csv', 'results/08_results/chatbot_repositories_sfmd.csv', 'results/08_results/chatbot_repositories_mfmd.csv']
-RESULTS_FOLDER = 'results/20_results/'
+FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
+RESULTS_FOLDER = 'results/18_results/'
 CHATGPT_RESPONSE_FOLDER = RESULTS_FOLDER +'/chatgpt_responses'
-INPUT_FILE = 'results/19_results/3_chatbots.csv'
+INPUT_FILE = 'results/17_results/3_chatbots.csv'
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 JSON_FOLDER = 'results/01_results/repositories_json/'
-TOPICS_FILE_NAME = '20_topic_categories.csv'
+TOPICS_FILE_NAME = '18_topic_categories.csv'
 
 
 # Query OpenAI ChatGPT

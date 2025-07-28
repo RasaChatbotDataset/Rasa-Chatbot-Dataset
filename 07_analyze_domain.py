@@ -8,8 +8,8 @@ import traceback
 
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-RESULTS_FOLDER = 'results/09_results'
-INPUT_FOLDER = 'results/08_results'
+RESULTS_FOLDER = 'results/07_results'
+INPUT_FOLDER = 'results/06_results'
 
 FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
     'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 

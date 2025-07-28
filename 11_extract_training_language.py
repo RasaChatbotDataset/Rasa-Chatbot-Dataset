@@ -13,9 +13,9 @@ config = dotenv_values('config.env')
 detectlanguage.configuration.api_key = config['DETECT_LANGUAGE_KEY']
 
 
-FILES = ['results/08_results/chatbot_repositories_sfsd.csv', 'results/08_results/chatbot_repositories_mfsd.csv', 'results/08_results/chatbot_repositories_sfmd.csv', 'results/08_results/chatbot_repositories_mfmd.csv']
-RESULTS_FOLDER = 'results/13_results/'
-CHATBOT_FILE = 'results/12_results/chatbots.csv'
+FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
+RESULTS_FOLDER = 'results/11_results/'
+CHATBOT_FILE = 'results/10_results/chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 

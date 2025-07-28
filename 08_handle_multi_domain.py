@@ -6,8 +6,8 @@ import yaml
 from deepdiff import DeepDiff
 
 csv.field_size_limit(100000000)
-INPUT_FOLDER = 'results/09_results/'
-RESULTS_FOLDER = 'results/10_results/'
+INPUT_FOLDER = 'results/07_results/'
+RESULTS_FOLDER = 'results/08_results/'
 MD_FILES = ['chatbot_repositories_sfmd_info.csv', 'chatbot_repositories_mfmd_info.csv']
 CSV_SEPARATOR = ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'

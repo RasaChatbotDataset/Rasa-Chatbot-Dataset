@@ -7,8 +7,8 @@ import json
 from pathlib import Path
 import os
 
-RESULTS_FOLDER = 'results/07_results'
-CHATBOTS_FILE_NAME = 'results/06_results/chatbot_repositories.csv'
+RESULTS_FOLDER = 'results/05_results'
+CHATBOTS_FILE_NAME = 'results/04_results/chatbot_repositories.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 CHATBOTS_ANALYSIS_FILE_NAME = RESULTS_FOLDER + '/' +'chatbot_repositories_files.csv'

@@ -3,8 +3,8 @@ import os
 import csv
 
 
-RESULTS_FOLDER = 'results/17_results/'
-INPUT_FOLDER = 'results/16_results/'
+RESULTS_FOLDER = 'results/15_results/'
+INPUT_FOLDER = 'results/14_results/'
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 
