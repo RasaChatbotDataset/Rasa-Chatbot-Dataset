@@ -7,7 +7,7 @@ config = dotenv_values('config.env')
 
 
 GITHUB_API_URL = "https://api.github.com"
-ACCESS_TOKEN = config['GITHUB_TOKENS'].split(',')[0]
+ACCESS_TOKEN = config['GITHUB_TOKEN']
 USER_AGENT = 'agent' 
 RESULTS_FOLDER = 'results/02_results'
 REPOSITORIES_FILE = 'results/01_results/repositories.csv'
