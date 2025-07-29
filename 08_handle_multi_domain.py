@@ -4,6 +4,7 @@ import os
 import zipfile
 import yaml
 from deepdiff import DeepDiff
+import argparse
 
 csv.field_size_limit(100000000)
 INPUT_FOLDER = os.path.join('results', '07_results')
@@ -173,7 +174,26 @@ def main():
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
-    for file in MD_FILES:
+    # Optional arguments for number of repositories
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-sfmd",
+        type=int,
+        default=-1,
+        help="Number of sfmd chatbots (default: all)"
+    )
+    parser.add_argument(
+        "--n-mfmd",
+        type=int,
+        default=-1,
+        help="Number of mfmd chatbots (default: all)"
+    )
+    args = parser.parse_args()
+    n_chatbots = [args.n_sfmd, args.n_mfmd]
+
+    for index in len(MD_FILES):
+
+        file = MD_FILES[index]
         
         # Open files
         chatbot_file = open(os.path.join(INPUT_FOLDER, file), 'r', encoding="utf-8")
@@ -183,6 +203,10 @@ def main():
         result_file = open(os.path.join(RESULTS_FOLDER, file), 'w', newline='', encoding="utf-8")
         result_writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames + ['status'], extrasaction='ignore')
         result_writer.writeheader()
+
+        # Domain files number check
+        if n_chatbots[index] >0 and n_chatbots[index] < len(domain):
+            domains = domain[0:n_chatbots[index]]
 
         # Current chatbot id
         current_repo_id = None

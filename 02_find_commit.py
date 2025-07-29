@@ -2,6 +2,7 @@ import requests
 from dotenv import dotenv_values
 import csv
 import os
+import argparse
 
 config = dotenv_values('config.env')
 
@@ -35,6 +36,17 @@ def find_last_commit_sha(repo_name, branch):
 # Add last commit info to all repositories
 def add_last_commit():
 
+    # Optional argument for number of chatbots
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-repos",
+        type=int,
+        default=-1,
+        help="Number of repositories (default: all)"
+    )
+
+    args = parser.parse_args()
+
     # Result folder creation
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
@@ -53,6 +65,10 @@ def add_last_commit():
     empty_writer = csv.DictWriter(empty_file, fieldnames=reader.fieldnames, delimiter=CSV_SEPARATOR)
     empty_writer.writeheader()
     i = 0
+
+    # Repositories number check
+    if args.n_repos >0 and args.n_repos < len(repos):
+        repos = repos[0:args.n_repos]
 
     # For each repository
     for repo in repos:

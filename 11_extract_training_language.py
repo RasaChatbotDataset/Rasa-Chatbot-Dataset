@@ -8,6 +8,7 @@ import pandas as pd
 import re
 from dotenv import dotenv_values
 import random
+import argparse
 
 config = dotenv_values('config.env')
 detectlanguage.configuration.api_key = config['DETECT_LANGUAGE_KEY']
@@ -242,10 +243,25 @@ def main():
     # Create result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
+    
+    # Optional argument for number of chatbots
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-chatbots",
+        type=int,
+        default=-1,
+        help="Number of chatbots (default: all)"
+    )
+
+    args = parser.parse_args()
 
     # Join chatbot files
     chatbots = pd.read_csv(CHATBOT_FILE, sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
+
+    # Chatbot number check
+    if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
+        chatbots = chatbots.head(args.n_chatbots)
 
     # Merge with nlu files
     for file in FILES:

@@ -3,6 +3,7 @@ import ast
 import os
 import pandas as pd
 from difflib import SequenceMatcher
+import argparse
 
 
 RESULTS_FOLDER = os.path.join('results', '14_results')
@@ -117,8 +118,23 @@ def main():
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    # Optional argument for number of chatbots
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-chatbots",
+        type=int,
+        default=-1,
+        help="Number of chatbots (default: all)"
+    )
+
+    args = parser.parse_args()
+
     # Open files
     chatbots= pd.read_csv(INPUT_FOLDER + CHATBOT_FILE, sep=CSV_SEPARATOR)
+
+    # Chatbot number check
+    if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
+        chatbots = chatbots.head(args.n_chatbots)
 
     # Join with relevant fields
     cb_files = pd.DataFrame()

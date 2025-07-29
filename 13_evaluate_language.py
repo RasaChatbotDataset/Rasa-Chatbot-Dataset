@@ -1,9 +1,5 @@
-import detectlanguage
-import yaml
-import zipfile
 import ast
 import os
-import re
 import csv
 
 RESULTS_FOLDER = os.path.join('results', '13_results')

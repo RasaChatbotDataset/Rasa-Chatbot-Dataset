@@ -6,6 +6,7 @@ import yaml
 import json
 from pathlib import Path
 import os
+import argparse
 
 RESULTS_FOLDER = os.path.join('results', '05_results')
 CHATBOTS_FILE_NAME = os.path.join('results', '04_results', 'chatbot_repositories.csv')
@@ -336,6 +337,17 @@ def main():
     # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
+    
+    # Optional argument for number of repositories
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-repos",
+        type=int,
+        default=-1,
+        help="Number of repositories (default: all)"
+    )
+
+    args = parser.parse_args()
 
     # Open files
     chatbot_file = open(CHATBOTS_FILE_NAME, 'r')
@@ -346,6 +358,10 @@ def main():
     header = reader.fieldnames + ['domain-folders', 'n-domain-folders', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files', 'readme-folders', 'n-readme-folders', 'language-files', 'n-language-files', 'language-folders', 'n-language-folders']
     writer = csv.DictWriter(multi_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
+
+    # Chatbot repositories number check
+    if args.n_repos >0 and args.n_repos < len(chatbots):
+        chatbots = chatbots[0:args.n_repos]
 
     for chatbot_info in chatbots:
 

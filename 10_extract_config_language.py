@@ -5,6 +5,7 @@ import yaml
 import json
 import zipfile
 import re
+import argparse
 
 FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
 RESULTS_FOLDER = os.path.join('results', '10_results')
@@ -68,10 +69,25 @@ def main():
     # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
+    
+    # Optional argument for number of chatbots
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-chatbots",
+        type=int,
+        default=-1,
+        help="Number of chatbots (default: all)"
+    )
+
+    args = parser.parse_args()
 
     # Open dataset as pandas dataframe
     chatbots = pd.read_csv(CHATBOT_FILE, sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
+
+    # Chatbot number check
+    if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
+        chatbots = chatbots.head(args.n_chatbots)
 
     # Join chatbot dataset with config file info
     for file in FILES:

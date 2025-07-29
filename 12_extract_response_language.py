@@ -8,6 +8,7 @@ import re
 from dotenv import dotenv_values
 import random
 import csv
+import argparse
 
 config = dotenv_values('config.env')
 detectlanguage.configuration.api_key = config['DETECT_LANGUAGE_KEY']
@@ -138,6 +139,17 @@ def main():
     # Create result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
+    
+    # Optional argument for number of chatbots
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-chatbots",
+        type=int,
+        default=-1,
+        help="Number of chatbots (default: all)"
+    )
+
+    args = parser.parse_args()
 
     # Open files
     csv.field_size_limit(100000000)
@@ -149,6 +161,10 @@ def main():
     header = reader.fieldnames + ['response-languages']
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
+
+    # Chatbot number check
+    if args.n_chatbots >0 and args.n_chatbots < len(chatbots):
+        chatbots = chatbots[0:args.n_chatbots]
     
 
     for chatbot in chatbots:

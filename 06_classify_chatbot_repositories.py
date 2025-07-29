@@ -2,6 +2,7 @@ import csv
 import ast
 import copy
 import os
+import argparse
 
 CSV_SEPARATOR= ';'
 RESULTS_FOLDER = os.path.join('results', '06_results')
@@ -185,6 +186,17 @@ def main():
 
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
+    
+    # Optional argument for number of repositories
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-repos",
+        type=int,
+        default=-1,
+        help="Number of repositories (default: all)"
+    )
+
+    args = parser.parse_args()
 
     # Open files
     csv.field_size_limit(100000000)
@@ -208,6 +220,9 @@ def main():
     mfsd_writer = csv.DictWriter(mfsd_file, delimiter=CSV_SEPARATOR, fieldnames=fields, extrasaction='ignore')
     mfsd_writer.writeheader()
 
+    # Chatbot repositories number check
+    if args.n_repos >0 and args.n_repos < len(chatbots):
+        chatbots = chatbots[0:args.n_repos]
 
     # Split multi-domain folder repositories, keep single-domain folder ones
     for chatbot in chatbots:

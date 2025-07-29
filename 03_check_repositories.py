@@ -5,6 +5,7 @@ from utils import download_zip, clean_zip
 import os
 from utils import sync
 import shutil
+import argparse
 
 
 INPUT_FOLDER = os.path.join('results', '02_results')
@@ -45,6 +46,17 @@ def find_keyword_in_repo(keyword, repo_zip_path, commit):
 
 def main():
 
+    # Optional argument for number of repositories
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-repos",
+        type=int,
+        default=-1,
+        help="Number of repositories (default: all)"
+    )
+
+    args = parser.parse_args()
+
     # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
@@ -72,6 +84,11 @@ def main():
     # Create zip folder if not already defined
     if not os.path.isdir(ZIP_DIRECTORY):
         os.makedirs(ZIP_DIRECTORY)
+
+    # Repositories number check
+    if args.n_repos >0 and args.n_repos < len(repositories):
+        repositories = repositories[0:args.n_repos]
+
     i=0
     # For each repository
     for repo in repositories: 

@@ -6,6 +6,7 @@ from dotenv import dotenv_values
 import requests
 import time
 import re
+import argparse
 
 TEMPERATURE = 1
 TOP_P = 0.15
@@ -202,9 +203,24 @@ def main():
     if not os.path.isdir(CHATGPT_RESPONSE_FOLDER):
         os.mkdir(CHATGPT_RESPONSE_FOLDER)
 
+    # Optional argument for number of chatbots
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-chatbots",
+        type=int,
+        default=-1,
+        help="Number of chatbots (default: all)"
+    )
+
+    args = parser.parse_args()
+
     # Join chatbot files
     chatbots = pd.read_csv(os.path.join(INPUT_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
+
+    # Chatbot number check
+    if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
+        chatbots = chatbots.head(args.n_chatbots)
 
     for file in FILES:
         cb_with_files = pd.read_csv(file, sep=CSV_SEPARATOR)

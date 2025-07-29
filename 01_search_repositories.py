@@ -4,6 +4,7 @@ from dotenv import dotenv_values
 from datetime import datetime
 import json
 import os
+import argparse
 
 
 config = dotenv_values('config.env')
@@ -40,11 +41,28 @@ def execute_query(keywords, page, dt):
 # Search chatbot repositories
 def search_repositories():
 
+    # Optional argument for number of chatbots
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-repos",
+        type=int,
+        default=-1,
+        help="Number of repositories (default: all)"
+    )
+
+    args = parser.parse_args()
+
     # Result folders creation
     if not os.path.isdir(RESULTS_FOLDER):
         os.makedirs(RESULTS_FOLDER)
     if not os.path.isdir(REPO_JSON_DIRECTORY):
         os.mkdir(REPO_JSON_DIRECTORY)
+
+    # Repositories number check
+    if args.n_repos >= 100:
+        max_requests = args.n_repos / 100
+    else:
+        max_requests = -1
 
     # Open files
     repo_file = open(RESULT_FILE, 'w')
@@ -54,6 +72,7 @@ def search_repositories():
                     + CSV_SEPARATOR + 'is-fork' + CSV_SEPARATOR + 'fork-parent\n')
     page = 1
     list_completed = False
+    req = 0
 
     # Get min date: today
     dt = datetime.today()
@@ -64,6 +83,7 @@ def search_repositories():
 
         # Search repositories with keywords and last update before dt
         repo_response =  execute_query(REPO_KEYWORDS, page, dt)
+        req += 1
 
         if repo_response.status_code != 200:
             print(f"Error in search: {repo_response.status_code}")
@@ -111,6 +131,10 @@ def search_repositories():
                 page += 1
             else:
                 list_completed = True
+        
+        # Max number of requests
+        if req >= max_requests:
+            list_completed = True
 
     repo_file.close()
 

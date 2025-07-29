@@ -4,6 +4,7 @@ import yaml
 import ast
 import os
 from utils import sync
+import argparse
 
 
 RESULTS_FOLDER = os.path.join('results', '04_results')
@@ -83,6 +84,17 @@ def main():
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+     # Optional argument for number of repositories
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-repos",
+        type=int,
+        default=-1,
+        help="Number of chatbot repositories (default: all)"
+    )
+
+    args = parser.parse_args()
+
     # Open files
     chatbot_file = open(CHATBOTS_BEFORE_CLEAN_NAME, 'r')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
@@ -99,6 +111,10 @@ def main():
     n_domain_removed = 0
     n_repository_cleaned = 0
     n_repository_removed = 0
+
+    # Chatbot repositories number check
+    if args.n_repos > 0 and args.n_repos < len(chatbots):
+        chatbots = chatbots[0:args.n_repos]
 
     for chatbot_info in chatbots:
 

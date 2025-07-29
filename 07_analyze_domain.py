@@ -4,6 +4,7 @@ import ast
 import csv
 import os
 import traceback
+import argparse
 
 
 CSV_SEPARATOR= ';'
@@ -188,14 +189,44 @@ def main():
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    # Optional arguments for number of repositories
+    parser = argparse.ArgumentParser(description='Parser')
+    parser.add_argument(
+        "--n-sfsd",
+        type=int,
+        default=-1,
+        help="Number of sfsd repositories (default: all)"
+    )
+    parser.add_argument(
+        "--n-sfmd",
+        type=int,
+        default=-1,
+        help="Number of sfmd repositories (default: all)"
+    )
+    parser.add_argument(
+        "--n-mfsd",
+        type=int,
+        default=-1,
+        help="Number of mfsd repositories (default: all)"
+    )
+    parser.add_argument(
+        "--n-mfmd",
+        type=int,
+        default=-1,
+        help="Number of mfmd repositories (default: all)"
+    )
+    args = parser.parse_args()
+    n_chatbots = [args.n_sfsd, args.n_sfmd, args.n_mfsd, args.n_mfmd]
+
     # Error file
     error_file = open(os.path.join(RESULTS_FOLDER, ERROR_FILE), 'w', newline='')
     error_writer = csv.DictWriter(error_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS[:10] + ['chatbot-type', 'exception'], extrasaction='ignore')
     error_writer.writeheader()
 
-    for file in CHATBOT_FILES:
+    for index in len(CHATBOT_FILES):
 
         # Open files
+        file = CHATBOT_FILES[index]
         chatbot_file = open(os.path.join(INPUT_FOLDER, file+'.csv'), 'r')
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
@@ -203,6 +234,10 @@ def main():
         analysis_file = open(os.path.join(RESULTS_FOLDER, file+'_info.csv'), 'w', newline='')
         analysis_writer = csv.DictWriter(analysis_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS, extrasaction='ignore')
         analysis_writer.writeheader()
+
+        # Chatbot repositories number check
+        if n_chatbots[index] >0 and n_chatbots[index] < len(chatbots):
+            chatbots = chatbots[0:n_chatbots[index]]
 
         for chatbot_info in chatbots:
             print(chatbot_info['full-name'])
