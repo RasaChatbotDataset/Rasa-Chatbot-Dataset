@@ -7,29 +7,49 @@ import subprocess
 
 
 # Download GitHub repository zip
-def download_zip(zip_directory, repo_name, commit):
-    #download_url = f"https://github.com/{repo_name}/archive/refs/heads/{branch}.zip"
+def download_zip_no_timeout(zip_directory, repo_name, commit):
     download_url =f"https://github.com/{repo_name}/archive/{commit}.zip"
+
+    response = requests.get(download_url)
+    # Commit not found
+    if response.status_code == 404:
+        print(f'Error in repository {repo_name} ZIP download: commit {commit} not found')
+        return -1
+    # Generic error
+    elif response.status_code != 200:
+        print(f'Error in repository {repo_name} ZIP download: {response.status_code}')
+        return -1
+    # Commit found
+    else:
+        zip_path = f"{zip_directory}/{repo_name.replace('/', '_')}.zip"
+        with open(zip_path, "wb") as f:
+            f.write(response.content)
+        return zip_path
     
-    try: 
-        response = requests.get(download_url)
-        # Commit not found
-        if response.status_code == 404:
-            print(f'Error in repository {repo_name} ZIP download: commit {commit} not found')
-            return -1
-        # Generic error
-        elif response.status_code != 200:
-            print(f'Error in repository {repo_name} ZIP download: {response.status_code}')
-            return -1
-        # Commit found
-        else:
-            zip_path = f"{zip_directory}/{repo_name.replace('/', '_')}.zip"
-            with open(zip_path, "wb") as f:
-                f.write(response.content)
-            return zip_path
-    except requests.exceptions.Timeout:
-        print(f"Timeout in repository {repo_name} ZIP download")
-        return 0
+
+# Download GitHub repository zip handling a timeout
+def download_zip_timeout(zip_directory, repo_name, commit, queue):
+    download_url =f"https://github.com/{repo_name}/archive/{commit}.zip"
+
+    response = requests.get(download_url)
+    # Commit not found
+    if response.status_code == 404:
+        print(f'Error in repository {repo_name} ZIP download: commit {commit} not found')
+        queue.put(-1)
+        return
+    # Generic error
+    elif response.status_code != 200:
+        print(f'Error in repository {repo_name} ZIP download: {response.status_code}')
+        queue.put(-1)
+        return
+    # Commit found
+    else:
+        zip_path = f"{zip_directory}/{repo_name.replace('/', '_')}.zip"
+        with open(zip_path, "wb") as f:
+            f.write(response.content)
+
+        queue.put(zip_path)
+        return
     
 
 # Delete cache and tar-gz models (except last one)

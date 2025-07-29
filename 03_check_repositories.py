@@ -1,22 +1,24 @@
 import csv
 import zipfile
 import re
-from utils import download_zip, clean_zip
+from utils import download_zip_no_timeout, download_zip_timeout, clean_zip
 import os
 from utils import sync
 import shutil
 import argparse
+from multiprocessing import Process, Queue, freeze_support
 
 
 INPUT_FOLDER = os.path.join('results', '02_results')
 REPOSITORIES_FILE = 'repositories_commit.csv'
-RESULTS_FOLDER = os.path.join('results', '03_results_prova')
+RESULTS_FOLDER = os.path.join('results', '03_results')
 CHATBOTS_FILE = 'chatbot_repositories.csv'
 NOT_CHATBOTS_FILE = 'not_chatbot_repositories.csv'
 NOT_INDEXED_REPO_FILE = 'not_indexed_repositories.csv'
 NOT_FOUND_REPOSITORIES_FILE = 'not_found_repositories.csv'
 ZIP_DIRECTORY = 'chatbot_repositories_zip'
 CSV_SEPARATOR= ';'
+TIMEOUT_REPO_FILE = 'timeout_repositories.csv'
 
     
 
@@ -42,17 +44,37 @@ def find_keyword_in_repo(keyword, repo_zip_path, commit):
                 print(f"Decode error")
     return domain_files
 
+# Handle download zip with timeout
+def handle_download_zip_timeout(zip_directory, repo_name, commit, timeout):
+    queue = Queue()
+    p = Process(target=download_zip_timeout, args=(zip_directory, repo_name, commit, queue))
+    p.start()
+    p.join(timeout)
+    
+    if p.is_alive():
+        p.terminate()
+        p.join()
+        print(f"Timeout in repository {repo_name} ZIP download: exceeded {timeout} seconds")
+        return 0
+    
+    return queue.get() if not queue.empty() else -1
 
 
 def main():
 
-    # Optional argument for number of repositories
+    # Optional argument for number of repositories and timeout
     parser = argparse.ArgumentParser(description='Parser')
     parser.add_argument(
         "--n-repos",
         type=int,
         default=-1,
         help="Number of repositories (default: all)"
+    )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=-1,
+        help="Timeout for zip download (default: none)"
     )
 
     args = parser.parse_args()
@@ -80,6 +102,10 @@ def main():
     cb_csv = csv.DictWriter(cb_file, fieldnames=cb_headers, delimiter=CSV_SEPARATOR)
     cb_csv.writeheader()
 
+    timeout_file = open(os.path.join(RESULTS_FOLDER, TIMEOUT_REPO_FILE), 'w', newline='')
+    timeout_csv = csv.DictWriter(timeout_file, fieldnames= reader.fieldnames, delimiter=CSV_SEPARATOR)
+    timeout_csv.writeheader()
+
     
     # Create zip folder if not already defined
     if not os.path.isdir(ZIP_DIRECTORY):
@@ -99,9 +125,25 @@ def main():
           print('sync')
         try:
             # Download zip
-            zip_path = download_zip(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'])
+            if args.timeout > 0:
+                zip_path = handle_download_zip_timeout(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'], args.timeout)
+            else:
+                zip_path = download_zip_timeout(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'], args.timeout)
             print('Download completed')
-            if zip_path != -1:
+
+            # Timeout error
+            if zip_path == 0:
+                timeout_csv.writerow(repo)
+                # Remove zip
+                #os.remove(zip_path) 
+
+            # Not found error
+            elif zip_path == -1:
+                print(f"Not Found repository: {e}")
+                not_found_csv.writerow(repo)
+            
+            # Repository downloaded
+            else:
                 # Chatbot check
                 domain_files = find_keyword_in_repo('intents', zip_path, repo['last-commit'])
                 # Not chatbot
@@ -127,6 +169,11 @@ def main():
     cb_file.close()
     ncb_file.close()
     not_found_repo_file.close()
+    timeout_file.close()
     #sync(ZIP_DIRECTORY)
 
-main()
+
+if __name__ == "__main__":
+    from multiprocessing import freeze_support
+    freeze_support()
+    main()
