@@ -15,10 +15,10 @@ USER_AGENT = 'agent'
 
 
 REPO_KEYWORDS = ['rasa', 'chatbot'] 
-RESULTS_FOLDER = 'results/01_results'
-RESULT_FILE = RESULTS_FOLDER + '/' +'repositories.csv'
+RESULTS_FOLDER = os.path.join('results', '01_results')
+RESULT_FILE = os.path.join(RESULTS_FOLDER, 'repositories.csv')
 CSV_SEPARATOR= ';'
-REPO_JSON_DIRECTORY =  RESULTS_FOLDER + '/' + 'repositories_json'
+REPO_JSON_DIRECTORY =  os.path.join(RESULTS_FOLDER, 'repositories_json')
   
 
 headers = {

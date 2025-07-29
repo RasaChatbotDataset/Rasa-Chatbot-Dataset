@@ -6,13 +6,13 @@ import os
 from utils import sync
 
 
-RESULTS_FOLDER = 'results/04_results'
-CHATBOTS_BEFORE_CLEAN_NAME=  'results/03_results/chatbot_repositories.csv'
-CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories.csv'
-NO_MORE_DOMAIN_FILE_NAME = RESULTS_FOLDER + '/' + 'discarded_repositories.csv'
+RESULTS_FOLDER = os.path.join('results', '04_results')
+CHATBOTS_BEFORE_CLEAN_NAME=  os.path.join('results', '03_results', 'chatbot_repositories.csv')
+CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories.csv')
+NO_MORE_DOMAIN_FILE_NAME = os.path.join(RESULTS_FOLDER, 'discarded_repositories.csv')
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-CHECK_DOMAIN_STATISTICS_FILE = RESULTS_FOLDER + '/' + 'clean_domain_statistics.txt'
+CHECK_DOMAIN_STATISTICS_FILE = os.path.join(RESULTS_FOLDER, 'clean_domain_statistics.txt')
 
 
 # Clean wrong domain files
@@ -103,7 +103,7 @@ def main():
     for chatbot_info in chatbots:
 
         # Open zip file
-        zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
+        zip_path = os.path.join(ZIP_FOLDER, chatbot_info['full-name'].replace('/', '_') + '.zip')
         try:
             repository =  zipfile.ZipFile(zip_path, 'r')
         except:

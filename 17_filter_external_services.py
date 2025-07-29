@@ -3,8 +3,8 @@ import os
 import ast
 
 CSV_SEPARATOR = ';'
-INPUT_FOLDER = 'results/16_results/'
-RESULTS_FOLDER = 'results/17_results/'
+INPUT_FOLDER = os.path.join('results', '16_results')
+RESULTS_FOLDER = os.path.join('results', '17_results')
 CHATBOT_FILE = 'chatbots.csv'
 STATISTICS = 'blacklist-statistics.txt'
 
@@ -19,7 +19,7 @@ def main():
 
     # Open files
     csv.field_size_limit(100000000)
-    chatbot_file = open(INPUT_FOLDER + CHATBOT_FILE, 'r', encoding="utf-8")
+    chatbot_file = open(os.path.join(INPUT_FOLDER, CHATBOT_FILE), 'r', encoding="utf-8")
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
@@ -27,7 +27,7 @@ def main():
     blacklist = bl_file.read().split(CSV_SEPARATOR)
     print(blacklist)
 
-    result_file = open(RESULTS_FOLDER + '1_' + CHATBOT_FILE, 'w', newline='', encoding="utf-8")
+    result_file = open(os.path.join(RESULTS_FOLDER, '1_' + CHATBOT_FILE), 'w', newline='', encoding="utf-8")
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames, extrasaction='ignore')
     writer.writeheader()
 
@@ -69,7 +69,7 @@ def main():
         writer.writerow(chatbot)
     
     # Write statistics
-    statistics_file = open(RESULTS_FOLDER + STATISTICS, 'w', newline='')
+    statistics_file = open(os.path.join(RESULTS_FOLDER, STATISTICS), 'w', newline='')
     statistics_file.write('SERVICES REMOVED: '+ str(removed_services))
     statistics_file.write('\nCHATBOTS WITH NO MORE SERVICES: '+ str(no_more_services))
 

@@ -7,9 +7,9 @@ from utils import sync
 import shutil
 
 
-INPUT_FOLDER = 'results/02_results'
+INPUT_FOLDER = os.path.join('results', '02_results')
 REPOSITORIES_FILE = 'repositories_commit.csv'
-RESULTS_FOLDER = 'results/03_results_prova'
+RESULTS_FOLDER = os.path.join('results', '03_results_prova')
 CHATBOTS_FILE = 'chatbot_repositories.csv'
 NOT_CHATBOTS_FILE = 'not_chatbot_repositories.csv'
 NOT_INDEXED_REPO_FILE = 'not_indexed_repositories.csv'
@@ -50,20 +50,20 @@ def main():
         os.mkdir(RESULTS_FOLDER)
 
     # Open file
-    repo_file = open(   INPUT_FOLDER + '/' +REPOSITORIES_FILE, 'r')
+    repo_file = open( os.path.join(INPUT_FOLDER, REPOSITORIES_FILE), 'r')
     reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
     repositories = list(reader)
     
     # Open result files
-    not_found_repo_file = open(RESULTS_FOLDER+'/'+NOT_FOUND_REPOSITORIES_FILE, 'w', newline='')
+    not_found_repo_file = open(os.path.join(RESULTS_FOLDER, NOT_FOUND_REPOSITORIES_FILE), 'w', newline='')
     not_found_csv = csv.DictWriter(not_found_repo_file, fieldnames=reader.fieldnames, delimiter=CSV_SEPARATOR)
     not_found_csv.writeheader()
 
-    ncb_file = open(RESULTS_FOLDER+'/'+NOT_CHATBOTS_FILE, 'w', newline='')
+    ncb_file = open(os.path.join(RESULTS_FOLDER, NOT_CHATBOTS_FILE), 'w', newline='')
     ncb_csv = csv.DictWriter(ncb_file, fieldnames= reader.fieldnames, delimiter=CSV_SEPARATOR)
     ncb_csv.writeheader()
 
-    cb_file = open(RESULTS_FOLDER+'/'+CHATBOTS_FILE, 'w', newline='')
+    cb_file = open(os.path.join(RESULTS_FOLDER, CHATBOTS_FILE), 'w', newline='')
     cb_headers =  reader.fieldnames + ['domain-files']
     cb_csv = csv.DictWriter(cb_file, fieldnames=cb_headers, delimiter=CSV_SEPARATOR)
     cb_csv.writeheader()

@@ -12,9 +12,9 @@ import csv
 config = dotenv_values('config.env')
 detectlanguage.configuration.api_key = config['DETECT_LANGUAGE_KEY']
 
-INPUT_FILE = 'results/11_results/chatbots.csv'
-RESULTS_FOLDER = 'results/12_results/'
-CHATBOT_FILE = RESULTS_FOLDER + 'chatbots.csv'
+INPUT_FILE = os.path.join('results', '11_results', 'chatbots.csv')
+RESULTS_FOLDER = os.path.join('results', '12_results')
+CHATBOT_FILE = os.path.join(RESULTS_FOLDER, 'chatbots.csv')
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 
@@ -23,7 +23,7 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 def extract_response_language(chatbot):
 
     # Get all domain files
-    zip_path = ZIP_FOLDER + '/' + chatbot['full-name'].replace('/', '_') + '.zip'
+    zip_path = os.path.join(ZIP_FOLDER,  chatbot['full-name'].replace('/', '_') + '.zip')
     repository =  zipfile.ZipFile(zip_path, 'r')
 
     file_list = ast.literal_eval(chatbot['domain-files'])

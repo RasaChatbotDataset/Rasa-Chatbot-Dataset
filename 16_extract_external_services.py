@@ -12,10 +12,10 @@ TOP_P = 0.15
 
 config = dotenv_values('config.env')
 
-FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
-RESULTS_FOLDER = 'results/16_results/'
-CHATGPT_RESPONSE_FOLDER = RESULTS_FOLDER +'/chatgpt_responses'
-INPUT_FOLDER = 'results/15_results/'
+FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+RESULTS_FOLDER = os.path.join('results', '16_results')
+CHATGPT_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'chatgpt_responses')
+INPUT_FOLDER = os.path.join('results', '15_results')
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
@@ -92,11 +92,11 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type):
     content = json_response['choices'][0]['message']['content']#"NO\n\nPurpose of external services"#
 
     # Create result folder
-    if not os.path.isdir(CHATGPT_RESPONSE_FOLDER + '/' + chatbot_id.replace('/', '_')):
-        os.mkdir(CHATGPT_RESPONSE_FOLDER + '/' + chatbot_id.replace('/', '_'))
+    if not os.path.isdir(os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot_id.replace('/', '_'))):
+        os.mkdir(os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot_id.replace('/', '_')))
 
     # Save request and response
-    r_file = CHATGPT_RESPONSE_FOLDER + '/' + chatbot_id.replace('/', '_') + '/' + file_type + '_' + str(n_file) + '.txt'
+    r_file = os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot_id.replace('/', '_'), file_type + '_' + str(n_file) + '.txt')
     response_file = open(r_file, 'w', encoding="utf-8", errors="replace")
     response_file.write('REQUEST\n' + prompt + '\n\nRESPONSE\n' + content)
     response_file.close()
@@ -176,7 +176,7 @@ def extract_services_from_files(chatbot, file_type, file_list):
 
     external_services = []
 
-    zip_path = ZIP_FOLDER + '/' + chatbot['full-name'].replace('/', '_') + '.zip'
+    zip_path = os.path.join(ZIP_FOLDER, chatbot['full-name'].replace('/', '_') + '.zip')
     repository =  zipfile.ZipFile(zip_path, 'r')
 
     # For each file
@@ -203,7 +203,7 @@ def main():
         os.mkdir(CHATGPT_RESPONSE_FOLDER)
 
     # Join chatbot files
-    chatbots = pd.read_csv(INPUT_FOLDER + CHATBOT_FILE, sep=CSV_SEPARATOR)
+    chatbots = pd.read_csv(os.path.join(INPUT_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
 
     for file in FILES:
@@ -213,7 +213,7 @@ def main():
 
     chatbots = pd.merge(chatbots, cb_files, how='inner')
 
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots_join_files.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots_join_files.csv'), sep=CSV_SEPARATOR, index=False)
 
     # Add columns
     chatbots['external-services-actions'] = None
@@ -247,7 +247,7 @@ def main():
     chatbots = chatbots.drop('readme-files', axis=1)
     chatbots = chatbots.drop('n-actions-files', axis=1)
     chatbots = chatbots.drop('actions-files', axis=1)
-    chatbots.to_csv(RESULTS_FOLDER +CHATBOT_FILE, sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR, index=False)
 
 
 

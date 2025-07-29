@@ -3,8 +3,8 @@ import os
 import csv
 
 
-RESULTS_FOLDER = 'results/15_results/'
-INPUT_FOLDER = 'results/14_results/'
+RESULTS_FOLDER = os.path.join('results', '15_results')
+INPUT_FOLDER = os.path.join('results', '14_results')
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 
@@ -19,14 +19,14 @@ def main():
         os.mkdir(RESULTS_FOLDER)
 
     # Open files
-    chatbot_file = open(INPUT_FOLDER + CHATBOT_FILE, 'r', encoding='utf-8')
+    chatbot_file = open(os.path.join(INPUT_FOLDER, CHATBOT_FILE), 'r', encoding='utf-8')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
     header = reader.fieldnames
     header.remove('has-english')
 
-    result_file = open(RESULTS_FOLDER + CHATBOT_FILE, 'w', newline='', encoding='utf-8')
+    result_file = open(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), 'w', newline='', encoding='utf-8')
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
 

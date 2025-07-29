@@ -8,8 +8,8 @@ import traceback
 
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-RESULTS_FOLDER = 'results/07_results'
-INPUT_FOLDER = 'results/06_results'
+RESULTS_FOLDER = os.path.join('results', '07_results')
+INPUT_FOLDER = os.path.join('results', '06_results')
 
 FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
     'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 
@@ -189,18 +189,18 @@ def main():
         os.mkdir(RESULTS_FOLDER)
 
     # Error file
-    error_file = open(RESULTS_FOLDER + '/' +ERROR_FILE, 'w', newline='')
+    error_file = open(os.path.join(RESULTS_FOLDER, ERROR_FILE), 'w', newline='')
     error_writer = csv.DictWriter(error_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS[:10] + ['chatbot-type', 'exception'], extrasaction='ignore')
     error_writer.writeheader()
 
     for file in CHATBOT_FILES:
 
         # Open files
-        chatbot_file = open(INPUT_FOLDER + '/' +file+'.csv', 'r')
+        chatbot_file = open(os.path.join(INPUT_FOLDER, file+'.csv'), 'r')
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
 
-        analysis_file = open(RESULTS_FOLDER + '/' +file+'_info.csv', 'w', newline='')
+        analysis_file = open(os.path.join(RESULTS_FOLDER, file+'_info.csv'), 'w', newline='')
         analysis_writer = csv.DictWriter(analysis_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS, extrasaction='ignore')
         analysis_writer.writeheader()
 
@@ -210,7 +210,7 @@ def main():
             chatbot_info['actions-files'] = ast.literal_eval(chatbot_info['actions-files'])
 
             # Open zip archive
-            zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
+            zip_path = os.path.join(ZIP_FOLDER, chatbot_info['full-name'].replace('/', '_') + '.zip')
             repository =  zipfile.ZipFile(zip_path, 'r')
             file_list = repository.namelist()  
 

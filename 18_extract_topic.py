@@ -13,14 +13,14 @@ TOP_P = 0.15
 
 config = dotenv_values('config.env')
 
-FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
-RESULTS_FOLDER = 'results/18_results/'
-CHATGPT_RESPONSE_FOLDER = RESULTS_FOLDER +'/chatgpt_responses'
-INPUT_FILE = 'results/17_results/3_chatbots.csv'
+FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+RESULTS_FOLDER = os.path.join('results', '18_results')
+CHATGPT_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'chatgpt_responses')
+INPUT_FILE = os.path.join('results', '17_results', '3_chatbots.csv')
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-JSON_FOLDER = 'results/01_results/repositories_json/'
+JSON_FOLDER = os.path.join('results', '01_results', 'repositories_json')
 TOPICS_FILE_NAME = '18_topic_categories.csv'
 
 
@@ -57,7 +57,7 @@ def extract_topic(chatbot, topics):
     # Readme files (exclude rasa hq base one)
     readme_merge = ""
     file_list = ast.literal_eval(chatbot['readme-files'])
-    zip_path = ZIP_FOLDER + '/' + chatbot['full-name'].replace('/', '_') + '.zip'
+    zip_path = os.path.join(ZIP_FOLDER, chatbot['full-name'].replace('/', '_') + '.zip')
     repository =  zipfile.ZipFile(zip_path, 'r')
 
     for file in file_list:
@@ -73,7 +73,7 @@ def extract_topic(chatbot, topics):
                 print(f"Decode error")
 
     # Repository description
-    repo_json_file = JSON_FOLDER + chatbot['full-name'].replace('/', '_') + '.json'
+    repo_json_file = os.path.join(JSON_FOLDER, chatbot['full-name'].replace('/', '_') + '.json')
     f = open(repo_json_file)
     json_repo = json.load(f)
     description = json_repo['description']
@@ -108,7 +108,7 @@ def extract_topic(chatbot, topics):
     topic = json_response['choices'][0]['message']['content'] #"NO\n\nPurpose of external services"#
 
     # Save request and response
-    r_file = CHATGPT_RESPONSE_FOLDER + '/' + chatbot['id'].replace('/', '_') + '.txt'
+    r_file = os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot['id'].replace('/', '_') + '.txt')
     response_file = open(r_file, 'w', encoding="utf-8", errors="replace")
     response_file.write('REQUEST\n' + prompt + '\n\nRESPONSE\n' + topic)
     response_file.close()
@@ -136,7 +136,7 @@ def main():
 
     chatbots = pd.merge(chatbots, cb_files, how='inner')
 
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots_join_readme.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots_join_readme.csv'), sep=CSV_SEPARATOR, index=False)
 
     # Set TOPICS
     topics_file = open(TOPICS_FILE_NAME, 'r', encoding='utf-8')
@@ -162,7 +162,7 @@ def main():
     chatbots = chatbots.drop('n-readme-files', axis=1)
     chatbots = chatbots.drop('readme-files', axis=1)
 
-    chatbots.to_csv(RESULTS_FOLDER +CHATBOT_FILE, sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR, index=False)
 
 
 

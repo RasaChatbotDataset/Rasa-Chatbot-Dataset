@@ -6,19 +6,19 @@ import yaml
 from deepdiff import DeepDiff
 
 csv.field_size_limit(100000000)
-INPUT_FOLDER = 'results/07_results/'
-RESULTS_FOLDER = 'results/08_results/'
+INPUT_FOLDER = os.path.join('results', '07_results')
+RESULTS_FOLDER = os.path.join('results', '08_results')
 MD_FILES = ['chatbot_repositories_sfmd_info.csv', 'chatbot_repositories_mfmd_info.csv']
 CSV_SEPARATOR = ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-MD_STATISTICS_FILE = RESULTS_FOLDER + 'md_statistics.txt'
+MD_STATISTICS_FILE = os.path.join(RESULTS_FOLDER, 'md_statistics.txt')
 
 
 # Remove domain copies
 def clean_same_domain(domain_files):
 
     # Open zip file
-    zip_path = ZIP_FOLDER + '/' + domain_files[0]['full-name'].replace('/', '_') + '.zip'
+    zip_path = os.path.join(ZIP_FOLDER, domain_files[0]['full-name'].replace('/', '_') + '.zip')
     try:
         repository =  zipfile.ZipFile(zip_path, 'r')
     except:
@@ -176,11 +176,11 @@ def main():
     for file in MD_FILES:
         
         # Open files
-        chatbot_file = open(INPUT_FOLDER + file, 'r', encoding="utf-8")
+        chatbot_file = open(os.path.join(INPUT_FOLDER, file), 'r', encoding="utf-8")
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         domains = list(reader)
 
-        result_file = open(RESULTS_FOLDER + file, 'w', newline='', encoding="utf-8")
+        result_file = open(os.path.join(RESULTS_FOLDER, file), 'w', newline='', encoding="utf-8")
         result_writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames + ['status'], extrasaction='ignore')
         result_writer.writeheader()
 

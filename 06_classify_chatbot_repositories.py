@@ -4,12 +4,12 @@ import copy
 import os
 
 CSV_SEPARATOR= ';'
-RESULTS_FOLDER = 'results/06_results'
-CHATBOTS_FILE_NAME = 'results/05_results/chatbot_repositories_files.csv'
-MFSD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_mfsd.csv'
-SFSD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_sfsd.csv'
-MFMD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_mfmd.csv'
-SFMD_CHATBOTS_FILE_NAME = RESULTS_FOLDER + '/' + 'chatbot_repositories_sfmd.csv'
+RESULTS_FOLDER = os.path.join('results', '06_results')
+CHATBOTS_FILE_NAME = os.path.join('results', '05_results', 'chatbot_repositories_files.csv')
+MFSD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_mfsd.csv')
+SFSD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_sfsd.csv')
+MFMD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_mfmd.csv')
+SFMD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_sfmd.csv')
 
 fields = ['id', 'full-name', 'html-url', 'stars', 'forks', 'created-at', 'updated-at', 'pushed-at', 'default-branch', 'owner-name', 'owner-id','owner-type',
           'last-commit', 'last-commit-date', 'domain-folder', 'domain-files', 'n-domain-files', 'nlu-files' , 'n-nlu-files', 'actions-files', 

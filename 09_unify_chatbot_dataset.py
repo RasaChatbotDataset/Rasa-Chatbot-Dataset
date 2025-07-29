@@ -3,10 +3,10 @@ import os
 import ast
 
 csv.field_size_limit(100000000)
-INPUT_FOLDER_MD = 'results/08_results/'
-INPUT_FOLDER_SD = 'results/07_results/'
-RESULTS_FOLDER = 'results/09_results/'
-FILES = [INPUT_FOLDER_SD + 'chatbot_repositories_sfsd_info.csv', INPUT_FOLDER_SD + 'chatbot_repositories_mfsd_info.csv', INPUT_FOLDER_MD + 'chatbot_repositories_sfmd_info.csv', INPUT_FOLDER_MD +'chatbot_repositories_mfmd_info.csv']
+INPUT_FOLDER_MD = os.path.join('results', '08_results')
+INPUT_FOLDER_SD = os.path.join('results', '07_results')
+RESULTS_FOLDER = os.path.join('results', '09_results')
+FILES = [os.path.join(INPUT_FOLDER_SD, 'chatbot_repositories_sfsd_info.csv'), os.path.join(INPUT_FOLDER_SD, 'chatbot_repositories_mfsd_info.csv'), os.path.join(INPUT_FOLDER_MD, 'chatbot_repositories_sfmd_info.csv'), os.path.join(INPUT_FOLDER_MD, 'chatbot_repositories_mfmd_info.csv')]
 TYPES = ['sfsd', 'mfsd', 'sfmd', 'mfmd']
 CSV_SEPARATOR = ';'
 
@@ -18,7 +18,7 @@ def main():
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
     
-    result_file = open(RESULTS_FOLDER + 'chatbots.csv', 'w', newline='', encoding="utf-8")
+    result_file = open(os.path.join(RESULTS_FOLDER, 'chatbots.csv'), 'w', newline='', encoding="utf-8")
     
     # For each chatbot file and type
     for file, type in zip(FILES, TYPES):

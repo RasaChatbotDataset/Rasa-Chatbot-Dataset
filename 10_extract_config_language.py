@@ -6,9 +6,9 @@ import json
 import zipfile
 import re
 
-FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
-RESULTS_FOLDER = 'results/10_results/'
-CHATBOT_FILE = 'results/09_results/chatbots.csv'
+FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+RESULTS_FOLDER = os.path.join('results', '10_results')
+CHATBOT_FILE = os.path.join('results', '09_results', 'chatbots.csv')
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 PROGRAMMING_LANGUAGES = ['java', 'python', 'android', 'node_js', 'php', 'generic']
@@ -17,7 +17,7 @@ PROGRAMMING_LANGUAGES = ['java', 'python', 'android', 'node_js', 'php', 'generic
 
 # Extract language from configuration file
 def extract_config_language(chatbot):
-    zip_path = ZIP_FOLDER + '/' + chatbot['full-name'].replace('/', '_') + '.zip'
+    zip_path = os.path.join(ZIP_FOLDER, chatbot['full-name'].replace('/', '_') + '.zip')
 
     repository =  zipfile.ZipFile(zip_path, 'r')
 
@@ -81,7 +81,7 @@ def main():
 
     chatbots = pd.merge(chatbots, cb_files, how='inner')
 
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots_join_config_file.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots_join_config_file.csv'), sep=CSV_SEPARATOR, index=False)
 
     # Extract configuration language
     chatbots['config-languages'] = chatbots.apply(extract_config_language, axis=1)
@@ -91,6 +91,6 @@ def main():
     chatbots = chatbots.drop('language-files', axis=1)
 
     # Write dataset
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots.csv'), sep=CSV_SEPARATOR, index=False)
 
 main()

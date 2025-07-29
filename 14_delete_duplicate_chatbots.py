@@ -5,13 +5,12 @@ import pandas as pd
 from difflib import SequenceMatcher
 
 
-RESULTS_FOLDER = 'results/14_results/'
-INPUT_FOLDER = 'results/13_results/'
+RESULTS_FOLDER = os.path.join('results', '14_results')
+INPUT_FOLDER = os.path.join('results', '13_results')
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-DATE_FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
-
+DATE_FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
 FIELDS = ['intents', 'entities', 'actions', 'slots','slots-type', 'forms', 'config-languages', 'training-language', 'response-languages', 'n-actions-files']
 
 ORDER_COLUMNS = ['id', 'full-name', 'html-url', 'stars', 'forks', 'owner-name', 'owner-type', 'created-at', 'last-commit', 'last-commit-date', 'domain-files', 'type', 'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 'slots-type', 'n-forms', 'forms', 'version', 'config-languages', 'training-language', 'response-languages', 'languages', 'has-english', 'pure-english', 'n-actions-files']
@@ -34,7 +33,7 @@ def select_best_copies(copies):
             copy_action_files_contents = []
 
             # Open zip
-            zip_path = ZIP_FOLDER + '/' + copy['full-name'].replace('/', '_') + '.zip'
+            zip_path = os.path.join(ZIP_FOLDER, copy['full-name'].replace('/', '_') + '.zip')
             try:
                 repository =  zipfile.ZipFile(zip_path, 'r')
             except:
@@ -128,7 +127,7 @@ def main():
         cb_with_files = cb_with_files[['id', 'created-at', 'owner-name', 'owner-type', 'last-commit-date', 'actions-files']]
         cb_files = pd.concat([cb_files, cb_with_files])
     chatbots = pd.merge(chatbots, cb_files, how='inner', on=['id'])
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots_join_date.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots_join_date.csv'), sep=CSV_SEPARATOR, index=False)
     
     # Order chatbots to have copies one after another
     order_fields = FIELDS + ['version', 'stars', 'forks', 'created-at'] 
@@ -137,7 +136,7 @@ def main():
 
     # Find copies (by equal fields)
     copies = chatbots[chatbots.duplicated(subset=FIELDS, keep=False)].reset_index(drop=True)
-    copies.to_csv(RESULTS_FOLDER + 'copies.csv', sep=CSV_SEPARATOR, index=False)
+    copies.to_csv(os.path.join(RESULTS_FOLDER, 'copies.csv'), sep=CSV_SEPARATOR, index=False)
 
     # Drop all copies
     chatbots.drop_duplicates(inplace=True, subset=FIELDS, keep=False)
@@ -189,8 +188,8 @@ def main():
     chatbots = chatbots.sort_values(by= 'id')
     chatbots = chatbots[ORDER_COLUMNS]
 
-    chatbots.to_csv(RESULTS_FOLDER + CHATBOT_FILE, sep=CSV_SEPARATOR, index=False)
-    copies_to_keep.to_csv(RESULTS_FOLDER + 'copies_to_keep.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR, index=False)
+    copies_to_keep.to_csv(os.path.join(RESULTS_FOLDER, 'copies_to_keep.csv'), sep=CSV_SEPARATOR, index=False)
     
     
 

@@ -13,9 +13,9 @@ config = dotenv_values('config.env')
 detectlanguage.configuration.api_key = config['DETECT_LANGUAGE_KEY']
 
 
-FILES = ['results/06_results/chatbot_repositories_sfsd.csv', 'results/06_results/chatbot_repositories_mfsd.csv', 'results/06_results/chatbot_repositories_sfmd.csv', 'results/06_results/chatbot_repositories_mfmd.csv']
-RESULTS_FOLDER = 'results/11_results/'
-CHATBOT_FILE = 'results/10_results/chatbots.csv'
+FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+RESULTS_FOLDER = os.path.join('results', '11_results')
+CHATBOT_FILE = os.path.join('results', '10_results', 'chatbots.csv')
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 
@@ -24,7 +24,7 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 def extract_training_language(chatbot):
 
     # Get all configuration file from repository
-    zip_path = ZIP_FOLDER + '/' + chatbot['full-name'].replace('/', '_') + '.zip'
+    zip_path = os.path.join(ZIP_FOLDER, chatbot['full-name'].replace('/', '_') + '.zip')
     repository =  zipfile.ZipFile(zip_path, 'r')
 
     file_list = ast.literal_eval(chatbot['nlu-files'])
@@ -255,7 +255,7 @@ def main():
 
     chatbots = pd.merge(chatbots, cb_files, how='inner')
 
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots_join_nlu_file.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots_join_nlu_file.csv'), sep=CSV_SEPARATOR, index=False)
     chatbots['training-language'] = None
     
     for index, chatbot in chatbots.iterrows():
@@ -282,7 +282,7 @@ def main():
     chatbots = chatbots.drop('nlu-files', axis=1)
 
     # Write dataset
-    chatbots.to_csv(RESULTS_FOLDER + 'chatbots.csv', sep=CSV_SEPARATOR, index=False)
+    chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots.csv'), sep=CSV_SEPARATOR, index=False)
 
 
 

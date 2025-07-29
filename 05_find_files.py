@@ -7,11 +7,11 @@ import json
 from pathlib import Path
 import os
 
-RESULTS_FOLDER = 'results/05_results'
-CHATBOTS_FILE_NAME = 'results/04_results/chatbot_repositories.csv'
+RESULTS_FOLDER = os.path.join('results', '05_results')
+CHATBOTS_FILE_NAME = os.path.join('results', '04_results', 'chatbot_repositories.csv')
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-CHATBOTS_ANALYSIS_FILE_NAME = RESULTS_FOLDER + '/' +'chatbot_repositories_files.csv'
+CHATBOTS_ANALYSIS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_files.csv')
 
 # Find nlu files
 def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model): 
@@ -97,7 +97,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
             except:
                 print('JSON parsing error')
         
-        elif file.endswith('.md') and file.split('/')[-1] != 'README.md' and file.split('/')[-1] != 'readme.md':
+        elif file.endswith('.md') and file.split(os.sep)[-1] != 'README.md' and file.split(os.sep)[-1] != 'readme.md':
             # NLU file
             if '## intent:' in content:
                 if 'test' in clean_file_name and not domain_is_test:
@@ -350,7 +350,7 @@ def main():
     for chatbot_info in chatbots:
 
         # Open zip
-        zip_path = ZIP_FOLDER + '/' + chatbot_info['full-name'].replace('/', '_') + '.zip'
+        zip_path = os.path.join(ZIP_FOLDER, chatbot_info['full-name'].replace('/', '_') + '.zip')
 
         repository =  zipfile.ZipFile(zip_path, 'r')
 

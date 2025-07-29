@@ -9,11 +9,11 @@ config = dotenv_values('config.env')
 GITHUB_API_URL = "https://api.github.com"
 ACCESS_TOKEN = config['GITHUB_TOKEN']
 USER_AGENT = 'agent' 
-RESULTS_FOLDER = 'results/02_results'
-REPOSITORIES_FILE = 'results/01_results/repositories.csv'
+RESULTS_FOLDER = os.path.join('results','02_results')
+REPOSITORIES_FILE = os.path.join('results', '01_results', 'repositories.csv')
 CSV_SEPARATOR= ';'
-COMMIT_REPO_FILE =  RESULTS_FOLDER + '/' + 'repositories_commit.csv'
-EMPTY_REPOSITORIES = RESULTS_FOLDER + '/' + 'empty_repositories.csv'
+COMMIT_REPO_FILE =  os.path.join(RESULTS_FOLDER, 'repositories_commit.csv')
+EMPTY_REPOSITORIES = os.path.join(RESULTS_FOLDER, 'empty_repositories.csv')
   
 
 headers = {
