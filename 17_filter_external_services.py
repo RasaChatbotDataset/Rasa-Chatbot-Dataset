@@ -17,6 +17,8 @@ def main():
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    print('\n\n', '-'*20, 'EXTERNAL SERVICES FILTERING', '-'*20, '\n') 
+
     # Open files
     csv.field_size_limit(100000000)
     chatbot_file = open(os.path.join(INPUT_FOLDER, CHATBOT_FILE), 'r', encoding="utf-8")
@@ -78,5 +80,6 @@ def main():
     bl_file.close()
     result_file.close()
     statistics_file.close()
+    print('Step 17 completed')
 
 main()

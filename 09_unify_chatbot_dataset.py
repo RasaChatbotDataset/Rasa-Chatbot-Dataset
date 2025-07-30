@@ -12,7 +12,9 @@ CSV_SEPARATOR = ';'
 
 
 
-def main(): 
+def main():
+
+    print('\n\n', '-'*20, 'CHATBOT FILES UNIFICATION', '-'*20, '\n') 
 
     # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
@@ -26,6 +28,8 @@ def main():
         chatbot_file = open(file, 'r', encoding="utf-8")
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
+
+        print(f"{type.upper()} CHATBOTS: {len(chatbots)}")
 
         # Open result file
         if type == 'sfsd':
@@ -60,6 +64,7 @@ def main():
 
             chatbot['type'] = type
             result_writer.writerow(chatbot)
+    print('Step 9 completed')
 
 
 main()

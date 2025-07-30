@@ -62,7 +62,7 @@ def clean_zip(zip_path):
                 
                 for file in zip_in.namelist():
                     if file.endswith('.tar.gz'):
-                        print(file)
+                        #print(file)
                         # Select most recent date
                         if re.match('^\d{8}-\d{6}', file.split('/')[-1]):
                             most_recent_date = most_recent_model.split('/')[-1][:15]
@@ -76,7 +76,7 @@ def clean_zip(zip_path):
 
                 # Write most recent model
                 if most_recent_model != '00000000-000000.tar.gz':
-                    print('writing most recent')
+                    #print('writing most recent')
                     zip_out.writestr(most_recent_model, zip_in.read(most_recent_model))
     
         os.remove(zip_path)
@@ -89,10 +89,10 @@ def clean_zip(zip_path):
 
 
 # Download and clean zip
-def download_clean_zip(zip_directory, repo_name, commit):
-    zip_path = download_zip(zip_directory, repo_name, commit)
-    if zip_path != -1 and zip_path != 0:
-        clean_zip(zip_path)
+#def download_clean_zip(zip_directory, repo_name, commit):
+#    zip_path = download_zip(zip_directory, repo_name, commit)
+#    if zip_path != -1 and zip_path != 0:
+#        clean_zip(zip_path)
 
 
 # Sync zip folder on google drive with rclone

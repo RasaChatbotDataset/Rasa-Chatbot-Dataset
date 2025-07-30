@@ -3,8 +3,8 @@ import os
 import csv
 
 RESULTS_FOLDER = os.path.join('results', '13_results')
-INPUT_FILE = os.path.join(RESULTS_FOLDER, 'chatbots_language_check.csv')
-OUTPUT_FILE = os.path.join(RESULTS_FOLDER, 'chatbots.csv')
+INPUT_FILE = os.path.join('results', '12_results', 'chatbots.csv')
+OUTPUT_FILE = os.path.join(RESULTS_FOLDER, 'chatbots_language_check.csv')
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 
@@ -14,6 +14,8 @@ def main():
     # Create result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
+
+    print('\n\n', '-'*20, 'RESPONSE EVALUATION', '-'*20, '\n') 
 
     # Open files
     csv.field_size_limit(100000000)
@@ -71,6 +73,7 @@ def main():
     # Close files
     chatbot_file.close()
     result_file.close()
+    print('Step 13 completed')
 
 
 

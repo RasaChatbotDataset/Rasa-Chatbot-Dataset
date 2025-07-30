@@ -18,6 +18,8 @@ def main():
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
+    print('\n\n', '-'*20, 'CHATBOT SELECTION', '-'*20, '\n') 
+
     # Open files
     chatbot_file = open(os.path.join(INPUT_FOLDER, CHATBOT_FILE), 'r', encoding='utf-8')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
@@ -30,6 +32,8 @@ def main():
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
 
+    selected_chatbots = 0
+
     # Select chatbots
     for chatbot in chatbots:
         chatbot['has-english'] = ast.literal_eval(chatbot['has-english'])
@@ -38,10 +42,13 @@ def main():
         if chatbot['has-english'] and int(chatbot['stars']) > 0 and int(chatbot['n-actions-custom']) > 0 and (int(chatbot['n-entities']) > 0 or int(chatbot['n-slots']) > 0) and recent:
             del chatbot['has-english']
             writer.writerow(chatbot)
+            selected_chatbots += 1
     
     # Close files
     chatbot_file.close()
     result_file.close()
+    print('Step 15 completed')
+    print(f"Chatbots selected: {selected_chatbots}")
 
 
 

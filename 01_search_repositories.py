@@ -32,9 +32,7 @@ headers = {
 def execute_query(keywords, page, dt):
     delimiter = "+"
     query = delimiter.join(keywords)
-    print("Searching repositories")
     search_url = f"{GITHUB_API_URL}/search/repositories?q={query}+in:name,description,topics,readme+pushed:<{dt.isoformat()}&sort=updated&page={page}&per_page=100"
-    print(search_url)
     repo_response = requests.get(search_url, headers=headers)
     return repo_response
 
@@ -52,6 +50,8 @@ def search_repositories():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'REPOSITORY SEARCH', '-'*20, '\n')
+
     # Result folders creation
     if not os.path.isdir(RESULTS_FOLDER):
         os.makedirs(RESULTS_FOLDER)
@@ -60,9 +60,11 @@ def search_repositories():
 
     # Repositories number check
     if args.n_repos >= 100:
-        max_requests = args.n_repos / 100
+        max_requests = (int) (args.n_repos / 100)
+        print(f'Max number of repositories: {args.n_repos}\nMax number of requests: {max_requests}\n')
     else:
         max_requests = -1
+        print(f'No max number of repositories set: seach process will cover all repositories\n')
 
     # Open files
     repo_file = open(RESULT_FILE, 'w')
@@ -72,7 +74,8 @@ def search_repositories():
                     + CSV_SEPARATOR + 'is-fork' + CSV_SEPARATOR + 'fork-parent\n')
     page = 1
     list_completed = False
-    req = 0
+    total_req= 0
+    repo_counter = 0
 
     # Get min date: today
     dt = datetime.today()
@@ -83,7 +86,7 @@ def search_repositories():
 
         # Search repositories with keywords and last update before dt
         repo_response =  execute_query(REPO_KEYWORDS, page, dt)
-        req += 1
+        total_req+= 1
 
         if repo_response.status_code != 200:
             print(f"Error in search: {repo_response.status_code}")
@@ -93,16 +96,19 @@ def search_repositories():
 
         # First page of results
         if page==1:
-            print(f"Total repositories: {repositories['total_count']}")
-        print(f'Checking page {page}')
+            print(f'Total requests: {total_req}')
+            print(f"Total repositories pushed before {min_pushed_date}: {repositories['total_count']}")
+        print(f'Page: {page}')
+
 
         # No more results
         if repositories is None or 'items' not in repositories:
-            print("No repository found - Error in repository search")
+            print('No repository found - Error in repository search')
             break
 
         # For each repository in the response
         for repo in repositories['items']:
+            repo_counter += 1
             fork_parent = ''
             if repo['fork']:
                 fork_parent = repo['parent']['full_name']
@@ -133,10 +139,12 @@ def search_repositories():
                 list_completed = True
         
         # Max number of requests
-        if req >= max_requests:
+        if total_req>= max_requests:
             list_completed = True
 
     repo_file.close()
+    print('\nStep 1 completed')
+    print('TOTAL REPOSITORIES: ',repo_counter)
 
 
 search_repositories()

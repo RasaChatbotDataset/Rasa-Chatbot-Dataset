@@ -48,7 +48,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
         try:
             content = nlu_file.read().decode()
         except:
-            print(f"Decode error")
+            print(f"{chatbot_info['full-name']}: Decode error")
             continue
 
         # YML files
@@ -80,7 +80,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
                         chatbot_info['n-nlu-yml'] += 1
 
             except Exception as e:
-                print('YML parsing error')
+                print(f"{chatbot_info['full-name']}: YML parsing error")
 
         # JSON files       
         elif file.endswith('.json'):
@@ -96,7 +96,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
                         chatbot_info['nlu-files'].append(clean_file_name)
                         chatbot_info['n-nlu-json'] +=1
             except:
-                print('JSON parsing error')
+                print(f"{chatbot_info['full-name']}: JSON parsing error")
         
         elif file.endswith('.md') and file.split(os.sep)[-1] != 'README.md' and file.split(os.sep)[-1] != 'readme.md':
             # NLU file
@@ -157,7 +157,7 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
         try:
             content = action_file.read().decode()
         except:
-            print(f"Decode error")
+            print(f"{chatbot_info['full-name']}: Decode error")
             continue
 
         # Discard empty files         
@@ -279,7 +279,7 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
         try:
             content = language_file.read().decode()
         except:
-            print(f"Decode error")
+            print(f"{chatbot_info['full-name']}: Decode error")
             continue
         
         # YML files
@@ -287,7 +287,7 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
             try:      
                 file_content = yaml.safe_load(content)
             except:
-                print(f"YML parsing error")
+                print(f"{chatbot_info['full-name']}: YML parsing error")
                 continue
 
         # JSON files
@@ -295,14 +295,14 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
             try:
                 file_content = json.loads(content)
             except:
-                print(f"JSON parsing error")
+                print(f"{chatbot_info['full-name']}: JSON parsing error")
                 continue
         
         try:
             if len(file_content) == 0:
                 continue
         except:
-            print('Language file content error')
+            print(f"{chatbot_info['full-name']}: Language file content error")
             continue
         
         # Check "language"
@@ -349,6 +349,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'FILES EXTRACTION', '-'*20, '\n')
+
     # Open files
     chatbot_file = open(CHATBOTS_FILE_NAME, 'r')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
@@ -362,8 +364,15 @@ def main():
     # Chatbot repositories number check
     if args.n_repos >0 and args.n_repos < len(chatbots):
         chatbots = chatbots[0:args.n_repos]
+        print(f'Number of chatbot repositories: {args.n_repos}\n')
+    else:
+        print(f'Number of chatbots: {len(chatbots)} (all)\n')
 
-    for chatbot_info in chatbots:
+    for i in range(len(chatbots)):
+        chatbot_info = chatbots[i]
+
+        if i%50==0:
+            print(f'> Processed repositories: {i}/{len(chatbots)}')
 
         # Open zip
         zip_path = os.path.join(ZIP_FOLDER, chatbot_info['full-name'].replace('/', '_') + '.zip')
@@ -384,7 +393,7 @@ def main():
             if 'models/dialogue' in domain:
                     domain_is_model = True
             if str(Path(domain).parent) not in chatbot_info['domain-folders']:
-                chatbot_info['domain-folders'].append(str(Path(domain).parent))
+                chatbot_info['domain-folders'].append(str(Path(domain).parent).replace('\\', '/'))
         
         chatbot_info['n-domain-folders'] = len(chatbot_info['domain-folders'])
 
@@ -395,6 +404,8 @@ def main():
         chatbot_info = find_language_files(repository, chatbot_info, domain_is_test, domain_is_model)
         writer.writerow(chatbot_info)
     
+    print(f'> Processed repositories: {len(chatbots)}/{len(chatbots)}')
+    print('Step 5 completed')
     # Close files
     chatbot_file.close()
     multi_file.close()

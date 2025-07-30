@@ -129,12 +129,17 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'DUPLICATE CHATBOTS REMOVAL', '-'*20, '\n') 
+
     # Open files
-    chatbots= pd.read_csv(INPUT_FOLDER + CHATBOT_FILE, sep=CSV_SEPARATOR)
+    chatbots= pd.read_csv(os.path.join(INPUT_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR)
 
     # Chatbot number check
     if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
         chatbots = chatbots.head(args.n_chatbots)
+        print(f'Number of chatbots: {args.n_chatbots}\n')
+    else:
+        print(f'Number of chatbots: {chatbots.shape[0]} (all)\n')
 
     # Join with relevant fields
     cb_files = pd.DataFrame()
@@ -152,51 +157,63 @@ def main():
 
     # Find copies (by equal fields)
     copies = chatbots[chatbots.duplicated(subset=FIELDS, keep=False)].reset_index(drop=True)
-    copies.to_csv(os.path.join(RESULTS_FOLDER, 'copies.csv'), sep=CSV_SEPARATOR, index=False)
 
-    # Drop all copies
-    chatbots.drop_duplicates(inplace=True, subset=FIELDS, keep=False)
+    # Copies found
+    if not copies.empty:
 
-    # Copies selection
-    current_fields= pd.Series()
-    copies_subgroup = []
-    copies_to_keep = pd.DataFrame()
-    
-    for index, copy in copies.iterrows():
-            
-        # New row has different fields
-        if not copy[FIELDS].equals(current_fields):
+        copies.to_csv(os.path.join(RESULTS_FOLDER, 'copies.csv'), sep=CSV_SEPARATOR, index=False)
 
-            # The previous subgroup is completed, ready to be checked
-            if not current_fields.empty:
-                    
-                # Select which copies to keep (false positives and the best one of copies)
-                keep_copies = select_best_copies(copies_subgroup)
+        # Drop all copies
+        chatbots.drop_duplicates(inplace=True, subset=FIELDS, keep=False)
 
-                # Append copies to keep
-                chatbots = pd.concat([chatbots, pd.DataFrame(keep_copies)], ignore_index=True)
-                copies_to_keep = pd.concat([copies_to_keep, pd.DataFrame(keep_copies)], ignore_index=True)
+        # Copies selection
+        current_fields= pd.Series()
+        copies_subgroup = []
+        copies_to_keep = pd.DataFrame()
+        
+        for index, copy in copies.iterrows():
 
-                # Previous subgroup analysis completed, start with new subgroup
-                current_fields = copy[FIELDS]
-                copies_subgroup = [copy]
+            if index%50 == 0:
+                print(f'> Processed chatbots: {index}/{chatbots.shape[0]}')
+                
+            # New row has different fields
+            if not copy[FIELDS].equals(current_fields):
 
-            # No previous subgroup
+                # The previous subgroup is completed, ready to be checked
+                if not current_fields.empty:
+                        
+                    # Select which copies to keep (false positives and the best one of copies)
+                    keep_copies = select_best_copies(copies_subgroup)
+
+                    # Append copies to keep
+                    chatbots = pd.concat([chatbots, pd.DataFrame(keep_copies)], ignore_index=True)
+                    copies_to_keep = pd.concat([copies_to_keep, pd.DataFrame(keep_copies)], ignore_index=True)
+
+                    # Previous subgroup analysis completed, start with new subgroup
+                    current_fields = copy[FIELDS]
+                    copies_subgroup = [copy]
+
+                # No previous subgroup
+                else:
+                    copies_subgroup.append(copy)
+                    current_fields = copy[FIELDS] 
+
+            # Append to previous subgroup
             else:
                 copies_subgroup.append(copy)
-                current_fields = copy[FIELDS] 
 
-        # Append to previous subgroup
-        else:
-            copies_subgroup.append(copy)
-            
-    # Handle last repository
-    keep_copies = select_best_copies(copies_subgroup)
-    
-    
-    chatbots = pd.concat([chatbots, pd.DataFrame(keep_copies)], ignore_index=True)
-    copies_to_keep = pd.concat([copies_to_keep, pd.DataFrame(keep_copies)], ignore_index=True)
+    print(f'> Processed chatbots: {chatbots.shape[0]}/{chatbots.shape[0]}\n')
 
+    if not copies.empty:
+        print('Best copies selection: started')    
+        # Handle last repository
+        keep_copies = select_best_copies(copies_subgroup)
+        print('Best copies selection: started')  
+        in_chatbots = chatbots.shape[0]
+        
+        
+        chatbots = pd.concat([chatbots, pd.DataFrame(keep_copies)], ignore_index=True)
+        copies_to_keep = pd.concat([copies_to_keep, pd.DataFrame(keep_copies)], ignore_index=True)
 
     # Reorder dataset
     chatbots = chatbots.apply(update_version, axis=1)
@@ -205,10 +222,16 @@ def main():
     chatbots = chatbots[ORDER_COLUMNS]
 
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR, index=False)
-    copies_to_keep.to_csv(os.path.join(RESULTS_FOLDER, 'copies_to_keep.csv'), sep=CSV_SEPARATOR, index=False)
-    
-    
+    print('Step 14 completed')
 
+    if not copies.empty:
+        copies_to_keep.to_csv(os.path.join(RESULTS_FOLDER, 'copies_to_keep.csv'), sep=CSV_SEPARATOR, index=False)
+        fn_chatbots = chatbots.shape[0]
+        print(f'COPIES DELETED: {fn_chatbots - in_chatbots}\n')
+    else:
+        print('NO COPIES FOUND\n')
+
+    print('CONGRATULATIONS: YOUR TOFU-R IS READY')
 
 
 main()

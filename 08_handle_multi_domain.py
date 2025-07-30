@@ -23,7 +23,7 @@ def clean_same_domain(domain_files):
     try:
         repository =  zipfile.ZipFile(zip_path, 'r')
     except:
-        print(domain_files[0]['full-name'])
+        print(f"{domain_files[0]['id']}: Error opening zip file")
         return
     
     # Store different domain contents
@@ -41,7 +41,7 @@ def clean_same_domain(domain_files):
                 yml_content = yaml.safe_load(file_content)
                 contents[d['domain-file']] = yml_content
             except:
-                print('Decode error')
+                print(f"{d['id']}: Decode error")
                 continue
 
     # Store different domain file names
@@ -180,20 +180,25 @@ def main():
         "--n-sfmd",
         type=int,
         default=-1,
-        help="Number of sfmd chatbots (default: all)"
+        help="Number of sfmd domain files (default: all)"
     )
     parser.add_argument(
         "--n-mfmd",
         type=int,
         default=-1,
-        help="Number of mfmd chatbots (default: all)"
+        help="Number of mfmd domain files (default: all)"
     )
     args = parser.parse_args()
     n_chatbots = [args.n_sfmd, args.n_mfmd]
 
-    for index in len(MD_FILES):
+    print('\n\n', '-'*20, 'MULTI-DOMAIN CHATBOT HANDLING', '-'*20, '\n')
+
+    for index in range(len(MD_FILES)):
 
         file = MD_FILES[index]
+        c_type = file.replace('chatbot_repositories_', '').replace('.csv', '')
+
+        print(f"\n\n{c_type.upper()} CHATBOTS")
         
         # Open files
         chatbot_file = open(os.path.join(INPUT_FOLDER, file), 'r', encoding="utf-8")
@@ -205,15 +210,22 @@ def main():
         result_writer.writeheader()
 
         # Domain files number check
-        if n_chatbots[index] >0 and n_chatbots[index] < len(domain):
-            domains = domain[0:n_chatbots[index]]
+        if n_chatbots[index] >0 and n_chatbots[index] < len(domains):
+            domains = domains[0:n_chatbots[index]]
+            print(f'Number of domain files: {n_chatbots[index]}\n')
+        else:
+            print(f'Number of domain files: {len(domains)} (all)\n')
 
         # Current chatbot id
         current_repo_id = None
         # Domain list of current chatbot
         chatbot_domain_files = []
 
-        for domain in domains:
+        for i in range(len(domains)):
+            domain = domains[i]
+
+            if i%50==0:
+                print(f'> Processed domain files: {i}/{len(domains)}')
 
             # Convert correct data type
             for field in list(domain.keys())[11:]:
@@ -239,14 +251,18 @@ def main():
             else:
                 chatbot_domain_files.append(domain)
         
-        # Handle last repository
-        check_repository(chatbot_domain_files, result_writer, statistics)
+        if len(domains) > 0:
+            # Handle last repository
+            check_repository(chatbot_domain_files, result_writer, statistics)
 
+        print(f'> Processed domain files: {len(domains)}/{len(domains)}')
+        print('-'*30, '\n')
         # Close files
         chatbot_file.close()
         result_file.close()
 
     write_statistics(statistics)
+    print('Step 8 completed')
                             
 
 main()      

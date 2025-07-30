@@ -41,7 +41,8 @@ def find_keyword_in_repo(keyword, repo_zip_path, commit):
                 if keyword in yml_content:
                     domain_files.append(file_path.split(commit+'/')[-1])
             except UnicodeDecodeError as e:
-                print(f"Decode error")
+                #print(f"Decode error")
+                continue
     return domain_files
 
 # Handle download zip with timeout
@@ -54,7 +55,7 @@ def handle_download_zip_timeout(zip_directory, repo_name, commit, timeout):
     if p.is_alive():
         p.terminate()
         p.join()
-        print(f"Timeout in repository {repo_name} ZIP download: exceeded {timeout} seconds")
+        print(f"{repo_name}: timeout in ZIP download, exceeded {timeout} seconds")
         return 0
     
     return queue.get() if not queue.empty() else -1
@@ -79,6 +80,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'REPOSITORY CLASSIFICATION', '-'*20, '\n')
+
     # Result folder
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
@@ -98,7 +101,7 @@ def main():
     ncb_csv.writeheader()
 
     cb_file = open(os.path.join(RESULTS_FOLDER, CHATBOTS_FILE), 'w', newline='')
-    cb_headers =  reader.fieldnames + ['domain-files']
+    cb_headers =  reader.fieldnames + ['domain-files', 'n-domain-files']
     cb_csv = csv.DictWriter(cb_file, fieldnames=cb_headers, delimiter=CSV_SEPARATOR)
     cb_csv.writeheader()
 
@@ -113,27 +116,42 @@ def main():
 
     # Repositories number check
     if args.n_repos >0 and args.n_repos < len(repositories):
+        print(f'Number of repositories: {args.n_repos}\n')
         repositories = repositories[0:args.n_repos]
+    else:
+        print(f'Number of chatbots: {len(repositories)} (all)\n')
+    
+    # Timeout check
+    if args.timeout > 0:
+        print(f'Zip download timeout: {args.timeout}')
+    else:
+        print('Zip download timeout: no timeout')
 
-    i=0
+    # Counters
+    n_c_repos = 0
+    n_nc_repos = 0
+    n_nf_repos = 0
+    n_t_repos = 0
+    
     # For each repository
-    for repo in repositories: 
-        i += 1
+    for i in range(len(repositories)): 
+        repo = repositories[i]
         # Periodical sync
         if i%50==0:
-          #sync(ZIP_DIRECTORY)
-          print('sync')
+            print(f"> Processed repositories: {i}/{len(repositories)}\n")
+            #sync(ZIP_DIRECTORY)
+            #print('sync')
         try:
             # Download zip
             if args.timeout > 0:
                 zip_path = handle_download_zip_timeout(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'], args.timeout)
             else:
-                zip_path = download_zip_timeout(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'], args.timeout)
-            print('Download completed')
+                zip_path = download_zip_no_timeout(ZIP_DIRECTORY, repo['full-name'], repo['last-commit'])
 
             # Timeout error
             if zip_path == 0:
                 timeout_csv.writerow(repo)
+                n_t_repos += 1
                 # Remove zip
                 #os.remove(zip_path) 
 
@@ -141,6 +159,7 @@ def main():
             elif zip_path == -1:
                 print(f"Not Found repository: {e}")
                 not_found_csv.writerow(repo)
+                n_nf_repos += 1
             
             # Repository downloaded
             else:
@@ -152,20 +171,27 @@ def main():
                     ncb_csv.writerow(repo)
                     # Remove zip
                     os.remove(zip_path) 
+                    n_nc_repos += 1
                 else:
                     # Chatbot
                     print(f"{repo['full-name']}: chatbot")
                     repo['domain-files'] = domain_files
+                    repo['n-domain-files'] = len(domain_files)
                     cb_csv.writerow(repo)
                     # Clean zip
                     clean_zip(zip_path)
+                    n_c_repos += 1
 
         # Exception: not_found repository
         except zipfile.BadZipFile as e:
             print(f"Not Found repository: {e}")
             not_found_csv.writerow(repo)
             #os.remove(zip_path)
+    print(f"\n> Processed repositories: {len(repositories)}/{len(repositories)}")
+    print('Step 3 completed\n')
+    print(f'CHATBOT REPOSITORIES: {n_c_repos}\nNON CHATBOT REPOSITORIES: {n_nc_repos}\nNOT FOUND REPOSITORIES: {n_nf_repos}\nTIMEOUT REPOSITORIES: {n_t_repos}')
 
+    
     cb_file.close()
     ncb_file.close()
     not_found_repo_file.close()

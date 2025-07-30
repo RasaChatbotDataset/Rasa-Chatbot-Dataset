@@ -151,6 +151,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'RESPONSE LANGUAGE EXTRACTION', '-'*20, '\n') 
+
     # Open files
     csv.field_size_limit(100000000)
     chatbot_file = open(INPUT_FILE, 'r', encoding="utf-8")
@@ -165,11 +167,16 @@ def main():
     # Chatbot number check
     if args.n_chatbots >0 and args.n_chatbots < len(chatbots):
         chatbots = chatbots[0:args.n_chatbots]
+        print(f'Number of chatbots: {args.n_chatbots}\n')
+    else:
+        print(f'Number of chatbots: {len(chatbots)} (all)\n')
     
 
-    for chatbot in chatbots:
+    for i in range(len(chatbots)):
+        chatbot = chatbots[i]
 
-        print(chatbot['full-name'])
+        if i%50 == 0:
+            print(f'> Processed chatbots: {i}/{len(chatbots)}')
             
         # Check API limit
         language_api_status = detectlanguage.user_status()
@@ -188,9 +195,11 @@ def main():
         # Write chatbot        
         writer.writerow(chatbot)
 
+    print(f'> Processed chatbots: {len(chatbots)}/{len(chatbots)}')
     # Close files
     chatbot_file.close()
     result_file.close()
+    print('Step 12 completed')
 
 
 

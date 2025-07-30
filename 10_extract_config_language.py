@@ -18,6 +18,9 @@ PROGRAMMING_LANGUAGES = ['java', 'python', 'android', 'node_js', 'php', 'generic
 
 # Extract language from configuration file
 def extract_config_language(chatbot):
+
+    if chatbot['temp_row_index'] % 50 == 0:
+        print(f"> Processed chatbots: {chatbot['temp_row_index']}")
     zip_path = os.path.join(ZIP_FOLDER, chatbot['full-name'].replace('/', '_') + '.zip')
 
     repository =  zipfile.ZipFile(zip_path, 'r')
@@ -81,6 +84,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'CONFIGURATION LANGUAGE EXTRACTION', '-'*20, '\n') 
+
     # Open dataset as pandas dataframe
     chatbots = pd.read_csv(CHATBOT_FILE, sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
@@ -88,6 +93,9 @@ def main():
     # Chatbot number check
     if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
         chatbots = chatbots.head(args.n_chatbots)
+        print(f'Number of chatbots: {args.n_chatbots}\n')
+    else:
+        print(f'Number of chatbots: {chatbots.shape[0]} (all)\n')
 
     # Join chatbot dataset with config file info
     for file in FILES:
@@ -98,15 +106,21 @@ def main():
     chatbots = pd.merge(chatbots, cb_files, how='inner')
 
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots_join_config_file.csv'), sep=CSV_SEPARATOR, index=False)
+    
+    chatbots['temp_row_index'] = range(len(chatbots))
 
     # Extract configuration language
     chatbots['config-languages'] = chatbots.apply(extract_config_language, axis=1)
+    print(f'> Processed chatbots: {chatbots.shape[0]}/{chatbots.shape[0]}')
 
     # Remove columns
+    chatbots = chatbots.drop('temp_row_index', axis=1)
     chatbots = chatbots.drop('n-language-files', axis=1)
     chatbots = chatbots.drop('language-files', axis=1)
 
     # Write dataset
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots.csv'), sep=CSV_SEPARATOR, index=False)
+
+    print('Step 10 completed')
 
 main()

@@ -255,6 +255,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'TRAINING LANGUAGE EXTRACTION', '-'*20, '\n') 
+
     # Join chatbot files
     chatbots = pd.read_csv(CHATBOT_FILE, sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
@@ -262,6 +264,9 @@ def main():
     # Chatbot number check
     if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
         chatbots = chatbots.head(args.n_chatbots)
+        print(f'Number of chatbots: {args.n_chatbots}\n')
+    else:
+        print(f'Number of chatbots: {chatbots.shape[0]} (all)\n')
 
     # Merge with nlu files
     for file in FILES:
@@ -273,11 +278,14 @@ def main():
 
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots_join_nlu_file.csv'), sep=CSV_SEPARATOR, index=False)
     chatbots['training-language'] = None
+    chatbots['temp_row_index'] = range(len(chatbots))
     
     for index, chatbot in chatbots.iterrows():
+        
+        if index % 50 == 0:
+            print(f'> Processed chatbots: {index}/{chatbots.shape[0]}')
 
         if chatbot['n-nlu-files'] > 0 :
-            print(chatbot['full-name'])
             
             # Check API limit
             language_api_status = detectlanguage.user_status()
@@ -293,12 +301,16 @@ def main():
         if chatbot['version'] == 'unknown':
             chatbot['version'] = None
 
+    print(f'> Processed chatbots: {chatbots.shape[0]}/{chatbots.shape[0]}')
     # Remove columns
+    chatbots = chatbots.drop('temp_row_index', axis=1)
     chatbots = chatbots.drop('n-nlu-files', axis=1)
     chatbots = chatbots.drop('nlu-files', axis=1)
 
     # Write dataset
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, 'chatbots.csv'), sep=CSV_SEPARATOR, index=False)
+
+    print('Step 11 completed')
 
 
 

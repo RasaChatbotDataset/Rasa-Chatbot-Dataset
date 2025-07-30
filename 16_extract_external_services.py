@@ -214,6 +214,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'EXTERNAL SERVICES EXTRACTION', '-'*20, '\n') 
+
     # Join chatbot files
     chatbots = pd.read_csv(os.path.join(INPUT_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR)
     cb_files = pd.DataFrame()
@@ -221,6 +223,9 @@ def main():
     # Chatbot number check
     if args.n_chatbots >0 and args.n_chatbots < chatbots.shape[0]:
         chatbots = chatbots.head(args.n_chatbots)
+        print(f'Number of chatbots: {args.n_chatbots}\n')
+    else:
+        print(f'Number of chatbots: {chatbots.shape[0]} (all)\n')
 
     for file in FILES:
         cb_with_files = pd.read_csv(file, sep=CSV_SEPARATOR)
@@ -238,7 +243,9 @@ def main():
     chatbots['n-external-services-readme'] = None
     
     for index, chatbot in chatbots.iterrows():
-        print(chatbot['id'])
+
+        if index%10==0:
+            print(f'> Processed chatbots: {index}/{chatbots.shape[0]}')
 
         # Extract services from action files
         if int(chatbot['n-actions-files']) > 0 :
@@ -258,12 +265,15 @@ def main():
             chatbots.at[index, 'external-services-readme'] = external_services
             chatbots.at[index, 'n-external-services-readme'] = len(external_services)
     
+    print(f'> Processed chatbots: {chatbots.shape[0]}/{chatbots.shape[0]}')
+            
     # Drop columns
     chatbots = chatbots.drop('n-readme-files', axis=1)
     chatbots = chatbots.drop('readme-files', axis=1)
     chatbots = chatbots.drop('n-actions-files', axis=1)
     chatbots = chatbots.drop('actions-files', axis=1)
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR, index=False)
+    print('Step 16 completed')
 
 
 

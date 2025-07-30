@@ -12,7 +12,7 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 RESULTS_FOLDER = os.path.join('results', '07_results')
 INPUT_FOLDER = os.path.join('results', '06_results')
 
-FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
+FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-domain-files', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
     'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 
     'slots-type','n-forms', 'forms', 'version']
 
@@ -20,7 +20,7 @@ csv.field_size_limit(100000000)
 
 # Initialize chatbot information
 def initialize_chatbot_info(chatbot_info):
-    for key in FIELDS[11:]:
+    for key in FIELDS[12:]:
         if key.startswith('n-'):
             chatbot_info[key] = 0
         else: 
@@ -154,7 +154,6 @@ def extract_domain_info(repository, file_path, chatbot_info):
             return -1
 
     #print(chatbot_info)
-    print('End domain extraction')
     return chatbot_info
 
 def analyze_actions(chatbot_info, repository):
@@ -218,15 +217,18 @@ def main():
     args = parser.parse_args()
     n_chatbots = [args.n_sfsd, args.n_sfmd, args.n_mfsd, args.n_mfmd]
 
+    print('\n\n', '-'*20, 'DOMAIN PARAMETER EXTRACTION', '-'*20, '\n')
+
     # Error file
     error_file = open(os.path.join(RESULTS_FOLDER, ERROR_FILE), 'w', newline='')
     error_writer = csv.DictWriter(error_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS[:10] + ['chatbot-type', 'exception'], extrasaction='ignore')
     error_writer.writeheader()
 
-    for index in len(CHATBOT_FILES):
+    for index in range(len(CHATBOT_FILES)):
 
         # Open files
         file = CHATBOT_FILES[index]
+        c_type = file.replace('chatbot_repositories_', '').replace('.csv', '')
         chatbot_file = open(os.path.join(INPUT_FOLDER, file+'.csv'), 'r')
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
@@ -235,12 +237,22 @@ def main():
         analysis_writer = csv.DictWriter(analysis_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS, extrasaction='ignore')
         analysis_writer.writeheader()
 
+        print(f"\n\n{c_type.upper()} CHATBOTS")
+
         # Chatbot repositories number check
         if n_chatbots[index] >0 and n_chatbots[index] < len(chatbots):
             chatbots = chatbots[0:n_chatbots[index]]
+            print(f'Number of chatbots: {args.n_repos}\n')
+        else:
+            print(f'Number of chatbots: {len(chatbots)} (all)\n')
 
-        for chatbot_info in chatbots:
-            print(chatbot_info['full-name'])
+
+        for i in range(len(chatbots)):
+
+            if i%50==0:
+                print(f'> Processed repositories: {i}/{len(chatbots)}')
+
+            chatbot_info = chatbots[i]
             chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files'])
             chatbot_info['actions-files'] = ast.literal_eval(chatbot_info['actions-files'])
 
@@ -257,10 +269,9 @@ def main():
                 # Domain information
                 complete_domain_path = chatbot_info['full-name'].split('/')[1] + '-'+chatbot_info['last-commit']+'/' + domain
                 if complete_domain_path in file_list:
-                    print(f"Analyzing domain file {complete_domain_path}")
                     result = extract_domain_info(repository, complete_domain_path, chatbot_info)
                     if result == -1:
-                        chatbot_info['chatbot-type'] = file.replace('chatbot_repositories_', '').replace('.csv', '')
+                        chatbot_info['chatbot-type'] = c_type
                         error_writer.writerow(chatbot_info)
                     else:
                         if int(result['n-actions-files']) != 0 and int(result['n-actions'] != 0):
@@ -273,9 +284,14 @@ def main():
                 else:
                     quit()
 
+        print(f'> Processed repositories: {len(chatbots)}/{len(chatbots)}')
+        print('-'*30, '\n')
+
+
         # Close files
         analysis_file.close()
         chatbot_file.close()
     error_file.close()
+    print('Step 7 completed')
 
 main()

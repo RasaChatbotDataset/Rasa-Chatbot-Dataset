@@ -47,11 +47,14 @@ def add_last_commit():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'LAST COMMIT RETRIEVAL', '-'*20, '\n')
+
+
     # Result folder creation
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
 
-    # Open filess
+    # Open files
     repo_file = open(REPOSITORIES_FILE, 'r')
     reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
     repos = list(reader)
@@ -64,18 +67,22 @@ def add_last_commit():
     empty_file = open(EMPTY_REPOSITORIES, 'a', newline='')
     empty_writer = csv.DictWriter(empty_file, fieldnames=reader.fieldnames, delimiter=CSV_SEPARATOR)
     empty_writer.writeheader()
-    i = 0
 
     # Repositories number check
     if args.n_repos >0 and args.n_repos < len(repos):
+        print(f'Number of repositories: {args.n_repos}\n')
         repos = repos[0:args.n_repos]
+    else:
+        print(f'Number of chatbots: {len(repos)} (all)\n')
+
 
     # For each repository
-    for repo in repos:
-        i += 1
+    for i in range(len(repos)):
+        repo = repos[i]
+
         # Periodically update files
-        if i%100 == 0:
-            print(f"{i}/{len(repos)}")
+        if i%50 == 0:
+            print(f">Processed repositories: {i}/{len(repos)}")
             repo_complete_file.flush()
             empty_file.flush()
 
@@ -95,6 +102,9 @@ def add_last_commit():
         else:
             print(f"Error: {response} for repo {repo['full-name']}")
             quit()
+    
+    print(f'> Processed repositories: {len(repos)}/{len(repos)}')
+    print('Step 2 completed')
     
     # Close files
     repo_file.close()

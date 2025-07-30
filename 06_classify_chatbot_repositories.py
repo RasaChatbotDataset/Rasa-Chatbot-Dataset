@@ -198,6 +198,8 @@ def main():
 
     args = parser.parse_args()
 
+    print('\n\n', '-'*20, 'CHATBOT REPOSITORY CLASSIFICATION', '-'*20, '\n')
+
     # Open files
     csv.field_size_limit(100000000)
     chatbot_file = open(CHATBOTS_FILE_NAME, 'r', encoding="utf-8")
@@ -223,6 +225,9 @@ def main():
     # Chatbot repositories number check
     if args.n_repos >0 and args.n_repos < len(chatbots):
         chatbots = chatbots[0:args.n_repos]
+        print(f'Number of chatbot repositories: {args.n_repos}\n')
+    else:
+        print(f'Number of chatbots: {len(chatbots)} (all)\n')
 
     # Split multi-domain folder repositories, keep single-domain folder ones
     for chatbot in chatbots:
@@ -249,7 +254,8 @@ def main():
         else:                                
             split_sub_folders(chatbot, mfsd_writer, mfmd_writer)
 
-
+    print('Step 6 completed')
+    
     # Close files
     mfmd_file.close()
     mfsd_file.close()
