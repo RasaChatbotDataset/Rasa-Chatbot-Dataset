@@ -11,7 +11,7 @@ INPUT_FOLDER = os.path.join('results', '13_results')
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
-DATE_FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+DATE_FILES = [os.path.join('results', '06_results', 'chatbots_sfsd.csv'), os.path.join('results', '06_results', 'chatbots_mfsd.csv'), os.path.join('results', '06_results', 'chatbots_sfmd.csv'), os.path.join('results', '06_results', 'chatbots_mfmd.csv')]
 FIELDS = ['intents', 'entities', 'actions', 'slots','slots-type', 'forms', 'config-languages', 'training-language', 'response-languages', 'n-actions-files']
 
 ORDER_COLUMNS = ['id', 'full-name', 'html-url', 'stars', 'forks', 'owner-name', 'owner-type', 'created-at', 'last-commit', 'last-commit-date', 'domain-files', 'type', 'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 'slots-type', 'n-forms', 'forms', 'version', 'config-languages', 'training-language', 'response-languages', 'languages', 'has-english', 'pure-english', 'n-actions-files']

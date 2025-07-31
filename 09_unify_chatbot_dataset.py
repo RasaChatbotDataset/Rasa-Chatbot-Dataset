@@ -6,7 +6,7 @@ csv.field_size_limit(100000000)
 INPUT_FOLDER_MD = os.path.join('results', '08_results')
 INPUT_FOLDER_SD = os.path.join('results', '07_results')
 RESULTS_FOLDER = os.path.join('results', '09_results')
-FILES = [os.path.join(INPUT_FOLDER_SD, 'chatbot_repositories_sfsd_info.csv'), os.path.join(INPUT_FOLDER_SD, 'chatbot_repositories_mfsd_info.csv'), os.path.join(INPUT_FOLDER_MD, 'chatbot_repositories_sfmd_info.csv'), os.path.join(INPUT_FOLDER_MD, 'chatbot_repositories_mfmd_info.csv')]
+FILES = [os.path.join(INPUT_FOLDER_SD, 'chatbots_sfsd_info.csv'), os.path.join(INPUT_FOLDER_SD, 'chatbots_mfsd_info.csv'), os.path.join(INPUT_FOLDER_MD, 'chatbots_sfmd_info.csv'), os.path.join(INPUT_FOLDER_MD, 'chatbots_mfmd_info.csv')]
 TYPES = ['sfsd', 'mfsd', 'sfmd', 'mfmd']
 CSV_SEPARATOR = ';'
 

@@ -13,7 +13,7 @@ TOP_P = 0.15
 
 config = dotenv_values('config.env')
 
-FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+FILES = [os.path.join('results', '06_results', 'chatbots_sfsd.csv'), os.path.join('results', '06_results', 'chatbots_mfsd.csv'), os.path.join('results', '06_results', 'chatbots_sfmd.csv'), os.path.join('results', '06_results', 'chatbots_mfmd.csv')]
 RESULTS_FOLDER = os.path.join('results', '16_results')
 CHATGPT_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'chatgpt_responses')
 INPUT_FOLDER = os.path.join('results', '15_results')

@@ -2,15 +2,14 @@ import csv
 import ast
 import copy
 import os
-import argparse
 
 CSV_SEPARATOR= ';'
 RESULTS_FOLDER = os.path.join('results', '06_results')
 CHATBOTS_FILE_NAME = os.path.join('results', '05_results', 'chatbot_repositories_files.csv')
-MFSD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_mfsd.csv')
-SFSD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_sfsd.csv')
-MFMD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_mfmd.csv')
-SFMD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbot_repositories_sfmd.csv')
+MFSD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbots_mfsd.csv')
+SFSD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbots_sfsd.csv')
+MFMD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbots_mfmd.csv')
+SFMD_CHATBOTS_FILE_NAME = os.path.join(RESULTS_FOLDER, 'chatbots_sfmd.csv')
 
 fields = ['id', 'full-name', 'html-url', 'stars', 'forks', 'created-at', 'updated-at', 'pushed-at', 'default-branch', 'owner-name', 'owner-id','owner-type',
           'last-commit', 'last-commit-date', 'domain-folder', 'domain-files', 'n-domain-files', 'nlu-files' , 'n-nlu-files', 'actions-files', 
@@ -186,19 +185,8 @@ def main():
 
     if not os.path.isdir(RESULTS_FOLDER):
         os.mkdir(RESULTS_FOLDER)
-    
-    # Optional argument for number of repositories
-    parser = argparse.ArgumentParser(description='Parser')
-    parser.add_argument(
-        "--n-repos",
-        type=int,
-        default=-1,
-        help="Number of repositories (default: all)"
-    )
 
-    args = parser.parse_args()
-
-    print('\n\n', '-'*20, 'CHATBOT REPOSITORY CLASSIFICATION', '-'*20, '\n')
+    print('\n\n', '-'*20, 'CHATBOT IDENTIFICATION', '-'*20, '\n')
 
     # Open files
     csv.field_size_limit(100000000)
@@ -222,12 +210,6 @@ def main():
     mfsd_writer = csv.DictWriter(mfsd_file, delimiter=CSV_SEPARATOR, fieldnames=fields, extrasaction='ignore')
     mfsd_writer.writeheader()
 
-    # Chatbot repositories number check
-    if args.n_repos >0 and args.n_repos < len(chatbots):
-        chatbots = chatbots[0:args.n_repos]
-        print(f'Number of chatbot repositories: {args.n_repos}\n')
-    else:
-        print(f'Number of chatbots: {len(chatbots)} (all)\n')
 
     # Split multi-domain folder repositories, keep single-domain folder ones
     for chatbot in chatbots:

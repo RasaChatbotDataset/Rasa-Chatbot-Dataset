@@ -125,7 +125,7 @@ def main():
         print(f'Number of chatbot repositories: {args.n_repos}\n')
         chatbots = chatbots[0:args.n_repos]
     else:
-        print(f'Number of chatbots: {len(chatbots)} (all)\n')
+        print(f'Number of chatbot repositories: {len(chatbots)} (all)\n')
 
     for i in range(len(chatbots)):
 

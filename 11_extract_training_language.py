@@ -14,7 +14,7 @@ config = dotenv_values('config.env')
 detectlanguage.configuration.api_key = config['DETECT_LANGUAGE_KEY']
 
 
-FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+FILES = [os.path.join('results', '06_results', 'chatbots_sfsd.csv'), os.path.join('results', '06_results', 'chatbots_mfsd.csv'), os.path.join('results', '06_results', 'chatbots_sfmd.csv'), os.path.join('results', '06_results', 'chatbots_mfmd.csv')]
 RESULTS_FOLDER = os.path.join('results', '11_results')
 CHATBOT_FILE = os.path.join('results', '10_results', 'chatbots.csv')
 CSV_SEPARATOR= ';'

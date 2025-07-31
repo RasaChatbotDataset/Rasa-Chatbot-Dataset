@@ -7,7 +7,7 @@ import zipfile
 import re
 import argparse
 
-FILES = [os.path.join('results', '06_results', 'chatbot_repositories_sfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfsd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_sfmd.csv'), os.path.join('results', '06_results', 'chatbot_repositories_mfmd.csv')]
+FILES = [os.path.join('results', '06_results', 'chatbots_sfsd.csv'), os.path.join('results', '06_results', 'chatbots_mfsd.csv'), os.path.join('results', '06_results', 'chatbots_sfmd.csv'), os.path.join('results', '06_results', 'chatbots_mfmd.csv')]
 RESULTS_FOLDER = os.path.join('results', '10_results')
 CHATBOT_FILE = os.path.join('results', '09_results', 'chatbots.csv')
 CSV_SEPARATOR= ';'
@@ -60,7 +60,7 @@ def extract_config_language(chatbot):
             except UnicodeDecodeError as e:
                 print(f"Decode error")
             except Exception as e:
-                print(f"Error for repository {chatbot['full-name']}, file {file}")
+                print(f"Error for chatbot {chatbot['full-name']}, file {file}")
                 print(e)
 
     return languages

@@ -9,7 +9,7 @@ import argparse
 csv.field_size_limit(100000000)
 INPUT_FOLDER = os.path.join('results', '07_results')
 RESULTS_FOLDER = os.path.join('results', '08_results')
-MD_FILES = ['chatbot_repositories_sfmd_info.csv', 'chatbot_repositories_mfmd_info.csv']
+MD_FILES = ['chatbots_sfmd_info.csv', 'chatbots_mfmd_info.csv']
 CSV_SEPARATOR = ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 MD_STATISTICS_FILE = os.path.join(RESULTS_FOLDER, 'md_statistics.txt')
@@ -196,7 +196,7 @@ def main():
     for index in range(len(MD_FILES)):
 
         file = MD_FILES[index]
-        c_type = file.replace('chatbot_repositories_', '').replace('.csv', '')
+        c_type = file.replace('chatbots_', '').replace('.csv', '')
 
         print(f"\n\n{c_type.upper()} CHATBOTS")
         

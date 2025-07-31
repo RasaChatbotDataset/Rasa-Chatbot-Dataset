@@ -16,6 +16,9 @@ FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-f
     'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 
     'slots-type','n-forms', 'forms', 'version']
 
+CHATBOT_FILES = ['chatbots_sfsd', 'chatbots_sfmd', 'chatbots_mfsd', 'chatbots_mfmd']
+ERROR_FILE = 'chatbots_errors.csv'
+
 csv.field_size_limit(100000000)
 
 # Initialize chatbot information
@@ -179,9 +182,6 @@ def analyze_actions(chatbot_info, repository):
     return chatbot_info
     
 
-CHATBOT_FILES = ['chatbot_repositories_sfsd', 'chatbot_repositories_sfmd', 'chatbot_repositories_mfsd', 'chatbot_repositories_mfmd']
-ERROR_FILE = 'chatbot_repositories_errors.csv'
-
 def main(): 
 
     # Result folder
@@ -194,25 +194,25 @@ def main():
         "--n-sfsd",
         type=int,
         default=-1,
-        help="Number of sfsd repositories (default: all)"
+        help="Number of sfsd chatbots (default: all)"
     )
     parser.add_argument(
         "--n-sfmd",
         type=int,
         default=-1,
-        help="Number of sfmd repositories (default: all)"
+        help="Number of sfmd chatbots (default: all)"
     )
     parser.add_argument(
         "--n-mfsd",
         type=int,
         default=-1,
-        help="Number of mfsd repositories (default: all)"
+        help="Number of mfsd chatbots (default: all)"
     )
     parser.add_argument(
         "--n-mfmd",
         type=int,
         default=-1,
-        help="Number of mfmd repositories (default: all)"
+        help="Number of mfmd chatbots (default: all)"
     )
     args = parser.parse_args()
     n_chatbots = [args.n_sfsd, args.n_sfmd, args.n_mfsd, args.n_mfmd]
@@ -228,7 +228,7 @@ def main():
 
         # Open files
         file = CHATBOT_FILES[index]
-        c_type = file.replace('chatbot_repositories_', '').replace('.csv', '')
+        c_type = file.replace('chatbots_', '').replace('.csv', '')
         chatbot_file = open(os.path.join(INPUT_FOLDER, file+'.csv'), 'r')
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
@@ -250,7 +250,7 @@ def main():
         for i in range(len(chatbots)):
 
             if i%50==0:
-                print(f'> Processed repositories: {i}/{len(chatbots)}')
+                print(f'> Processed chatbots: {i}/{len(chatbots)}')
 
             chatbot_info = chatbots[i]
             chatbot_info['domain-files'] = ast.literal_eval(chatbot_info['domain-files'])
@@ -284,7 +284,7 @@ def main():
                 else:
                     quit()
 
-        print(f'> Processed repositories: {len(chatbots)}/{len(chatbots)}')
+        print(f'> Processed chatbots: {len(chatbots)}/{len(chatbots)}')
         print('-'*30, '\n')
 
 
