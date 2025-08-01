@@ -1,6 +1,6 @@
 # From the TOFU-R Snapshot to the BRASATO Curated Dataset
 
-This repository contains all materials related to the work "Towards the Assessment of Task-based Chatbots: From the TOFU-R Snapshot to the BRASATO Curated Dataset". Specifically, it includes:
+This repository contains all materials related to the work *"Towards the Assessment of Task-based Chatbots: From the TOFU-R Snapshot to the BRASATO Curated Dataset"*. Specifically, it includes:
 - The **TOFU-R dataset**, consisting of Rasa open-source chatbots collected from GitHub.
 - The **BRASATO dataset**, a curated subset of selected chatbots derived from TOFU-R.
 - The **methodology scripts** used to create both datasets.
@@ -26,13 +26,15 @@ This repository has the following structure:
 - **Methodology scripts**: all scripts necessary to replicate the procedure step-by-step are numbered and their use is described in the following sections.
 - **Original result folders**: intermediate results of each step generated in the original execution are stored in the *original_results* folder, organized by step number.
 - **ChatGPT parameter analysis**: all materials related to the analysis of ChatGPT parameters for services extraction are available in *chatGPT_parameter_analysis* folder, along with a dedicated README.
-- **Datasets**:  the TOFU-R and BRASATO datasets, which are the outputs of steps 16 and 20 respectively, are also provided directly in the main folder for convenience (file *TOFU-R.csv* and file *BRASATO.CSV*).
+- **Datasets**:  the TOFU-R and BRASATO datasets, which are the outputs of steps 14 and 18 respectively, are also provided directly in the main folder for convenience (file *TOFU-R.csv* and file *BRASATO.CSV*).
 
 The following sections describe each step in detail, allowing for full replication of the procedure used to create the TOFU-R and BRASATO datasets.
 
 
 ## Expected Behaviour
-The artifact consists in a sequence of 18 scripts, i primi 14 danno tofur, gli altri brasato. si eseguono uno dopo l'altro per vedere i risultati parziali, il comportamento di ogni script e l'output atteso di ciascuno è documentato passo passo dopo
+The TOFU-R and BRASATO datasets are the results of the methodology illustrated in the paper *"Towards the Assessment of Task-based Chatbots: From the TOFU-R Snapshot to the BRASATO Curated Dataset"*. This methodology is implemented as a sequence of 18 Python scripts: the TOFU-R dataset is the result of the 14th step, while BRASATO is the final result of the last script. 
+
+Each step produces an intermediate result, saved in folder *results*. The expected behaviour of each script and the intermediate output of each step is explained in sections *TOFU-R: a snapshot of GitHub Rasa chatbots* and *BRASATO: a curated selection*
 
 
 ## Environment Setup
