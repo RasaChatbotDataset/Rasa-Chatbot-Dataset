@@ -104,6 +104,8 @@ Note that the original experimentation is based on the 8634 repositories collect
 ### 1. Repository search
 Search for GitHub repositories containing the keywords 'Rasa' and 'Chatbot' in the README, title, topics, or description.  
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Repository Search
+
 **Output**:   
 - `repositories_json`: folder with the complete JSON responses for all retrieved repositories
 - `repositories.csv`: repository dataset of all the parsed repositories
@@ -119,6 +121,8 @@ python 01_search_repositories.py [--n-repos <n>]
 ### 2. Last commit retrieval
 Retrieve the sha and date of the last commit on the default branch for each repository to keep a reference to a same repository version.
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Repository Search
+
 **Output**: 
 - `repositories_commit.csv`: repository dataset enriched with the last commit.
 - `empty_repositoriescsv`: repositories with no commits.
@@ -132,6 +136,8 @@ python 02_find_commit.py [--n-repos <n>]
 
 ### 3. Repository classification
 Classify repositories as *chatbot_repositories* and *non_chatbot_repositories* based on the presence of a Rasa domain file in the repository.
+
+**Paper corresponding step**: Creation of the TOFU-R dataset - Repository Classification
 
 **Output**:
 - `chatbot_repositories_zip`: folder with he zip archives of all chatbot repositories.
@@ -153,6 +159,8 @@ python 03_check_repositories.py [--n-repos <n>]
 ### 4. Domain files filtering
 Remove invalid domain files (empty files, non-parsable files or incorreclt identified).
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Chatbot Extraction
+
 **Output**: 
 - `chatbot_repositories.csv`: updated chatbot repository dataset.
 - `discarded_repositories.csv`: repositories with no domain file left after the filtering
@@ -167,6 +175,8 @@ python 04_check_domain_files.py [--n-repos <n>]
 
 ### 5. NLU, actions and README files extraction
 Enrich the dataset with information about NLU files / folder, actions files / folders and README files.
+
+**Paper corresponding step**: Creation of the TOFU-R dataset - Chatbot Extraction
 
 **Output**:
 - `chatbot_repositories_files.csv`: chatbot repository dataset enriched with information about files.
@@ -185,6 +195,8 @@ Identify chatbots in chatbot repositories based on the organization of their dom
 - **MFSD**: chatbot identified in a multi domain-folder repository, that has a single domain file.
 - **MFMD**: chatbot identified in a multi domain-folder repository, that has multiple domain files.
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Chatbot Extraction
+
 **Output**: 
 - `chatbots_sfsd.csv`: SFSD chatbots.
 - `chatbots_sfmd.csv`: SFMD chatbots.
@@ -197,6 +209,8 @@ python 06_classify_chatbot_repositories.py
 
 ### 7. Domain parameter extraction
 Extract domain parameters (e.g., intents, entities, slots, version) from domain files.
+
+**Paper corresponding step**: Creation of the TOFU-R dataset - Parameter Extraction
 
 **Output**:
 - `chatbots_sfsd_info.csv`: SFSD chatbots enriched with domain parameters, one row per each domain file.
@@ -221,6 +235,8 @@ Handle multi-domain (MD) chatbots by classifying them as:
 - **Modularized domain**: chatbot's domain has been modularized into many domain files with no intersection between them. A unified version of their parameters is saved.
 - **Discarded**: chatbots with domain files that are neither copies nor a modularized domain are discarded.
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Parameter Extraction
+
 **Output**:
 - `chatbots_sfmd_info.csv`: SFMD chatbots classified and solved.
 - `chatbots_mfmd_info.csv`: MFMD chatbots classified and solved.
@@ -236,6 +252,8 @@ python 08_handle_multi_domain.py [--n-sfmd <n>] [--n-mfmd <n>]
 ### 9. Chatbot files unification
 Create a unified dataset with all chatbots of different classes.
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Parameter Extraction
+
 **Output**:
 - - `chatbots.csv`: complete dataset of chatbots extracted from the collected repositories.
 
@@ -245,6 +263,8 @@ python 09_unify_chatbot_dataset.py
 
 ### 10. Configuration language extraction
 Extract the model configuration language from configuration files.
+
+**Paper corresponding step**: Creation of the TOFU-R dataset - Language Extraction
 
 **Output**:
 - `chatbots_join_config_file.csv`: chatbot dataset enriched with config file information.
@@ -260,6 +280,8 @@ python 10_extract_config_language.py [--n-chatbots <n>]
 ### 11. Training language extraction
 Extract the language used in training phrases via [detectlanguage](https://detectlanguage.com/) API.
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Language Extraction
+
 **Output**:
 - `chatbots_join_nlu_file.csv`: chatbot dataset enriched with nlu file information.
 - `chatbots.csv`: chatbot dataset enriched with training language.
@@ -274,6 +296,8 @@ python 11_extract_training_language.py [--n-chatbots <n>]
 ### 12. Response language extraction
 Extract the language used in response phrases via [detectlanguage](https://detectlanguage.com/) API.
 
+**Paper corresponding step**: Creation of the TOFU-R dataset - Language Extraction
+
 **Output**:
 - `chatbots.csv`: chatbot dataset enriched with response language.
 
@@ -286,6 +310,8 @@ python 12_extract_response_language.py [--n-chatbots <n>]
 
 ### 13. Language evaluation
 **A. Manual check on multiple languages (optional)**: since detectlanguage API may identify more languages incorrectly, perform a manual check over chatbots with more than one language to remove - correct them. 
+
+**Paper corresponding step**: Creation of the TOFU-R dataset - Language Extraction
 
 **Output**: 
 -  `chatbots_language_check.csv`: save the resulting chatbot dataset in this file, under folder *results/13_results*.
@@ -303,6 +329,8 @@ python 13_evaluate_language.py
 
 ### 14. Duplicate chatbots removal
 Remove multiple copies of the same chatbot from the dataset, keeping only the best one based on these criteria: Rasa version, number of stars, number of forks and creation date.
+
+**Paper corresponding step**: Creation of the TOFU-R dataset - Duplicate Removal
 
 **Output**:
 - `chatbots_join_nlu_date.csv`: chatbot dataset enriched with dates information.
@@ -322,6 +350,8 @@ python 14_delete_duplicate_chatbots.py [--n-chatbots <n>]
 ### 15. Chatbot selection
 Select from the TOFU-R dataset a subset of chatbots with criteria based on dialogue complexity, functional complexity and usability.
 
+**Paper corresponding step**: Creation of the BRASATO dataset - Chatbot Selection
+
 **Output**:
 - `chatbots.csv`: chatbot dataset of selected subjects.
 
@@ -329,8 +359,10 @@ Select from the TOFU-R dataset a subset of chatbots with criteria based on dialo
 python 15_select_chatbots.py
 ```
 
-### 16. External services extraction
+### 16. External service extraction
 Automatically extract the external services used by the chatbot from the README and action files with ChatGPT.
+
+**Paper corresponding step**: Creation of the BRASATO dataset - External Service Extraction
 
 **Output**:
 - `chatbots_join_files.csv`: chatbot dataset enriched with readme and action files information.
@@ -346,6 +378,8 @@ python 16_extract_external_services.py [--n-chatbots <n>]
 
 ### 17. External services filtering
 Filter external services incorrectly identified.
+
+**Paper corresponding step**: Creation of the BRASATO dataset - External Service Extraction
 
 **A. Automatic filtering**: remove services that match the *black-list* (common python local framework and libraries).
 **Output**: 
@@ -373,6 +407,8 @@ python 17_filter_external_services.py
 
 ### 18. Topic classification
 Determine the topic of each chatbot with ChatGPT, based on the Google Play categories list.
+
+**Paper corresponding step**: Creation of the BRASATO dataset - Topic Extraction
 
 **Output**:
 - `chatbots_join_readme.csv`: chatbot dataset enriched with readme files information.
