@@ -91,8 +91,8 @@ You can set up the environment using a Docker environment or a Python virtual en
 ### The TOFU-R and BRASATO methodology
 All the methodology steps are described in the following section, along with their output and parameters. To get started with the methodology, execute it on small set of repositories, specifically:
 
-- **Step 1**: 300 repositories
-- **Step** 2-3: 100 repositories
+- **Step 1**: 500 repositories
+- **Step** 2-3: 300 repositories
 - **Step** 4-18: on the remaining ones
 
 This execution should take around ------ minutes, but you can also reduce the considered sample at any time in the procedure.
@@ -461,7 +461,7 @@ To partially replicate the original procedure you can use the original results o
 To limit this dependance on GitHub, start the replication process by executing step 3 on the original results of step 2. Step 3 is also dependant on GitHub state but in a less heavy way, and its execution cannot be skipped in the reproduction process by starting direclty with step 4, because step 3 involves the download of zip archives required for the following steps, and we cannot legally include the original zip archives in this repository nor distribute them in other ways. Differences in step 3 results (chatbot repositories becoming not found repositories, timeout repositories) will propagate to the rest of the results.
 
 Given the space/time/API limitations involved in the execution of the procedure on the complete set of repositories, the suggested choice is to reproduce the procedure on a subset of the original repositories. You can execute step 3 with the following parameters:
-- `--n-repos <n>`: 300-500
+- `--n-repos <n>`: 500
 - `--timeout <t>`: 5-10 seconds
 
 > The script execution will overwrite previuos results, so to begin the reproduction process from step 3, copy folders *01_results*, *02_results* from *original_results* to *results/* before launching script 3.

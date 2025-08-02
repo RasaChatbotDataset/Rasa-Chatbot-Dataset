@@ -157,7 +157,7 @@ def main():
 
             # Not found error
             elif zip_path == -1:
-                print(f"Not Found repository: {e}")
+                print(f"Not Found repository: {repo['full-name']}")
                 not_found_csv.writerow(repo)
                 n_nf_repos += 1
             
@@ -184,7 +184,7 @@ def main():
 
         # Exception: not_found repository
         except zipfile.BadZipFile as e:
-            print(f"Not Found repository: {e}")
+            print(f"Not Found repository: {repo['full-name']}")
             not_found_csv.writerow(repo)
             #os.remove(zip_path)
     print(f"\n> Processed repositories: {len(repositories)}/{len(repositories)}")
