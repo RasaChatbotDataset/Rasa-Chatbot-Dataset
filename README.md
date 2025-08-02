@@ -465,3 +465,8 @@ Given the space/time/API limitations involved in the execution of the procedure 
 - `--timeout <t>`: 5-10 seconds
 
 > The script execution will overwrite previuos results, so to begin the reproduction process from step 3, copy folders *01_results*, *02_results* from *original_results* to *results/* before launching script 3.
+
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
