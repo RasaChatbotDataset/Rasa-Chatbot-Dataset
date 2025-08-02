@@ -54,8 +54,24 @@ The methodology scripts were executed with Python 3.10.11, on these two machines
 
 As far as we know, the scripts do not require specific RAM and CPU to run. Some steps that involve the download or the analysis of repository zip archives may require more time on less performing machines, but to mitigate this problem the number of repositories / chatbots considered for each step can be configured. 
 
-### Setup  
-You can set up the environment using a Python virtual enviroment or a Docker environment.
+### Configuration
+Create a config.env file from the template config.env.sample and complete it as explained below:
+
+- **GITHUB_TOKEN**: GitHub personal access token. 
+
+- **DETECT_LANGUAGE_KEY**: API key for the [Detect Language API](https://detectlanguage.com/).
+
+- **OPENAI_KEY**: API key for an [OpenAI API](https://platform.openai.com/docs/overview).
+
+- **OPENAI_ENDPOINT**: endpoint of the OpenAI model to be used.
+
+### Setup
+You can set up the environment using a Docker environment or a Python virtual enviroment.
+
+**Docker environment**
+1. Build the docker image: `docker build -t rasa-dataset .`
+2. Run a docker container with this image: `docker run --rm -it -v "${PWD}/results:/app/results" -v "${PWD}/chatbot_repositories_zip:/app/chatbot_repositories_zip" rasa-dataset`
+
 
 **Python virtual environment**
 1. Download Python [3.10.11](https://www.python.org/downloads/release/python-31011/) 
@@ -69,23 +85,8 @@ You can set up the environment using a Python virtual enviroment or a Docker env
     - Linux/MacOS: `source <path_to_new_venv>/bin/activate`
 5. Install the required python libraries included in the requirements file: `pip install requirements.txt`
 
-**Docker environment**
-
-
-
 
 ## Getting Started
-
-### Configuration
-Create a config.env file from the template config.env.sample and complete it as explained below:
-
-- **GITHUB_TOKEN**: GitHub personal access token. 
-
-- **DETECT_LANGUAGE_KEY**: API key for the [Detect Language API](https://detectlanguage.com/).
-
-- **OPENAI_KEY**: API key for an [OpenAI API](https://platform.openai.com/docs/overview).
-
-- **OPENAI_ENDPOINT**: endpoint of the OpenAI model to be used.
 
 ### The TOFU-R and BRASATO methodology
 All the methodology steps are described in the following section, along with their output and parameters. To get started with the methodology, execute it on small set of repositories, specifically:
@@ -436,7 +437,7 @@ The output of some steps depend on the current state of GitHub repositories, so 
 **Four hours limitation**  
 The complete execution of all scripts requires more than 4 hours, expecially the zip archives download (step 3). To overcome this problem, every step can be executed of a subset of the available repositories: optional parameters specific for each script define the number of repositories / chatbots that will be considered in the execution.
 
-**API limitations**  
+**API limitations**
 The APIs used in this project have the following limits:
 - **GitHub API** (step 1, 2): 5000 requests/hour. 
 - **DetectLanguageAPI** (step 11, 12): 1000 requests/day, 1 MB/day.
@@ -462,3 +463,5 @@ To limit this dependance on GitHub, start the replication process by executing s
 Given the space/time/API limitations involved in the execution of the procedure on the complete set of repositories, the suggested choice is to reproduce the procedure on a subset of the original repositories. You can execute step 3 with the following parameters:
 - `--n-repos <n>`: 300-500
 - `--timeout <t>`: 5-10 seconds
+
+> The script execution will overwrite previuos results, so to begin the reproduction process from step 3, copy folders *01_results*, *02_results* from *original_results* to *results/* before launching script 3.
