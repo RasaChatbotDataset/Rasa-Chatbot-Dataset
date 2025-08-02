@@ -436,7 +436,7 @@ The output of some steps depend on the current state of GitHub repositories, so 
 **Four hours limitation**  
 The complete execution of all scripts requires more than 4 hours, expecially the zip archives download (step 3). To overcome this problem, every step can be executed of a subset of the available repositories: optional parameters specific for each script define the number of repositories / chatbots that will be considered in the execution.
 
-**API limitations**
+**API limitations**  
 The APIs used in this project have the following limits:
 - **GitHub API** (step 1, 2): 5000 requests/hour. 
 - **DetectLanguageAPI** (step 11, 12): 1000 requests/day, 1 MB/day.
