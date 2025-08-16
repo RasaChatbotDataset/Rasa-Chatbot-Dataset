@@ -407,7 +407,7 @@ Automatically extract the external services used by the chatbot from the README 
 **Output**:
 - `chatbots_join_files.csv`: chatbot dataset enriched with readme and action files information.
 - `chatbots.csv`: chatbot dataset enriched with external services.
-- `chatgpt_responses`: a folder with all merges requests and responses for each chatbot.
+- `<chatgpt>/<gemini>_responses`: a folder with all merges requests and responses for each chatbot.
 
 **Optional parameters**:
 - `--n-chatbots <n>`: number of chatbots to consider (default: all)
@@ -452,7 +452,7 @@ Determine the topic of each chatbot with an LLM (OpenAI GPT or Google Gemini), b
 
 **Output**:
 - `chatbots_join_readme.csv`: chatbot dataset enriched with readme files information.
-- `chatgpt_responses`: a folder with all requests and responses for each chatbot.
+- `<chatgpt>/<gemini>_responses`: a folder with all requests and responses for each chatbot.
 - `chatbots.csv`: chatbot dataset enriched with topic -> the BRASATO dataset.
 
 **Optional parameters**:
