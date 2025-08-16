@@ -57,33 +57,62 @@ As far as we know, the scripts do not require specific RAM and CPU to run. Some 
 ### Configuration
 Create a config.env file from the template config.env.sample and complete it as explained below:
 
-- **GITHUB_TOKEN**: GitHub personal access token. 
+- **GITHUB_TOKEN**: GitHub fine-grained personal access token with *Read-only access to public repositories* as *Repository access* (required for steps 1, 2). 
 
-- **DETECT_LANGUAGE_KEY**: API key for the [Detect Language API](https://detectlanguage.com/).
+- **DETECT_LANGUAGE_KEY**: API key for the [Detect Language API](https://detectlanguage.com/) (required for steps 11, 12). The API has a free plan. 
 
-- **OPENAI_KEY**: API key for an [OpenAI API](https://platform.openai.com/docs/overview).
+- **LLM**: Large Language Model (LLM) API to use (required for steps 16 and 18). Accepted values:
+    - `OPENAI`: [Azure OpenAI API](https://azure.microsoft.com/en-us/products/ai-services/openai-service). It does not offer a free tier and requires the deployment of a gpt model in your Azure subscription. 
+    - `GEMINI`: [Google Gemini API](https://ai.google.dev/gemini-api/docs). The API has a free plan. 
 
-- **OPENAI_ENDPOINT**: endpoint of the OpenAI model to be used.
+- **LLM_KEY**: API key for the LLM API.
+
+- **LLM_ENDPOINT**: endpoint of the model to be used.
+    - *Azure OpenAI*: the endpoint of your own model.
+    - *Google Gemini*: the endpoint of a given model. Suggested: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+
+> The original experimentation was based on Azure OpenAI using the GPT-4o model. However, to make the procedure accessible without requiring a paid subscription or an Azure account, we also added support for Google Gemini, which offers a free usage tier. With Google Gemini the results may vary from the original ones since it is a different model and, unlike GPT4o, it uses default temperature and top_p values.
 
 ### Setup
 You can set up the environment using a Docker environment or a Python virtual enviroment.
 
 **Docker environment**
-1. Build the docker image: `docker build -t rasa-dataset .`
-2. Run a docker container with this image: `docker run --rm -it -v "${PWD}/results:/app/results" -v "${PWD}/chatbot_repositories_zip:/app/chatbot_repositories_zip" rasa-dataset`
+1. Build the docker image: 
+    ```
+    docker build -t rasa-dataset . 
+    ```
+2. Run a docker container with this image: 
+    ```
+    docker run --rm -it -v "${PWD}/results:/app/results" -v "${PWD}/chatbot_repositories_zip:/app/chatbot_repositories_zip" rasa-dataset
+    ```
 
 
 **Python virtual environment**
 1. Download Python [3.10.11](https://www.python.org/downloads/release/python-31011/) 
 2.  Install Python 3.10.11 (not required for Windows)
 3.  Create a [Python virtual enviroment](https://docs.python.org/3/library/venv.html) with Python 3.10.11.
-    - Windows (3.10.11 installed): `python -m venv <path_to_new_venv>`
-    - Windows (3.10.11 not installed): `<path_to_python3.10.11.exe> -m venv <path_to_new_venv>`
-    - Linux/MacOS: `python3 -m venv <path_to_new_venv>`
+    - Windows (3.10.11 installed): 
+    ```
+    python -m venv <path_to_new_venv>
+    ```
+    - Windows (3.10.11 not installed): 
+    ```
+    <path_to_python3.10.11.exe> -m venv <path_to_new_venv>`
+    - Linux/MacOS: `python3 -m venv <path_to_new_venv>
+    ```
 4. Activate the virtual environment:
-    - Windows: `<path_to_new_venv>\Scripts\activate`
-    - Linux/MacOS: `source <path_to_new_venv>/bin/activate`
-5. Install the required python libraries included in the requirements file: `pip install requirements.txt`
+    - Windows: 
+    ```
+    <path_to_new_venv>\Scripts\activate
+    ```
+    - Linux/MacOS: 
+    ```
+    source <path_to_new_venv>/bin/activate
+    ```
+5. Install the required python libraries included in the requirements file: 
+    ```
+    pip install requirements.txt
+    ```
 
 
 ## Getting Started
@@ -92,10 +121,11 @@ You can set up the environment using a Docker environment or a Python virtual en
 All the methodology steps are described in the following section, along with their output and parameters. To get started with the methodology, execute it on small set of repositories, specifically:
 
 - **Step 1**: 500 repositories
-- **Step** 2-3: 300 repositories
+- **Step 2**: 250 repositories
+- **Step 3**: 250 repositories, 7 seconds timeout
 - **Step** 4-18: on the remaining ones
 
-This execution should take around ------ minutes, but you can also reduce the considered sample at any time in the procedure.
+This execution should take around 30 minutes, but you can also reduce the considered sample at any time in the procedure.
 
 Note that the original experimentation is based on the 8634 repositories collected and downloaded on the **14/01/2025**. A new execution of the scripts will not generate the same output, since the set of available repositories on GitHub has changed from January.
 
@@ -156,7 +186,7 @@ Classify repositories as *chatbot_repositories* and *non_chatbot_repositories* b
 - `--timeout <t>`: timeout (s) for the zip archive download  (default: no timeout)
 
 ```
-python 03_check_repositories.py [--n-repos <n>]
+python 03_check_repositories.py [--n-repos <n> --timeout <t>]
 ```
 
 ### 4. Domain files filtering
@@ -312,23 +342,28 @@ python 12_extract_response_language.py [--n-chatbots <n>]
 ```
 
 ### 13. Language evaluation
-**A. Manual check on multiple languages (optional)**: since detectlanguage API may identify more languages incorrectly, perform a manual check over chatbots with more than one language to remove - correct them. 
 
-**Paper corresponding step**: Creation of the TOFU-R dataset - Language Extraction
-
-**Output**: 
--  `chatbots_language_check.csv`: save the resulting chatbot dataset in this file, under folder *results/13_results*.
-
-> To skip this step, copy the results of the previous step and rename the file as `chatbots_language_check.csv`. 
-
-**B. Overall language evaluation**: identify the overall languages of a chatbot.
+**A. Overall language evaluation**  
+Identify the overall languages of a chatbot.
 
 **Output**:
-- `chatbots.csv`: chatbot dataset enriched with overall language and information about the use of English.
+- `chatbots_language_check.csv`: chatbot dataset enriched with overall language and information about the use of English.
 
 ```
 python 13_evaluate_language.py
 ```
+
+**B. Manual check on multiple languages (optional)**  
+Since Detect Language API may identify more languages incorrectly, perform a manual check over chatbots with more than one language to remove - correct them. 
+
+**Paper corresponding step**: Creation of the TOFU-R dataset - Language Extraction
+
+**Output**: 
+-  `chatbots.csv`: copy file `chatbots_language_check.csv`and rename it `chatbots.csv`. Perform your manual changes in this file.
+
+> If you want to skip step 13-B, just copy file `chatbots_language_check.csv` and rename it `chatbots.csv`, since step 14 requires as input a `chatbots.csv` file under folder *results/13_results*. 
+
+
 
 ### 14. Duplicate chatbots removal
 Remove multiple copies of the same chatbot from the dataset, keeping only the best one based on these criteria: Rasa version, number of stars, number of forks and creation date.
@@ -363,7 +398,7 @@ python 15_select_chatbots.py
 ```
 
 ### 16. External service extraction
-Automatically extract the external services used by the chatbot from the README and action files with ChatGPT.
+Automatically extract the external services used by the chatbot from the README and action files with an LLM (OpenAI GPT or Google Gemini).
 
 **Paper corresponding step**: Creation of the BRASATO dataset - External Service Extraction
 
@@ -409,7 +444,7 @@ python 17_filter_external_services.py
 
 
 ### 18. Topic classification
-Determine the topic of each chatbot with ChatGPT, based on the Google Play categories list.
+Determine the topic of each chatbot with an LLM (OpenAI GPT or Google Gemini), based on the Google Play categories list.
 
 **Paper corresponding step**: Creation of the BRASATO dataset - Topic Extraction
 
@@ -441,8 +476,9 @@ The complete execution of all scripts requires more than 4 hours, expecially the
 The APIs used in this project have the following limits:
 - **GitHub API** (step 1, 2): 5000 requests/hour. 
 - **DetectLanguageAPI** (step 11, 12): 1000 requests/day, 1 MB/day.
+- **Google Gemini API** (step 16, 18): 100/1000 requests/day, 5/30 requests/minute [depending on the model](https://ai.google.dev/gemini-api/docs/rate-limits)
 
-The complete execution on all repositories / chatbots overcomes this daily/hourly limit.
+The complete execution on all repositories / chatbots overcomes this limits.
 
 **Zip files space on disk**  
 From step 3 zip archives of chatbots repositories will be download and saved on disk for the following steps. The size of the complete set of zip archives in the original execution is 150 GB. 
@@ -461,8 +497,8 @@ To partially replicate the original procedure you can use the original results o
 To limit this dependance on GitHub, start the replication process by executing step 3 on the original results of step 2. Step 3 is also dependant on GitHub state but in a less heavy way, and its execution cannot be skipped in the reproduction process by starting direclty with step 4, because step 3 involves the download of zip archives required for the following steps, and we cannot legally include the original zip archives in this repository nor distribute them in other ways. Differences in step 3 results (chatbot repositories becoming not found repositories, timeout repositories) will propagate to the rest of the results.
 
 Given the space/time/API limitations involved in the execution of the procedure on the complete set of repositories, the suggested choice is to reproduce the procedure on a subset of the original repositories. You can execute step 3 with the following parameters:
-- `--n-repos <n>`: 500
-- `--timeout <t>`: 5-10 seconds
+- `--n-repos <n>`: 500/700
+- `--timeout <t>`: 8-10 seconds
 
 > The script execution will overwrite previuos results, so to begin the reproduction process from step 3, copy folders *01_results*, *02_results* from *original_results* to *results/* before launching script 3.
 
