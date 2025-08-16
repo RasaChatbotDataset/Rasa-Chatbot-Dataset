@@ -69,7 +69,7 @@ Create a config.env file from the template config.env.sample and complete it as 
 
 - **LLM_ENDPOINT**: endpoint of the model to be used.
     - *Azure OpenAI*: the endpoint of your own model.
-    - *Google Gemini*: the endpoint of a given model. Suggested: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+    - *Google Gemini*: the endpoint of a given model. (e.g. https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent )
 
 > The original experimentation was based on Azure OpenAI using the GPT-4o model. However, to make the procedure accessible without requiring a paid subscription or an Azure account, we also added support for Google Gemini, which offers a free usage tier. With Google Gemini the results may vary from the original ones since it is a different model and, unlike GPT4o, it uses default temperature and top_p values.
 
@@ -128,6 +128,8 @@ All the methodology steps are described in the following section, along with the
 This execution should take around 30 minutes, but you can also reduce the considered sample at any time in the procedure.
 
 Note that the original experimentation is based on the 8634 repositories collected and downloaded on the **14/01/2025**. A new execution of the scripts will not generate the same output, since the set of available repositories on GitHub has changed from January.
+
+> Step 15 selectes from TOFU-R only the chatbots that match the specific criteria illustrated in the paper. Since in the original experimentation only 198 over 5271 chatbots matched those criteria, this short execution of the procedure may lead to an empty BRASATO dataset. If this happens, to test the behaviour of the remaining steps you can manually modify some chatbots in the TOFU-R you obtained to match the criteria (like incrementing the number of stars). 
 
 > After the procedure section you can find the reproducibility one, with all the instruction to partially reproduce the original results.
 

@@ -60,11 +60,6 @@ def query_gemini(prompt, parameters):
         ]}
 
     response = requests.post(parameters['ENDPOINT'], headers=headers, json=payload)
-   
-   # response = parameters['CLIENT'].models.generate_content(
-    #    model="gemini-2.5-flash",
-     #   contents=prompt,
-    #)
 
     return response
 
@@ -110,7 +105,7 @@ def extract_topic(chatbot, topics, llm,  parameters, response_folder):
                 Select the topic of the chatbot considering this list of topics: {topics}. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
                 Answer only with the topic, with no further words."""
 
-    # Ask LLM to extract services from file
+    # Ask LLM to extract topic from file
     if llm == 'OPENAI':
         response = query_chatgpt(prompt, parameters)
     elif llm == 'GEMINI':
@@ -233,6 +228,7 @@ def main():
 
         # Extract topic
         topic = extract_topic(chatbot, topics, config['LLM'], parameters, LLM_RESPONSE_FOLDER)
+        print('TOPIC: ', topic)
         if topic == -1:
             break
         chatbots.at[index, 'topic'] = topic
@@ -244,7 +240,7 @@ def main():
     chatbots = chatbots.drop('readme-files', axis=1)
 
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR, index=False)
-    print('Step 18 completed\n')
+    print('\nStep 18 completed\n')
     print('CONGRATULATIONS: YOUR BRASATO IS READY')
 
 

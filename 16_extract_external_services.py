@@ -8,14 +8,10 @@ import time
 import re
 import argparse
 
-TEMPERATURE = 1
-TOP_P = 0.15
-
 config = dotenv_values('config.env')
 
 FILES = [os.path.join('results', '06_results', 'chatbots_sfsd.csv'), os.path.join('results', '06_results', 'chatbots_mfsd.csv'), os.path.join('results', '06_results', 'chatbots_sfmd.csv'), os.path.join('results', '06_results', 'chatbots_mfmd.csv')]
 RESULTS_FOLDER = os.path.join('results', '16_results')
-CHATGPT_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'chatgpt_responses')
 INPUT_FOLDER = os.path.join('results', '15_results')
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
@@ -23,13 +19,11 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 
 
 # Query OpenAI ChatGPT
-def query_chatgpt(prompt):
-    print("sending request")
+def query_chatgpt(prompt, parameters):
 
-    API_KEY = config['OPENAI_KEY']
     headers = {
         "Content-Type": "application/json",
-        "api-key": API_KEY,
+        "api-key": parameters['API_KEY'],
     }
     payload = {
     "messages": [
@@ -38,19 +32,39 @@ def query_chatgpt(prompt):
         "content": [{"type": "text", "text": prompt}]
         }
     ],
-    "temperature": TEMPERATURE,
-    "top_p": TOP_P,
+    "temperature": parameters['TEMPERATURE'],
+    "top_p": parameters['TOP_P'],
     "max_tokens": 800
     }
-    ENDPOINT = config['OPENAI_ENDPOINT']
 
-    response = requests.post(ENDPOINT, headers=headers, json=payload)
+    response = requests.post(parameters['ENDPOINT'], headers=headers, json=payload)
     
     return response
 
+# Query Gemini
+def query_gemini(prompt, parameters):
+
+    headers = {
+        "Content-Type": "application/json",
+        "x-goog-api-key": parameters['API_KEY'],
+    }
+
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ]}
+
+    response = requests.post(parameters['ENDPOINT'], headers=headers, json=payload)
+
+    return response
 
 # Ask chatgpt to merge 10 responses
-def merge_responses(chatbot_id, responses, n_file, file_content, file_type):
+def merge_responses(chatbot_id, responses, n_file, file_content, file_type, llm, parameters, response_folder):
     services = [] 
     
     s = '\n'.join(responses)
@@ -76,13 +90,20 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type):
     In a new section titled "Purpose of external services" explain the purpose of each service.
     If the file doesn't use any external service nor database, answer only with "NO" and nothing else'''
 
-    # Send query
-    response = query_chatgpt(prompt)
+    # Ask LLM to extract services from file
+    if llm == 'OPENAI':
+        response = query_chatgpt(prompt, parameters)
+    elif llm == 'GEMINI':
+        response = query_gemini(prompt, parameters)
+
     n_retry = 0
     while response.status_code == 429 and n_retry < 5:
         print("Error 429: too many requests")
         time.sleep(30)
-        response = query_chatgpt(prompt)
+        if llm == 'OPENAI':
+            response = query_chatgpt(prompt, parameters)
+        elif llm == 'GEMINI':
+            response = query_gemini(prompt, parameters)
         n_retry += 1
     
     if n_retry == 5:
@@ -90,14 +111,17 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type):
 
     # Parse response
     json_response = response.json()
-    content = json_response['choices'][0]['message']['content']#"NO\n\nPurpose of external services"#
+    if llm == 'OPENAI':
+        content = json_response['choices'][0]['message']['content'].strip()
+    elif llm == 'GEMINI':
+        content = json_response['candidates'][0]['content']['parts'][0]['text'].strip()
 
     # Create result folder
-    if not os.path.isdir(os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot_id.replace('/', '_'))):
-        os.mkdir(os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot_id.replace('/', '_')))
+    if not os.path.isdir(os.path.join(response_folder, chatbot_id.replace('/', '_'))):
+        os.mkdir(os.path.join(response_folder, chatbot_id.replace('/', '_')))
 
     # Save request and response
-    r_file = os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot_id.replace('/', '_'), file_type + '_' + str(n_file) + '.txt')
+    r_file = os.path.join(response_folder, chatbot_id.replace('/', '_'), file_type + '_' + str(n_file) + '.txt')
     response_file = open(r_file, 'w', encoding="utf-8", errors="replace")
     response_file.write('REQUEST\n' + prompt + '\n\nRESPONSE\n' + content)
     response_file.close()
@@ -112,7 +136,7 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type):
 
 
 # Extract services lost from file (10 requests + 1 merge)
-def extract_services_from_file(chatbot, repository, file, file_type, n_file):
+def extract_services_from_file(chatbot, repository, file, file_type, n_file, llm, parameters, response_folder):
     services = []
     merged_services = []
 
@@ -140,19 +164,29 @@ def extract_services_from_file(chatbot, repository, file, file_type, n_file):
             for i in range(10):
 
                 # Ask chatgpt to extract services from file
-                response = query_chatgpt(prompt)
+                if llm == 'OPENAI':
+                    response = query_chatgpt(prompt, parameters)
+                elif llm == 'GEMINI':
+                    response = query_gemini(prompt, parameters)
                 n_retry = 0
+
                 while response.status_code == 429 and n_retry < 5:
                     print("Error 429: too many requests")
                     time.sleep(30)
-                    response = query_chatgpt(prompt)
+                    if llm == 'OPENAI':
+                        response = query_chatgpt(prompt, parameters)
+                    elif llm == 'GEMINI':
+                        response = query_gemini(prompt, parameters)
                     n_retry += 1
                 if n_retry == 5:
                     return -1
 
                 # Parse response
                 json_response = response.json()
-                resp_content = json_response['choices'][0]['message']['content'] #"NO\n\nPurpose of external services"#
+                if llm == 'OPENAI':
+                    resp_content = json_response['choices'][0]['message']['content'].strip()
+                elif llm == 'GEMINI':
+                    resp_content = json_response['candidates'][0]['content']['parts'][0]['text'].strip()
 
                 if resp_content.startswith('YES'):
                     resp_content = resp_content.replace('YES', '', 1)
@@ -164,7 +198,7 @@ def extract_services_from_file(chatbot, repository, file, file_type, n_file):
 
             
             # Merge responses
-            merged_services = merge_responses(chatbot['id'], services, n_file, content, file_type)
+            merged_services = merge_responses(chatbot['id'], services, n_file, content, file_type, llm, parameters, response_folder)
 
         except UnicodeDecodeError as e:
             print(f"Decode error")
@@ -173,7 +207,7 @@ def extract_services_from_file(chatbot, repository, file, file_type, n_file):
 
 
 # Extract services from files
-def extract_services_from_files(chatbot, file_type, file_list):
+def extract_services_from_files(chatbot, file_type, file_list, llm, parameters, response_folder):
 
     external_services = []
 
@@ -184,7 +218,7 @@ def extract_services_from_files(chatbot, file_type, file_list):
     for i in range(len(file_list)):
         
         # Extract service 
-        services = extract_services_from_file(chatbot, repository, file_list[i], file_type, i)
+        services = extract_services_from_file(chatbot, repository, file_list[i], file_type, i, llm, parameters, response_folder)
         if services == -1:
             return -1, -1
 
@@ -196,12 +230,6 @@ def extract_services_from_files(chatbot, file_type, file_list):
       
 
 def main():
-
-    # Create result folder
-    if not os.path.isdir(RESULTS_FOLDER):
-        os.mkdir(RESULTS_FOLDER)
-    if not os.path.isdir(CHATGPT_RESPONSE_FOLDER):
-        os.mkdir(CHATGPT_RESPONSE_FOLDER)
 
     # Optional argument for number of chatbots
     parser = argparse.ArgumentParser(description='Parser')
@@ -215,6 +243,44 @@ def main():
     args = parser.parse_args()
 
     print('\n\n', '-'*20, 'EXTERNAL SERVICES EXTRACTION', '-'*20, '\n') 
+
+    # LLM configuration
+    # Gemini
+    if config['LLM'] == 'GEMINI':
+        if not config['LLM_ENDPOINT'] or not config['LLM_KEY']:
+            print('Incorrect GEMINI configuration in file config.env')
+            exit()
+
+        parameters = {
+                        'ENDPOINT' : config['LLM_ENDPOINT'],
+                        'API_KEY' : config['LLM_KEY']
+                    }
+        LLM_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'gemini_responses')
+        print('LLM: Google Gemini')
+
+    # ChatGPT
+    elif config['LLM'] == 'OPENAI':
+        if not config['LLM_ENDPOINT'] or not config['LLM_KEY']:
+            print('Incorrect OPENAI configuration in file config.env')
+            exit()
+        parameters = {
+                        'TEMPERATURE' : 1,
+                        'TOP_P' : 0.15,
+                        'ENDPOINT' : config['LLM_ENDPOINT'],
+                        'API_KEY' : config['LLM_KEY']
+                    }
+        LLM_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'chatgpt_responses')
+        print('LLM: OpenAI GPT')
+
+    else:
+       print('Incorrect LLM value in file config.env') 
+       exit()
+    
+    # Create result folder
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.mkdir(RESULTS_FOLDER)
+    if not os.path.isdir(LLM_RESPONSE_FOLDER):
+        os.mkdir(LLM_RESPONSE_FOLDER)
 
     # Join chatbot files
     chatbots = pd.read_csv(os.path.join(INPUT_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR)
@@ -250,7 +316,7 @@ def main():
         # Extract services from action files
         if int(chatbot['n-actions-files']) > 0 :
             file_list = ast.literal_eval(chatbot['actions-files'])
-            external_services = extract_services_from_files(chatbot, 'actions', file_list)
+            external_services = extract_services_from_files(chatbot, 'actions', file_list, config['LLM'], parameters, LLM_RESPONSE_FOLDER)
             if external_services == -1:
                 break
             chatbots.at[index, 'external-services-actions'] = external_services
@@ -259,13 +325,13 @@ def main():
         # Extract services from readme files
         if int(chatbot['n-readme-files']) > 0 :
             file_list = ast.literal_eval(chatbot['readme-files'])   
-            external_services = extract_services_from_files(chatbot, 'readme', file_list)
+            external_services = extract_services_from_files(chatbot, 'readme', file_list, config['LLM'], parameters, LLM_RESPONSE_FOLDER)
             if external_services == -1:
                 break
             chatbots.at[index, 'external-services-readme'] = external_services
             chatbots.at[index, 'n-external-services-readme'] = len(external_services)
     
-    print(f'> Processed chatbots: {chatbots.shape[0]}/{chatbots.shape[0]}')
+    print(f'\n> Processed chatbots: {chatbots.shape[0]}/{chatbots.shape[0]}')
             
     # Drop columns
     chatbots = chatbots.drop('n-readme-files', axis=1)
@@ -273,7 +339,7 @@ def main():
     chatbots = chatbots.drop('n-actions-files', axis=1)
     chatbots = chatbots.drop('actions-files', axis=1)
     chatbots.to_csv(os.path.join(RESULTS_FOLDER, CHATBOT_FILE), sep=CSV_SEPARATOR, index=False)
-    print('Step 16 completed')
+    print('\nStep 16 completed')
 
 
 
