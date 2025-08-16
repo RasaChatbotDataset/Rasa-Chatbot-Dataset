@@ -151,6 +151,7 @@ def main():
             n_domain_removed += n
         
         chatbot_info['n-domain-files'] = len(chatbot_info['domain-files'])
+        repository.close()
         
         # If there is no domain file left: not a chatbot, remove zip
         if len(chatbot_info['domain-files']) > 0:

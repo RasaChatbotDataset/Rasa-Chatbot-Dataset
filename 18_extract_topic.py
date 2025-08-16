@@ -135,6 +135,7 @@ def extract_topic(chatbot, topics, llm,  parameters, response_folder):
     response_file = open(r_file, 'w', encoding="utf-8", errors="replace")
     response_file.write('REQUEST\n' + prompt + '\n\nRESPONSE\n' + topic)
     response_file.close()
+    repository.close()
 
     return topic
       

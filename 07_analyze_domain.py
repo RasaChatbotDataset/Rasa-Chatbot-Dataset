@@ -284,6 +284,7 @@ def main():
                 else:
                     quit()
 
+            repository.close()
         print(f'> Processed chatbots: {len(chatbots)}/{len(chatbots)}')
         print('-'*30, '\n')
 

@@ -403,6 +403,7 @@ def main():
         chatbot_info = find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model)
         chatbot_info = find_language_files(repository, chatbot_info, domain_is_test, domain_is_model)
         writer.writerow(chatbot_info)
+        repository.close()
     
     print(f'> Processed repositories: {len(chatbots)}/{len(chatbots)}')
     print('Step 5 completed')

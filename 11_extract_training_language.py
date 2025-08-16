@@ -47,6 +47,8 @@ def extract_training_language(chatbot):
         for l in file_languages:
             if l not in languages:
                 languages.append(l)
+                
+    repository.close()
 
     return version, languages
 

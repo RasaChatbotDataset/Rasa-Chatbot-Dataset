@@ -62,6 +62,8 @@ def extract_config_language(chatbot):
             except Exception as e:
                 print(f"Error for chatbot {chatbot['full-name']}, file {file}")
                 print(e)
+    
+    repository.close()
 
     return languages
            

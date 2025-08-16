@@ -439,7 +439,7 @@ python 17_filter_external_services.py
 **Output**: 
 -  `2_chatbots.csv`: save the filtered chatbot dataset in this file.
 
-**C. Services merge**: merge services extracted from action files and readme files into a single field called *external-services*.
+**C. Services merge**: manually merge the list of services extracted from action files (*external-services-actions*) and readme files (*external-services-readme*) into a new single column called *external-services*. Write their total number under a new column, *n-external-services*. Delete all the other services columns (*external-services-actions*, *n-external-services-actions*, *external-services-readme*, *n-external-services-readme*).
 
 **Output**: 
 -  `3_chatbots.csv`: save the resulting chatbot dataset in this file.

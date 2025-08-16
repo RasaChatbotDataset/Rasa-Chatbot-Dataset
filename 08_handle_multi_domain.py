@@ -71,6 +71,8 @@ def clean_same_domain(domain_files):
         if not d_file['domain-file'] in different_domain_files:
             domain_files.remove(d_file)
             n += 1
+            
+    repository.close()
 
     return domain_files, n
 

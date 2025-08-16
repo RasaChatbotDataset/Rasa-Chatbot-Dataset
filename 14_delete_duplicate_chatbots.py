@@ -96,7 +96,8 @@ def select_best_copies(copies):
             if is_new:
                 diff_action_files_set.append(copy_action_files_contents)
                 best_copies.append(copy)
-
+            
+            repository.close()
 
 
     return best_copies

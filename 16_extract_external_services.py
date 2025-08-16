@@ -224,6 +224,7 @@ def extract_services_from_files(chatbot, file_type, file_list, llm, parameters, 
 
         # Append services
         external_services = external_services + services
+    repository.close()
     
     return external_services
 
