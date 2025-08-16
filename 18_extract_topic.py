@@ -8,14 +8,9 @@ import time
 import json
 import argparse
 
-TEMPERATURE = 1
-TOP_P = 0.15
-
 config = dotenv_values('config.env')
-
 FILES = [os.path.join('results', '06_results', 'chatbots_sfsd.csv'), os.path.join('results', '06_results', 'chatbots_mfsd.csv'), os.path.join('results', '06_results', 'chatbots_sfmd.csv'), os.path.join('results', '06_results', 'chatbots_mfmd.csv')]
 RESULTS_FOLDER = os.path.join('results', '18_results')
-CHATGPT_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'chatgpt_responses')
 INPUT_FILE = os.path.join('results', '17_results', '3_chatbots.csv')
 CHATBOT_FILE = 'chatbots.csv'
 CSV_SEPARATOR= ';'
@@ -25,13 +20,11 @@ TOPICS_FILE_NAME = '18_topic_categories.csv'
 
 
 # Query OpenAI ChatGPT
-def query_chatgpt(prompt):
-    print("sending request")
+def query_chatgpt(prompt, parameters):
 
-    API_KEY = config['OPENAI_KEY']
     headers = {
         "Content-Type": "application/json",
-        "api-key": API_KEY,
+        "api-key": parameters['API_KEY'],
     }
     payload = {
     "messages": [
@@ -40,21 +33,46 @@ def query_chatgpt(prompt):
         "content": [{"type": "text", "text": prompt}]
         }
     ],
-    "temperature": TEMPERATURE,
-    "top_p": TOP_P,
+    "temperature": parameters['TEMPERATURE'],
+    "top_p": parameters['TOP_P'],
     "max_tokens": 800
     }
-    ENDPOINT = config['OPENAI_ENDPOINT']
 
-    response = requests.post(ENDPOINT, headers=headers, json=payload)
+    response = requests.post(parameters['ENDPOINT'], headers=headers, json=payload)
     
+    return response
+
+def query_gemini(prompt, parameters):
+
+    headers = {
+        "Content-Type": "application/json",
+        "x-goog-api-key": parameters['API_KEY'],
+    }
+
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ]}
+
+    response = requests.post(parameters['ENDPOINT'], headers=headers, json=payload)
+   
+   # response = parameters['CLIENT'].models.generate_content(
+    #    model="gemini-2.5-flash",
+     #   contents=prompt,
+    #)
+
     return response
 
 
 # Extract topic from file
-def extract_topic(chatbot, topics):
+def extract_topic(chatbot, topics, llm,  parameters, response_folder):
     
-    # Readme files (exclude rasa hq base one)
+    # Readme files
     readme_merge = ""
     file_list = ast.literal_eval(chatbot['readme-files'])
     zip_path = os.path.join(ZIP_FOLDER, chatbot['full-name'].replace('/', '_') + '.zip')
@@ -92,38 +110,41 @@ def extract_topic(chatbot, topics):
                 Select the topic of the chatbot considering this list of topics: {topics}. If the chatbot's topic matches one of these, use the topic in the list. Otherwise define a new topic. 
                 Answer only with the topic, with no further words."""
 
-    # Ask chatgpt to extract services from file
-    response = query_chatgpt(prompt)
+    # Ask LLM to extract services from file
+    if llm == 'OPENAI':
+        response = query_chatgpt(prompt, parameters)
+    elif llm == 'GEMINI':
+        response = query_gemini(prompt, parameters)
+    
     n_retry = 0
     while response.status_code == 429 and n_retry < 5:
         print("Error 429: too many requests")
         time.sleep(30)
-        response = query_chatgpt(prompt)
+        if llm == 'OPENAI':
+            response = query_chatgpt(prompt, parameters)
+        elif llm == 'GEMINI':
+            response = query_gemini(prompt, parameters)
         n_retry += 1
     if n_retry == 5:
         return -1
 
     # Parse response
     json_response = response.json()
-    topic = json_response['choices'][0]['message']['content'] #"NO\n\nPurpose of external services"#
+    if llm == 'OPENAI':
+        topic = json_response['choices'][0]['message']['content'].strip()
+    elif llm == 'GEMINI':
+        topic = json_response['candidates'][0]['content']['parts'][0]['text'].strip()
 
     # Save request and response
-    r_file = os.path.join(CHATGPT_RESPONSE_FOLDER, chatbot['id'].replace('/', '_') + '.txt')
+    r_file = os.path.join(response_folder, chatbot['id'].replace('/', '_') + '.txt')
     response_file = open(r_file, 'w', encoding="utf-8", errors="replace")
     response_file.write('REQUEST\n' + prompt + '\n\nRESPONSE\n' + topic)
     response_file.close()
 
-    print(topic)
     return topic
       
 
 def main():
-
-    # Create result folder
-    if not os.path.isdir(RESULTS_FOLDER):
-        os.mkdir(RESULTS_FOLDER)
-    if not os.path.isdir(CHATGPT_RESPONSE_FOLDER):
-        os.mkdir(CHATGPT_RESPONSE_FOLDER)
     
     # Optional argument for number of chatbots
     parser = argparse.ArgumentParser(description='Parser')
@@ -137,6 +158,44 @@ def main():
     args = parser.parse_args()
 
     print('\n\n', '-'*20, 'TOPIC EXTRACTION', '-'*20, '\n') 
+
+    # LLM configuration
+    # Gemini
+    if config['LLM'] == 'GEMINI':
+        if not config['LLM_ENDPOINT'] or not config['LLM_KEY']:
+            print('Incorrect GEMINI configuration in file config.env')
+            exit()
+
+        parameters = {
+                        'ENDPOINT' : config['LLM_ENDPOINT'],
+                        'API_KEY' : config['LLM_KEY']
+                    }
+        LLM_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'gemini_responses')
+        print('LLM: Google Gemini')
+
+    # ChatGPT
+    elif config['LLM'] == 'OPENAI':
+        if not config['LLM_ENDPOINT'] or not config['LLM_KEY']:
+            print('Incorrect OPENAI configuration in file config.env')
+            exit()
+        parameters = {
+                        'TEMPERATURE' : 1,
+                        'TOP_P' : 0.15,
+                        'ENDPOINT' : config['LLM_ENDPOINT'],
+                        'API_KEY' : config['LLM_KEY']
+                    }
+        LLM_RESPONSE_FOLDER = os.path.join(RESULTS_FOLDER, 'chatgpt_responses')
+        print('LLM: OpenAI GPT')
+
+    else:
+       print('Incorrect LLM value in file config.env') 
+       exit()
+    
+    # Create result folder
+    if not os.path.isdir(RESULTS_FOLDER):
+        os.mkdir(RESULTS_FOLDER)
+    if not os.path.isdir(LLM_RESPONSE_FOLDER):
+        os.mkdir(LLM_RESPONSE_FOLDER)
 
     # Join chatbot files
     chatbots = pd.read_csv(INPUT_FILE, sep=CSV_SEPARATOR)
@@ -173,8 +232,8 @@ def main():
             print(f'> Processed chatbots: {index}/{chatbots.shape[0]}')
 
         # Extract topic
-        topic = extract_topic(chatbot, topics)
-        if topic== -1:
+        topic = extract_topic(chatbot, topics, config['LLM'], parameters, LLM_RESPONSE_FOLDER)
+        if topic == -1:
             break
         chatbots.at[index, 'topic'] = topic
 
