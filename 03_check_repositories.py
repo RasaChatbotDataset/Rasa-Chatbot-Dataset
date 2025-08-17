@@ -7,6 +7,8 @@ from utils import sync
 import shutil
 import argparse
 from multiprocessing import Process, Queue, freeze_support
+import requests
+import time
 
 
 INPUT_FOLDER = os.path.join('results', '02_results')
@@ -135,10 +137,15 @@ def main():
     
     # For each repository
     for i in range(len(repositories)): 
+        connection_retries = 0
         repo = repositories[i]
         # Periodical sync
         if i%50==0:
             print(f"> Processed repositories: {i}/{len(repositories)}\n")
+            cb_file.flush()
+            ncb_file.flush()
+            not_found_repo_file.flush()
+            timeout_file.flush()
             #sync(ZIP_DIRECTORY)
             #print('sync')
         try:
@@ -160,6 +167,16 @@ def main():
                 print(f"Not Found repository: {repo['full-name']}")
                 not_found_csv.writerow(repo)
                 n_nf_repos += 1
+            
+            # Connection error
+            elif zip_path == -2:
+                print('Connection error: sleep for 30 seconds')
+                time.sleep(30)
+                i = i - 1
+                connection_retries += 1
+                if connection_retries == 5:
+                    print('Too many connection retries: connection persistent error, process terminated')
+                    break
             
             # Repository downloaded
             else:
