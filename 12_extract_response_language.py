@@ -161,7 +161,7 @@ def main():
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
-    result_file = open(CHATBOT_FILE, 'w', newline='')
+    result_file = open(CHATBOT_FILE, 'w', newline='', encoding='utf-8')
     header = reader.fieldnames + ['response-languages']
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()

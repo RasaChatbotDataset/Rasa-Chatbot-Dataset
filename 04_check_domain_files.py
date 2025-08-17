@@ -104,15 +104,15 @@ def main():
     print('\n\n', '-'*20, 'DOMAIN FILES FILTERING', '-'*20, '\n')
 
     # Open files
-    chatbot_file = open(CHATBOTS_BEFORE_CLEAN_NAME, 'r')
+    chatbot_file = open(CHATBOTS_BEFORE_CLEAN_NAME, 'r', encoding='utf-8')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
-    cleaned_file = open(CHATBOTS_FILE_NAME, 'w', newline='')
+    cleaned_file = open(CHATBOTS_FILE_NAME, 'w', newline='', encoding='utf-8')
     analysis_writer = csv.DictWriter(cleaned_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
     analysis_writer.writeheader()
 
-    discarded_file = open(NO_MORE_DOMAIN_FILE_NAME, 'w', newline='')
+    discarded_file = open(NO_MORE_DOMAIN_FILE_NAME, 'w', newline='', encoding='utf-8')
     discarded_writer = csv.DictWriter(discarded_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
     discarded_writer.writeheader()
 
@@ -143,7 +143,12 @@ def main():
             continue
 
         # Clean domain files
-        chatbot_info, n = check_domain_files(repository, chatbot_info)
+        try:
+            chatbot_info, n = check_domain_files(repository, chatbot_info)
+        except:
+            print(f"Repository {chatbot_info['full-name']} changed url since step 1, archive does not match csv information, skipping")
+            n_repository_removed += 1
+            continue
 
         # Update statistics
         if n>0:
@@ -159,7 +164,7 @@ def main():
         else:
             n_repository_removed += 1
             discarded_writer.writerow(chatbot_info)
-            os.remove(zip_path) 
+            #os.remove(zip_path) 
     
     # Sync folder with google drive folder
     #sync(ZIP_FOLDER)

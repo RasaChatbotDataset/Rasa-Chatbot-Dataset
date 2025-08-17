@@ -220,7 +220,7 @@ def main():
     print('\n\n', '-'*20, 'DOMAIN PARAMETER EXTRACTION', '-'*20, '\n')
 
     # Error file
-    error_file = open(os.path.join(RESULTS_FOLDER, ERROR_FILE), 'w', newline='')
+    error_file = open(os.path.join(RESULTS_FOLDER, ERROR_FILE), 'w', newline='', encoding='utf-8')
     error_writer = csv.DictWriter(error_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS[:10] + ['chatbot-type', 'exception'], extrasaction='ignore')
     error_writer.writeheader()
 
@@ -229,11 +229,11 @@ def main():
         # Open files
         file = CHATBOT_FILES[index]
         c_type = file.replace('chatbots_', '').replace('.csv', '')
-        chatbot_file = open(os.path.join(INPUT_FOLDER, file+'.csv'), 'r')
+        chatbot_file = open(os.path.join(INPUT_FOLDER, file+'.csv'), 'r', encoding='utf-8')
         reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
         chatbots = list(reader)
 
-        analysis_file = open(os.path.join(RESULTS_FOLDER, file+'_info.csv'), 'w', newline='')
+        analysis_file = open(os.path.join(RESULTS_FOLDER, file+'_info.csv'), 'w', newline='', encoding='utf-8')
         analysis_writer = csv.DictWriter(analysis_file, delimiter=CSV_SEPARATOR, fieldnames=FIELDS, extrasaction='ignore')
         analysis_writer.writeheader()
 

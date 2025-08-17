@@ -48,7 +48,7 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
         try:
             content = nlu_file.read().decode()
         except:
-            print(f"{chatbot_info['full-name']}: Decode error")
+            #print(f"{chatbot_info['full-name']}: Decode error")
             continue
 
         # YML files
@@ -80,7 +80,8 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
                         chatbot_info['n-nlu-yml'] += 1
 
             except Exception as e:
-                print(f"{chatbot_info['full-name']}: YML parsing error")
+                #print(f"{chatbot_info['full-name']}: YML parsing error")
+                pass
 
         # JSON files       
         elif file.endswith('.json'):
@@ -96,7 +97,8 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
                         chatbot_info['nlu-files'].append(clean_file_name)
                         chatbot_info['n-nlu-json'] +=1
             except:
-                print(f"{chatbot_info['full-name']}: JSON parsing error")
+                #print(f"{chatbot_info['full-name']}: JSON parsing error")
+                pass
         
         elif file.endswith('.md') and file.split(os.sep)[-1] != 'README.md' and file.split(os.sep)[-1] != 'readme.md':
             # NLU file
@@ -117,8 +119,8 @@ def find_nlu_files(repository, chatbot_info, domain_is_test, domain_is_model):
 
     # Append nlu folder
     for nlu_name in chatbot_info['nlu-files']:
-        if str(Path(nlu_name).parent) not in chatbot_info['nlu-folders']:
-            chatbot_info['nlu-folders'].append(str(Path(nlu_name).parent))  
+        if str(Path(nlu_name).parent).replace('\\', '/')   not in chatbot_info['nlu-folders']:
+            chatbot_info['nlu-folders'].append(str(Path(nlu_name).parent).replace('\\', '/'))
 
     chatbot_info['n-nlu-folders'] = len(chatbot_info['nlu-folders']) 
 
@@ -157,7 +159,7 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
         try:
             content = action_file.read().decode()
         except:
-            print(f"{chatbot_info['full-name']}: Decode error")
+            #print(f"{chatbot_info['full-name']}: Decode error")
             continue
 
         # Discard empty files         
@@ -192,8 +194,8 @@ def find_action_files(repository, chatbot_info, domain_is_test, domain_is_model)
 
     # Identify action folders
     for actions_name in chatbot_info['actions-files']:
-        if str(Path(actions_name).parent) not in chatbot_info['actions-folders']:
-            chatbot_info['actions-folders'].append(str(Path(actions_name).parent))
+        if str(Path(actions_name).parent).replace('\\', '/') not in chatbot_info['actions-folders']:
+            chatbot_info['actions-folders'].append(str(Path(actions_name).parent).replace('\\', '/'))
                                     
     chatbot_info['n-actions-folders'] = len(chatbot_info['actions-folders'])
 
@@ -235,8 +237,8 @@ def find_readme_files(repository, chatbot_info, domain_is_test, domain_is_model)
 
     # Readme folders
     for readme_name in chatbot_info['readme-files']:
-        if str(Path(readme_name).parent) not in chatbot_info['readme-folders']:
-            chatbot_info['readme-folders'].append(str(Path(readme_name).parent))
+        if str(Path(readme_name).parent).replace('\\', '/') not in chatbot_info['readme-folders']:
+            chatbot_info['readme-folders'].append(str(Path(readme_name).parent).replace('\\', '/'))
                                     
     chatbot_info['n-readme-folders'] = len(chatbot_info['readme-folders'])
 
@@ -279,7 +281,7 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
         try:
             content = language_file.read().decode()
         except:
-            print(f"{chatbot_info['full-name']}: Decode error")
+            #print(f"{chatbot_info['full-name']}: Decode error")
             continue
         
         # YML files
@@ -287,7 +289,7 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
             try:      
                 file_content = yaml.safe_load(content)
             except:
-                print(f"{chatbot_info['full-name']}: YML parsing error")
+                #print(f"{chatbot_info['full-name']}: YML parsing error")
                 continue
 
         # JSON files
@@ -295,14 +297,14 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
             try:
                 file_content = json.loads(content)
             except:
-                print(f"{chatbot_info['full-name']}: JSON parsing error")
+                #print(f"{chatbot_info['full-name']}: JSON parsing error")
                 continue
         
         try:
             if len(file_content) == 0:
                 continue
         except:
-            print(f"{chatbot_info['full-name']}: Language file content error")
+            #print(f"{chatbot_info['full-name']}: Language file content error")
             continue
         
         # Check "language"
@@ -322,8 +324,8 @@ def find_language_files(repository, chatbot_info, domain_is_test, domain_is_mode
 
     # Language folders
     for lang_name in chatbot_info['language-files']:
-        if str(Path(lang_name).parent) not in chatbot_info['language-folders']:
-            chatbot_info['language-folders'].append(str(Path(lang_name).parent))
+        if str(Path(lang_name).parent).replace('\\', '/') not in chatbot_info['language-folders']:
+            chatbot_info['language-folders'].append(str(Path(lang_name).parent).replace('\\', '/'))
                                     
     chatbot_info['n-language-folders'] = len(chatbot_info['language-folders'])
 
@@ -352,11 +354,11 @@ def main():
     print('\n\n', '-'*20, 'FILES EXTRACTION', '-'*20, '\n')
 
     # Open files
-    chatbot_file = open(CHATBOTS_FILE_NAME, 'r')
+    chatbot_file = open(CHATBOTS_FILE_NAME, 'r', encoding='utf-8')
     reader = csv.DictReader(chatbot_file, delimiter=CSV_SEPARATOR)
     chatbots = list(reader)
 
-    multi_file = open(CHATBOTS_ANALYSIS_FILE_NAME, 'w', newline='')
+    multi_file = open(CHATBOTS_ANALYSIS_FILE_NAME, 'w', newline='', encoding='utf-8')
     header = reader.fieldnames + ['domain-folders', 'n-domain-folders', 'nlu-files', 'n-nlu-files', 'n-nlu-yml', 'n-nlu-json', 'n-nlu-md', 'nlu-folders', 'n-nlu-folders', 'actions-files', 'n-actions-files', 'actions-folders', 'n-actions-folders', 'readme-files', 'n-readme-files', 'readme-folders', 'n-readme-folders', 'language-files', 'n-language-files', 'language-folders', 'n-language-folders']
     writer = csv.DictWriter(multi_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
