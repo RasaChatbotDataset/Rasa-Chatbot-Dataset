@@ -142,6 +142,7 @@ Note that the original experimentation is based on the 8634 repositories collect
 
 
 ## TOFU-R: a snapshot of GitHub Rasa chatbots
+TOFU-R (Rasa Task-based chatbOts From githUb) is a snapshot of the Rasa chatbots available on GitHub, representing the state of the practice in open-source chatbot development with Rasa. The six logical steps illustrated in the paper are implemented with the following 14 scripts. Intermediate results are saved under folder *results*, and TOFU-R is the dataset obtained in step 14.
 
 ### 1. Repository search
 Search for GitHub repositories containing the keywords 'Rasa' and 'Chatbot' in the README, title, topics, or description.  
@@ -395,6 +396,7 @@ python 14_delete_duplicate_chatbots.py [--n-chatbots <n>]
 ```
 
 ## BRASATO: a curated selection
+BRASATO (Bot RASA collectiOn) is a curated selection of the most relevant chatbots for dialogue complexity, functional complexity, and utility, whose goal is to ease reproducibility and facilitate research on chatbot reliability. The three logical steps illustrated in the paper are implemented with the following 4 scripts. Intermediate results are saved under folder *results*, and BRASATO is the final dataset obtained after step 18.
 
 ### 15. Chatbot selection
 Select from the TOFU-R dataset a subset of chatbots with criteria based on dialogue complexity, functional complexity and usability.
