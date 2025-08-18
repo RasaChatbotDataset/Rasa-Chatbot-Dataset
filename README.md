@@ -26,7 +26,7 @@ This repository has the following structure:
 - **Methodology scripts**: all scripts necessary to replicate the procedure step-by-step are numbered and their use is described in the following sections.
 - **Original result folders**: intermediate results of each step generated in the original execution are stored in the *original_results* folder, organized by step number.
 - **ChatGPT parameter analysis**: all materials related to the analysis of ChatGPT parameters for services extraction are available in *chatGPT_parameter_analysis* folder, along with a dedicated README.
-- **Datasets**:  the TOFU-R and BRASATO datasets, which are the outputs of steps 14 and 18 respectively, are also provided directly in the main folder for convenience (file *TOFU-R.csv* and file *BRASATO.CSV*).
+- **Datasets**:  the TOFU-R and BRASATO datasets, which are the outputs of steps 14 and 18 respectively, are also provided directly in the main folder for convenience (file *TOFU_R.csv* and file *BRASATO.CSV*).
 
 The following sections describe each step in detail, allowing for full replication of the procedure used to create the TOFU-R and BRASATO datasets.
 
@@ -34,7 +34,7 @@ The following sections describe each step in detail, allowing for full replicati
 ## Expected Behaviour
 The TOFU-R and BRASATO datasets are the results of the methodology illustrated in the paper *"Towards the Assessment of Task-based Chatbots: From the TOFU-R Snapshot to the BRASATO Curated Dataset"*. This methodology is implemented as a sequence of 18 Python scripts: the TOFU-R dataset is the result of the 14th step, while BRASATO is the final result of the last script. 
 
-Each step produces an intermediate result, saved in folder *results*. The expected behaviour of each script and the intermediate output of each step is explained in sections *TOFU-R: a snapshot of GitHub Rasa chatbots* and *BRASATO: a curated selection*
+Each step produces an intermediate result, saved in folder *results*. The expected behaviour of each script and the intermediate output of each step is explained in sections *TOFU-R: a snapshot of GitHub Rasa chatbots* and *BRASATO: a curated selection*.
 
 
 ## Environment Setup
@@ -62,7 +62,7 @@ Create a config.env file from the template config.env.sample and complete it as 
 - **DETECT_LANGUAGE_KEY**: API key for the [Detect Language API](https://detectlanguage.com/) (required for steps 11, 12). The API has a free plan. 
 
 - **LLM**: Large Language Model (LLM) API to use (required for steps 16 and 18). Accepted values:
-    - `OPENAI`: [Azure OpenAI API](https://azure.microsoft.com/en-us/products/ai-services/openai-service). It does not offer a free tier and requires the deployment of a gpt model in your Azure subscription. 
+    - `OPENAI`: [Azure OpenAI API](https://azure.microsoft.com/en-us/products/ai-services/openai-service). It does not offer a free tier and requires the deployment of a GPT model in your Azure subscription. 
     - `GEMINI`: [Google Gemini API](https://ai.google.dev/gemini-api/docs). The API has a free plan. 
 
 - **LLM_KEY**: API key for the LLM API.
@@ -77,6 +77,8 @@ Create a config.env file from the template config.env.sample and complete it as 
 You can set up the environment using a Docker environment or a Python virtual enviroment.
 
 **Docker environment**
+From the root folder of the project:
+
 1. Build the docker image: 
     ```
     docker build -t rasa-dataset . 
@@ -89,8 +91,9 @@ You can set up the environment using a Docker environment or a Python virtual en
 
 **Python virtual environment**
 1. Download Python [3.10.11](https://www.python.org/downloads/release/python-31011/) 
-2.  Install Python 3.10.11 (not required for Windows)
-3.  Create a [Python virtual enviroment](https://docs.python.org/3/library/venv.html) with Python 3.10.11.
+2. Install Python 3.10.11 (not required for Windows)
+3. Go to the root folder of the project
+4. Create a [Python virtual enviroment](https://docs.python.org/3/library/venv.html) with Python 3.10.11.
     - Windows (3.10.11 installed): 
     ```
     python -m venv <path_to_new_venv>
@@ -100,7 +103,7 @@ You can set up the environment using a Docker environment or a Python virtual en
     <path_to_python3.10.11.exe> -m venv <path_to_new_venv>`
     - Linux/MacOS: `python3 -m venv <path_to_new_venv>
     ```
-4. Activate the virtual environment:
+5. Activate the virtual environment:
     - Windows: 
     ```
     <path_to_new_venv>\Scripts\activate
@@ -109,7 +112,7 @@ You can set up the environment using a Docker environment or a Python virtual en
     ```
     source <path_to_new_venv>/bin/activate
     ```
-5. Install the required python libraries included in the requirements file: 
+6. Install the required python libraries included in the requirements file: 
     ```
     pip install requirements.txt
     ```
@@ -122,8 +125,8 @@ You can set up the environment using a Docker environment or a Python virtual en
 All the methodology steps are described in the following section, along with their output and parameters. To get started with the methodology, execute it on small set of repositories, specifically:
 
 - **Step 1**: 500 repositories
-- **Step 2**: 200/250 repositories
-- **Step 3**: 200/250 repositories, 7 seconds timeout
+- **Step 2**: 200 repositories
+- **Step 3**: 200 repositories, 8 seconds timeout
 - **Step** 4-18: on the remaining ones (all available results)
 
 This execution should take around 30 minutes, but you can also reduce the considered sample at any time in the procedure.
@@ -198,7 +201,7 @@ Remove invalid domain files (empty files, non-parsable files or incorrectly iden
 **Paper corresponding step**: Creation of the TOFU-R dataset - Chatbot Extraction
 
 **Output**: 
-- `chatbot_repositories.csv`: updated chatbot repository dataset.
+- `chatbot_repositories.csv`: updated chatbot repository dataset
 - `discarded_repositories.csv`: repositories with no domain file left after the filtering
 - `clean_domain_statistics.txt`: statistics about the filtering process
 
@@ -352,13 +355,14 @@ Identify the overall languages of a chatbot.
 
 **Output**:
 - `chatbots_language_check.csv`: chatbot dataset enriched with overall language and information about the use of English.
+- `discarded_chatbots.csv`: chatbots discarded because they have no training language nor response language.
 
 ```
 python 13_evaluate_language.py
 ```
 
 **B. Manual check on multiple languages (optional)**  
-Since Detect Language API may identify more languages incorrectly, perform a manual check over chatbots with more than one language to remove - correct them. 
+Since Detect Language API may identify more languages incorrectly, perform a manual check over chatbots with more than one language to remove - correct them. You can check the training language by looking at the training sentences in the nlu files of the chatbot, and the response language in the responses section in the domain file.
 
 **Paper corresponding step**: Creation of the TOFU-R dataset - Language Extraction
 
@@ -438,6 +442,8 @@ python 17_filter_external_services.py
 - Remove non-used services (services that do not appear within the code or the readme)
 - Normalize services names across chatbots (e.g., mysql, mysql-connector, MySQL)
 - Normalize database and endpoint names (e.g., "JSON files" instead of "file1.json", or "Local server" instead of localhost endpoints").
+
+> Services extracted from action files are usually more reliable than services extracted from README files, especially when there are more README files in the repository.
 
 **Output**: 
 -  `2_chatbots.csv`: save the filtered chatbot dataset in this file.

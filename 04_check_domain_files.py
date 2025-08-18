@@ -79,9 +79,9 @@ def write_statistics(n_domain_removed, n_repository_cleaned, n_repository_remove
 
 # Print statistics about domain cleaning
 def print_statistics(n_domain_removed, n_repository_cleaned, n_repository_removed):
-    print(f"DOMAIN FILES REMOVED: {n_domain_removed}\n")
-    print(f"REPOSITORIES CLEANED: {n_repository_cleaned}\n")
-    print(f"REPOSITORIES REMOVED: {n_repository_removed}\n")
+    print(f"DOMAIN FILES REMOVED: {n_domain_removed}")
+    print(f"REPOSITORIES CLEANED: {n_repository_cleaned}")
+    print(f"REPOSITORIES REMOVED: {n_repository_removed}")
 
 
 def main():
@@ -169,8 +169,8 @@ def main():
     # Sync folder with google drive folder
     #sync(ZIP_FOLDER)
 
-    print(f'> Processed repositories: {len(chatbots)}/{len(chatbots)}')
-    print('Step 4 completed')
+    print(f'> Processed repositories: {len(chatbots)}/{len(chatbots)}\n')
+    print('Step 4 completed\n')
 
     # Close files
     cleaned_file.close()

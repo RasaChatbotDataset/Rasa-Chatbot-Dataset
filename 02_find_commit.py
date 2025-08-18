@@ -59,12 +59,12 @@ def add_last_commit():
     reader = csv.DictReader(repo_file, delimiter=CSV_SEPARATOR)
     repos = list(reader)
 
-    repo_complete_file = open(COMMIT_REPO_FILE, 'a', newline='')
+    repo_complete_file = open(COMMIT_REPO_FILE, 'w', newline='')
     cheaders = reader.fieldnames + ['last-commit', 'last-commit-date']
     writer = csv.DictWriter(repo_complete_file, fieldnames=cheaders, delimiter=CSV_SEPARATOR)
     writer.writeheader()
 
-    empty_file = open(EMPTY_REPOSITORIES, 'a', newline='')
+    empty_file = open(EMPTY_REPOSITORIES, 'w', newline='')
     empty_writer = csv.DictWriter(empty_file, fieldnames=reader.fieldnames, delimiter=CSV_SEPARATOR)
     empty_writer.writeheader()
 
