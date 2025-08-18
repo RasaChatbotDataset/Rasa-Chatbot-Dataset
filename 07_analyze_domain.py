@@ -12,7 +12,7 @@ ZIP_FOLDER = 'chatbot_repositories_zip'
 RESULTS_FOLDER = os.path.join('results', '07_results')
 INPUT_FOLDER = os.path.join('results', '06_results')
 
-FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-domain-files', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
+FIELDS = ['id', 'full-name','html-url','stars','forks', 'last-commit', 'domain-file', 'n-nlu-files', 'n-actions-files', 'n-language-files', 'n-readme-files',
     'n-intents', 'intents', 'n-entities', 'entities', 'n-actions', 'actions', 'n-actions-custom', 'actions-custom', 'n-slots', 'slots', 'n-slots-from-entity', 'n-slots-from-text', 
     'slots-type','n-forms', 'forms', 'version']
 
@@ -23,7 +23,7 @@ csv.field_size_limit(100000000)
 
 # Initialize chatbot information
 def initialize_chatbot_info(chatbot_info):
-    for key in FIELDS[12:]:
+    for key in FIELDS[11:]:
         if key.startswith('n-'):
             chatbot_info[key] = 0
         else: 

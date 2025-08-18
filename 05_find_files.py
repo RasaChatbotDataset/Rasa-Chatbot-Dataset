@@ -394,7 +394,7 @@ def main():
                     domain_is_test = True
             if 'models/dialogue' in domain:
                     domain_is_model = True
-            if str(Path(domain).parent) not in chatbot_info['domain-folders']:
+            if str(Path(domain).parent).replace('\\', '/') not in chatbot_info['domain-folders']:
                 chatbot_info['domain-folders'].append(str(Path(domain).parent).replace('\\', '/'))
         
         chatbot_info['n-domain-folders'] = len(chatbot_info['domain-folders'])

@@ -76,7 +76,7 @@ Create a config.env file from the template config.env.sample and complete it as 
 ### Setup
 You can set up the environment using a Docker environment or a Python virtual enviroment.
 
-**Docker environment**
+**Docker environment**  
 From the root folder of the project:
 
 1. Build the docker image: 
@@ -100,8 +100,11 @@ From the root folder of the project:
     ```
     - Windows (3.10.11 not installed): 
     ```
-    <path_to_python3.10.11.exe> -m venv <path_to_new_venv>`
-    - Linux/MacOS: `python3 -m venv <path_to_new_venv>
+    <path_to_python3.10.11.exe> -m venv <path_to_new_venv>
+    ```
+    - Linux/MacOS: 
+    ``` 
+    python3 -m venv <path_to_new_venv>
     ```
 5. Activate the virtual environment:
     - Windows: 
@@ -499,7 +502,7 @@ The intermediate original results of each step are available in folder *original
 
 To partially replicate the original procedure you can use the original results of step 2 as a base for the execution of the following steps. Steps 1, 2 and 3 in fact depend on the current state of GitHub repositories, specifically:
 
-- **Step 1**: new repositories with terms *Rasa* and *Chatbot* have been added from January, and some of the ones identified in January have been deleted or updated, so the generated list or repositories is different in size and content.
+- **Step 1**: new repositories with terms *Rasa* and *Chatbot* have been added from January, and some of the ones identified in January have been deleted or updated, so the generated list of repositories is different in size and content.
 
 - **Step 2**: even when executed starting from the original list of repositories collected in January, the output will be different because many repositories have been updated with new commits.
 
@@ -508,7 +511,7 @@ To partially replicate the original procedure you can use the original results o
 To limit this dependance on GitHub, start the replication process by executing step 3 on the original results of step 2. Step 3 is also dependant on GitHub state but in a less heavy way, and its execution cannot be skipped in the reproduction process by starting direclty with step 4, because step 3 involves the download of zip archives required for the following steps, and we cannot legally include the original zip archives in this repository nor distribute them in other ways. Differences in step 3 results (chatbot repositories becoming not found repositories, timeout repositories) will propagate to the rest of the results.
 
 Given the space/time/API limitations involved in the execution of the procedure on the complete set of repositories, the suggested choice is to reproduce the procedure on a subset of the original repositories. You can execute step 3 with the following parameters:
-- `--n-repos <n>`: 500/700
+- `--n-repos <n>`: 500-700
 - `--timeout <t>`: 8-10 seconds
 
 To begin the reproduction process from step 3, delete or rename the results folders obtained from the *getting started* execution (folder *results*, folder *chatbot_repositories_zip*). Create a folder named *results* and copy folders *01_results* and *02_results* from *original_results* into *results* before launching script 3. If you are using docker, stop and run the docker container again before the new execution.
