@@ -5,6 +5,7 @@ import csv
 RESULTS_FOLDER = os.path.join('results', '13_results')
 INPUT_FILE = os.path.join('results', '12_results', 'chatbots.csv')
 OUTPUT_FILE = os.path.join(RESULTS_FOLDER, 'chatbots_language_check.csv')
+DISCARDED_FILE = os.path.join(RESULTS_FOLDER, 'discarded_chatbots.csv')
 CSV_SEPARATOR= ';'
 ZIP_FOLDER = 'chatbot_repositories_zip'
 
@@ -27,6 +28,10 @@ def main():
     header = reader.fieldnames + ['languages', 'has-english', 'pure-english']
     writer = csv.DictWriter(result_file, delimiter=CSV_SEPARATOR, fieldnames=header)
     writer.writeheader()
+
+    discarded_c_file = open(DISCARDED_FILE, 'w', newline='', encoding="utf-8")
+    disc_writer = csv.DictWriter(discarded_c_file, delimiter=CSV_SEPARATOR, fieldnames=reader.fieldnames)
+    disc_writer.writeheader()
     
 
     for chatbot in chatbots:
@@ -48,6 +53,11 @@ def main():
             chatbot['response-languages'].sort()
         else:
             chatbot['response-languages'] = []
+        
+        # Discard chatbot without training phrases and responses
+        if not chatbot['training-language'] and not chatbot['response-languages']:
+            disc_writer.writerow(chatbot)
+            continue
 
         # Extract language
         chatbot['languages'] = list(set(chatbot['training-language'] + chatbot['response-languages']))
@@ -73,6 +83,7 @@ def main():
     # Close files
     chatbot_file.close()
     result_file.close()
+    discarded_c_file.close()
     print('Step 13 completed')
 
 

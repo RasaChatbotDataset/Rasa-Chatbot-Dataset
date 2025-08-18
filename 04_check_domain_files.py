@@ -48,7 +48,7 @@ def check_domain_files(repository, chatbot_info):
 
             except:
                 # YML parsing failed: not working file
-                print('YML EXCEPTION')
+                #print('YML EXCEPTION')
                 continue
         
         # Test files - copy files

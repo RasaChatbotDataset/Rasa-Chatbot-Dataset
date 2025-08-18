@@ -114,6 +114,7 @@ You can set up the environment using a Docker environment or a Python virtual en
     pip install requirements.txt
     ```
 
+> All commands (environment creation, script execution) must be executed in the project root folder (the same folder with the scripts and dockerfile).
 
 ## Getting Started
 
@@ -121,9 +122,9 @@ You can set up the environment using a Docker environment or a Python virtual en
 All the methodology steps are described in the following section, along with their output and parameters. To get started with the methodology, execute it on small set of repositories, specifically:
 
 - **Step 1**: 500 repositories
-- **Step 2**: 250 repositories
-- **Step 3**: 250 repositories, 7 seconds timeout
-- **Step** 4-18: on the remaining ones
+- **Step 2**: 200/250 repositories
+- **Step 3**: 200/250 repositories, 7 seconds timeout
+- **Step** 4-18: on the remaining ones (all available results)
 
 This execution should take around 30 minutes, but you can also reduce the considered sample at any time in the procedure.
 
@@ -175,7 +176,7 @@ Classify repositories as *chatbot_repositories* and *non_chatbot_repositories* b
 **Paper corresponding step**: Creation of the TOFU-R dataset - Repository Classification
 
 **Output**:
-- `chatbot_repositories_zip`: folder with he zip archives of all chatbot repositories.
+- `chatbot_repositories_zip`: folder with the zip archives of all chatbot repositories. This folder isn't under folder results, but in the root project folder.
 - `chatbot_repositories.csv`: repositories with one or more chatbots; in this cases, domain files found by the API are saved in field *domain-files*.
 - `not_chatbot_repositories.csv`: repositories without chatbots.
 - `not_found_repositories.csv`: repositories no longer available on GitHub.
@@ -192,7 +193,7 @@ python 03_check_repositories.py [--n-repos <n> --timeout <t>]
 ```
 
 ### 4. Domain files filtering
-Remove invalid domain files (empty files, non-parsable files or incorreclt identified).
+Remove invalid domain files (empty files, non-parsable files or incorrectly identified).
 
 **Paper corresponding step**: Creation of the TOFU-R dataset - Chatbot Extraction
 
@@ -275,6 +276,7 @@ Handle multi-domain (MD) chatbots by classifying them as:
 **Output**:
 - `chatbots_sfmd_info.csv`: SFMD chatbots classified and solved.
 - `chatbots_mfmd_info.csv`: MFMD chatbots classified and solved.
+- `md_statistics.txt`: statistics file.
 
 **Optional parameters**:
 - `--n-sfmd <n>`: number of SFMD chatbots to consider (default: all)
@@ -290,7 +292,7 @@ Create a unified dataset with all chatbots of different classes.
 **Paper corresponding step**: Creation of the TOFU-R dataset - Parameter Extraction
 
 **Output**:
-- - `chatbots.csv`: complete dataset of chatbots extracted from the collected repositories.
+- `chatbots.csv`: complete dataset of chatbots extracted from the collected repositories.
 
 ```
 python 09_unify_chatbot_dataset.py
@@ -373,7 +375,7 @@ Remove multiple copies of the same chatbot from the dataset, keeping only the be
 **Paper corresponding step**: Creation of the TOFU-R dataset - Duplicate Removal
 
 **Output**:
-- `chatbots_join_nlu_date.csv`: chatbot dataset enriched with dates information.
+- `chatbots_join_date.csv`: chatbot dataset enriched with dates information.
 - `copies.csv`: all copies identified in the dataset.
 - `copies_to_keep`: the best chatbots for each copy group.
 - `chatbots.csv`: chatbot dataset with no more copies -> the TOFU-R dataset.
@@ -424,6 +426,7 @@ Filter external services incorrectly identified.
 **A. Automatic filtering**: remove services that match the *black-list* (common python local framework and libraries).
 **Output**: 
 -  `1_chatbots.csv`: chatbot dataset with automatically filtered services.
+- `blacklist-statistics.txt`: filtering statistics.
 
 ```
 python 17_filter_external_services.py
@@ -502,7 +505,9 @@ Given the space/time/API limitations involved in the execution of the procedure 
 - `--n-repos <n>`: 500/700
 - `--timeout <t>`: 8-10 seconds
 
-> The script execution will overwrite previuos results, so to begin the reproduction process from step 3, copy folders *01_results*, *02_results* from *original_results* to *results/* before launching script 3.
+To begin the reproduction process from step 3, delete or rename the results folders obtained from the *getting started* execution (folder *results*, folder *chatbot_repositories_zip*). Create a folder named *results* and copy folders *01_results* and *02_results* from *original_results* into *results* before launching script 3. If you are using docker, stop and run the docker container again before the new execution.
+
+> Some chatbot repositories may have changed their url since the original execution. They will be excluded in step 3 as not found or in step 4 as wrong match with the csv file, if they are found but their current zip file name does not match the information collected in the original execution.
 
 
 ## License
