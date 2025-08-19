@@ -98,7 +98,7 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type, llm,
 
     n_retry = 0
     while response.status_code == 429 and n_retry < 5:
-        print("Error 429: too many requests")
+        print("Error 429: too many requests. Wait for the next retry (30 s)")
         time.sleep(30)
         if llm == 'OPENAI':
             response = query_chatgpt(prompt, parameters)
@@ -107,6 +107,7 @@ def merge_responses(chatbot_id, responses, n_file, file_content, file_type, llm,
         n_retry += 1
     
     if n_retry == 5:
+        print('Too many retries: execution stopped')
         return -1
 
     # Parse response
@@ -171,7 +172,7 @@ def extract_services_from_file(chatbot, repository, file, file_type, n_file, llm
                 n_retry = 0
 
                 while response.status_code == 429 and n_retry < 5:
-                    print("Error 429: too many requests")
+                    print("Error 429: too many requests. Wait for the next retry (30 s)")
                     time.sleep(30)
                     if llm == 'OPENAI':
                         response = query_chatgpt(prompt, parameters)
@@ -179,6 +180,7 @@ def extract_services_from_file(chatbot, repository, file, file_type, n_file, llm
                         response = query_gemini(prompt, parameters)
                     n_retry += 1
                 if n_retry == 5:
+                    print('Too many retries: execution stopped')
                     return -1
 
                 # Parse response

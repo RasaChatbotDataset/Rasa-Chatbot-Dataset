@@ -113,7 +113,7 @@ def extract_topic(chatbot, topics, llm,  parameters, response_folder):
     
     n_retry = 0
     while response.status_code == 429 and n_retry < 5:
-        print("Error 429: too many requests")
+        print("Error 429: too many requests. Wait for the next retry (30 s)")
         time.sleep(30)
         if llm == 'OPENAI':
             response = query_chatgpt(prompt, parameters)
@@ -121,6 +121,7 @@ def extract_topic(chatbot, topics, llm,  parameters, response_folder):
             response = query_gemini(prompt, parameters)
         n_retry += 1
     if n_retry == 5:
+        print('Too many retries: execution stopped')
         return -1
 
     # Parse response

@@ -1,7 +1,7 @@
 # From the TOFU-R Snapshot to the BRASATO Curated Dataset
 
 This repository contains all materials related to the work *"Towards the Assessment of Task-based Chatbots: From the TOFU-R Snapshot to the BRASATO Curated Dataset"*. Specifically, it includes:
-- The **TOFU-R dataset**, consisting of Rasa open-source chatbots collected from GitHub.
+- The **TOFU-R dataset**, a snapshot of the Rasa open-source chatbots available in GitHub.
 - The **BRASATO dataset**, a curated subset of selected chatbots derived from TOFU-R.
 - The **methodology scripts** used to create both datasets.
 - The **analysis of ChatGPT parameters** for the extraction of external services.
@@ -26,7 +26,7 @@ This repository has the following structure:
 - **Methodology scripts**: all scripts necessary to replicate the procedure step-by-step are numbered and their use is described in the following sections.
 - **Original result folders**: intermediate results of each step generated in the original execution are stored in the *original_results* folder, organized by step number.
 - **ChatGPT parameter analysis**: all materials related to the analysis of ChatGPT parameters for services extraction are available in *chatGPT_parameter_analysis* folder, along with a dedicated README.
-- **Datasets**:  the TOFU-R and BRASATO datasets, which are the outputs of steps 14 and 18 respectively, are also provided directly in the main folder for convenience (file *TOFU_R.csv* and file *BRASATO.CSV*).
+- **Datasets**:  the TOFU-R and BRASATO datasets, which are the outputs of steps 14 and 18 respectively, are also provided directly in the main folder for convenience (file *TOFU_R.csv* and file *BRASATO.CSV*). The fields of each dataset are described in files *BRASATO_fields.txt* and *TOFU_R_fields.txt*.
 
 The following sections describe each step in detail, allowing for full replication of the procedure used to create the TOFU-R and BRASATO datasets.
 

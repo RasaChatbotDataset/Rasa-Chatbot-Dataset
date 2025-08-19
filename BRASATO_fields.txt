@@ -1,0 +1,38 @@
+BRASATO FIELDS
+
+ID: chatbot id, the name of the repository if the repository has only one chatbot, the name of the repository + the folder if the repository has more chatbots.
+FULL-NAME: complete name of the repository
+HTML-URL: repository URL
+STARS: number of stars of the repository
+FORKS: number of forks of the repository
+OWNER-NAME: name of the owner of the repository
+OWNER-TYPE: type of the owner of the repository (user or organization)
+CREATED-AT: date of creation
+LAST-COMMIT: sha of the last commit on the default branch
+LAST-COMMIT-DATE: date of the last commit on the default branch
+DOMAIN-FILES: list of the domain files of the chatbot
+TYPE: chatbot type (SFSD, SFMD, MFSD, MFMD)
+N-INTENTS: number of intents of the chatbot
+INTENTS: list of intents of the chatbot
+N-ENTITIES: number of entities of the chatbot
+ENTITIES: list of entities of the chatbot
+N-ACTIONS: number of actions of the chatbot
+ACTIONS: list of actions of the chatbot
+N-ACTIONS: number of custom actions of the chatbot (actions implemented in the backend)
+ACTIONS: list of custom actions of the chatbot (actions implemented in the backend)
+N-SLOTS: number of slots of the chatbot
+SLOTS: list of slots of the chatbot
+N-SLOTS-FROM-ENTITY: number of slots that store entity values
+N-SLOTS-FROM-TEXT: number of slots that store directly extracted text
+SLOTS-TYPE: type of the slots of the chatbot
+N-FORMS: number of forms of the chatbot
+FORMS: list of forms of the chatbot
+VERSION: Rasa version of the chatbot
+CONFIG-LANGUAGES: languages extracted from the config files
+TRANING-LANGUAGES: languages identified from the training phrases
+RESPONSE-LANGUAGES: languages identified from the response phrases
+LANGUAGES: the overall languages of the chatbot
+PURE-ENGLISH: True/False if English is the only overall language of the chatbot
+EXTERNAL-SERVICES: list of external services (API, Databases) used by the chatbot
+N-EXTERNAL-SERVICES: number of external services (API, Databases) used by the chatbot
+TOPIC: topic category of the chatbot (from Google Play categories)
