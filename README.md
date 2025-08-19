@@ -10,7 +10,7 @@ This repository contains all materials related to the work *"Towards the Assessm
 The datasets are updated to **14/01/2025**.
 
 ## Information
-**Target Badge**: Reproducible Badge
+**Target Badges**: Available Badge, Reviewed Badge, Reproducible Badge
 
 **Paper Title**: Towards the Assessment of Task-based Chatbots: From the TOFU-R Snapshot to the BRASATO Curated Dataset
 
